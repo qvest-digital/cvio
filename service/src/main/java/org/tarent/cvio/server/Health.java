@@ -1,5 +1,5 @@
 
-package cvserver;
+package org.tarent.cvio.server;
 
 import com.yammer.metrics.core.HealthCheck;
 

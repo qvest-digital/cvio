@@ -1,6 +1,7 @@
-package cvserver;
+package org.tarent.cvio.server;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 import com.yammer.metrics.annotation.Timed;
 
 import javax.ws.rs.GET;
@@ -13,10 +14,9 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class CVResource {
 
-    private final String elasticSearchServer;
 
-    public CVResource(String elasticSearchServer) {
-        this.elasticSearchServer = elasticSearchServer;
+    @Inject
+    public CVResource(CVIOConfiguration cfg) {
     }
 
     @GET
