@@ -51,8 +51,7 @@
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body">
             <div ng-repeat="item in ratingItems | filter:byCategory(selection)"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></div>
-            <div contenteditable="true" style="display: inline-block;  border: solid 1px #cccccc;"></div>
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></span></small></div>
           </div>
         </div>
       </div>
@@ -68,8 +67,6 @@
                   <button class="input-sm btn btn-default" type="button">Hinzu</button>
                 </span>
               </span>
-            </div>
-            <div class="connectedSortable panel-body" id="beginner-box">
             </div>
           </div>
         </div>

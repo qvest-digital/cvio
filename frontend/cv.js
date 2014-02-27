@@ -1,6 +1,6 @@
 var cv = angular.module('cv', []);
 
-$( "#all-items-box" ).sortable({
+$( "#all-items-box #beginner-box" ).sortable({
 //$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
 //    connectWith: ".connectedSortable"
 });//.disableSelection();
@@ -9,7 +9,6 @@ $( "#all-items-box" ).sortable({
 //    drop: function(event, ui) {
 //    }
 //});
-
 
 cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
 
@@ -210,27 +209,4 @@ cv.directive('cvDateField', function() {
                       </div>\
                     </div>'
   }
-});
-
-
-cv.directive('contenteditable', function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, elm, attrs, ctrl) {
-            
-            // model -> view
-            ctrl.$render = function() {
-                elm.html(ctrl.$viewValue);
-            };
-
-            /**
-             * handling the maxlength parameter
-             */
-            elm.bind('keyup', function(event) {
-                scope.$apply(function() {
-                    ctrl.$setViewValue(elm.html());
-                });
-            });
-        }
-    }
 });
