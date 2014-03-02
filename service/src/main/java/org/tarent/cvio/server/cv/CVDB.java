@@ -3,8 +3,6 @@ package org.tarent.cvio.server.cv;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-
 public interface CVDB {
 
 	/**
