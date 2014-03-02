@@ -13,11 +13,15 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.tooling.GlobalGraphOperations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tarent.cvio.server.CVIOConfiguration;
 
 import com.google.inject.Inject;
 
 public class SkillDBService implements SkillDB {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SkillDBService.class);
 	
 	private static final String NAME = "name";
 	private static final String DESCRIPTION = "description";
@@ -30,6 +34,7 @@ public class SkillDBService implements SkillDB {
 	
 	@Inject
 	public SkillDBService(CVIOConfiguration cfg) {
+		logger.info("opening database in "+cfg.getDatabasePath());
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( cfg.getDatabasePath() );
 	    registerShutdownHook();
 	}
@@ -38,7 +43,9 @@ public class SkillDBService implements SkillDB {
 		Runtime.getRuntime().addShutdownHook( new Thread() {	    	
 	    	@Override
 	        public void run() {
-	            graphDb.shutdown();
+	    		logger.info("shutdown neo4j database ..");
+	    		graphDb.shutdown();
+	    		logger.info("shutdown neo4j is down!");
 	        }
 	    });
 	}
@@ -54,15 +61,6 @@ public class SkillDBService implements SkillDB {
 			return result;
 		}
 			
-	}
-
-	private Skill skillFromNode(Node node) {
-		Skill skill = new Skill();
-		skill.setName((String)node.getProperty(NAME));
-		skill.setDescription((String)node.getProperty(DESCRIPTION));
-		skill.setCategory((String)node.getProperty(CATEGORY));
-		skill.setCreationDate(new DateTime(node.getProperty(CREATION_DATE)));
-		return skill;
 	}
 
 	@Override
@@ -82,11 +80,7 @@ public class SkillDBService implements SkillDB {
 	public void createSkill(Skill newSkill) {
 		try ( Transaction tx = graphDb.beginTx() ) {		
 			Node newSkillNode = graphDb.createNode(SkillLabels.SKILL);
-			newSkillNode.setProperty(NAME, newSkill.getName());
-			newSkillNode.setProperty(DESCRIPTION, newSkill.getDescription());
-			newSkillNode.setProperty(CREATION_DATE, getDateTime());			
-			newSkillNode.setProperty(CATEGORY, newSkill.getCategory());
-
+			updateNodeWithSkill(newSkill, newSkillNode);
 			tx.success();
         }
 	}
@@ -97,4 +91,19 @@ public class SkillDBService implements SkillDB {
 		 return fmt.print(dt);
 	}	
 
+	private Skill skillFromNode(Node node) {
+		Skill skill = new Skill();
+		skill.setName((String)node.getProperty(NAME));
+		skill.setDescription((String)node.getProperty(DESCRIPTION));
+		skill.setCategory((String)node.getProperty(CATEGORY));
+		skill.setCreationDate(new DateTime(node.getProperty(CREATION_DATE)));
+		return skill;
+	}
+
+	private void updateNodeWithSkill(Skill newSkill, Node newSkillNode) {
+		newSkillNode.setProperty(NAME, newSkill.getName());
+		newSkillNode.setProperty(DESCRIPTION, newSkill.getDescription());
+		newSkillNode.setProperty(CREATION_DATE, getDateTime());			
+		newSkillNode.setProperty(CATEGORY, newSkill.getCategory());
+	}
 }

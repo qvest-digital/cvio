@@ -1,6 +1,7 @@
 
 package org.tarent.cvio.server;
 
+import org.tarent.cvio.server.cv.CVResource;
 import org.tarent.cvio.server.skill.SkillResource;
 
 import com.google.inject.Guice;
@@ -9,10 +10,10 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 
-public class CVService extends Service<CVIOConfiguration> {
+public class CVIO extends Service<CVIOConfiguration> {
 
     public static void main(String[] args) throws Exception {
-        new CVService().run(args);
+        new CVIO().run(args);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class CVService extends Service<CVIOConfiguration> {
     
     @Override
     public void run(CVIOConfiguration configuration, Environment environment) {
-    	Injector injector = Guice.createInjector(new CVGuiceModule(configuration));
+    	Injector injector = Guice.createInjector(new CVIOGuiceModule(configuration));
     	
         environment.addResource(injector.getInstance(CVResource.class));
         environment.addResource(injector.getInstance(SkillResource.class));
