@@ -17,8 +17,8 @@ public class CVIO extends Service<CVIOConfiguration> {
     	try {
     		new CVIO().run(args);
     	} catch (Exception e) {
-    		System.out.println("Error while startup");
-    		e.printStackTrace();
+    		System.out.println("Error while startup"); //NOSONAR
+    		e.printStackTrace(); //NOSONAR
     		System.exit(1);
     	}
     }
