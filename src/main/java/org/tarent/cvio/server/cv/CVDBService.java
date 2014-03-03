@@ -45,8 +45,7 @@ public class CVDBService implements CVDB {
     /**
      * Create a new CVDBService based on elastic search.
      * 
-     * @param esNode
-     *            the access to elasticsearch
+     * @param esNode the access to elasticsearch
      */
     @Inject
     public CVDBService(final ESNodeManager esNode) {
@@ -82,7 +81,7 @@ public class CVDBService implements CVDB {
 
     @Override
     public String createCV(final String content) {
-        logger.trace("create cv in es");
+        logger.trace("create cv in es: " + content);
         IndexResponse resp = es.client().prepareIndex(INDEX_CVS, TYPE_CV)
                 .setSource(content).execute().actionGet();
         return resp.getId();
@@ -97,7 +96,7 @@ public class CVDBService implements CVDB {
 
     @Override
     public void updateCV(final String id, final String content) {
-        logger.trace("update cv with id " + id + " in es");
+        logger.trace("update cv with id " + id + " in es: " + content);
         es.client().prepareIndex(INDEX_CVS, TYPE_CV, id).setSource(content)
                 .execute().actionGet();
     }

@@ -2,7 +2,7 @@
 
 dataDirectory: /tmp/cvio-db
 
-uriPrefix: http://127.0.0.1:8080
+uriPrefix: http://127.0.0.1:8080/api
 
 elasticsearchBindHost: 127.0.0.1
 
@@ -43,7 +43,7 @@ http:
   # adminPassword: null
 
   # The root path for the Jersey servlet.
-  rootPath: "/api"
+  rootPath: "/api/*"
 
   # SSL configuration parameters. If omitted, all of these parameters
   # will fall back to using JVM-specific defaults (except for
@@ -117,4 +117,16 @@ http:
     # The list of supported SSL/TLS protocols. Dropwizard
     # intentionally disables SSLv2Hello for security reasons.
     #supportedProtocols: ["SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"]
+
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO,
+  # DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.example.app' to DEBUG.
+    org.tarent.cvio.server: TRACE
 

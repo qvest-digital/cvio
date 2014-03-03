@@ -10,6 +10,17 @@ $( "#all-items-box #beginner-box" ).sortable({
 //    }
 //});
 
+
+cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.cvs =  { };
+
+    $http.get('/api/cv/cvs')
+        .success(function(data, status, headers, config) {
+            $scope.cvs = data;
+        });        
+}]);
+
+
 cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.ratingItems = [];
@@ -21,7 +32,7 @@ cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
         }
     }
 
-    $http.get('/tech-rating/api/default/ratingitem')
+    $http.get('http://127.0.0.1/tech-rating/api/default/ratingitem')
         .success(function(data, status, headers, config) {
             $scope.ratingItems = data;
         })
@@ -38,27 +49,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.cv =  { 
         'educations': [ {} ],
         'jobs': [
-            {},
-            { 'start': {'year' : '2011', 'month': '01'},
-              'end':  {'year' : '2013', 'month': '05'},
-              'type': 'freelance',
-              'company': 'tarent GmbH, Bonn',
-              'project': 'OSIAM',
-              'projectDescription': 'Erstellung eines Open Source Identity und Access Management Systems auf Basis von SCIM und oAuth2.0',
-              'role': 'Product Owner',
-              'activity': 'Verantwortung der fachlichen Anforderungen',
-              'topics': 'SCIM, oAuth, Java, REST, Spring, Postgres' 
-            },
-            { 'start': '2011-01',
-              'end': '2011-02',
-              'type': 'freelance',
-              'company': 'tarent GmbH, Bonn',
-              'project': 'OSIAM',
-              'projectDescription': 'Erstellung eines Open Source Identity und Access Management Systems auf Basis von SCIM und oAuth2.0',
-              'role': 'Product Owner',
-              'activity': 'Verantwortung der fachlichen Anforderungen',
-              'topics': 'SCIM, oAuth, Java, REST, Spring, Postgres' 
-            },
+            {},           
         ],
     };
     $scope.ignoreNextWatch = false;
@@ -106,6 +97,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
         $http.get(uri)
             .success(function(data, status, headers, config) {
                 $scope.cv = data;
+                $scope.currentUri = uri;
                 $scope.modified = false;
             })
             .error(function(data, status, headers, config) {
@@ -114,8 +106,8 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     }
 
     $scope.save = function() {
-        if ($scope.cv.cvURI) { // update
-            $http.put($scope.cv.cvURI, $scope.cv)
+        if ($scope.currentUri) { // update
+            $http.put($scope.currentUri, $scope.cv)
                 .success(function(data, status, headers, config) {
                     $scope.modified = false;
                 })
@@ -124,7 +116,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 });
 
         } else { // create new
-            $http.post('cv_api.php', $scope.cv)
+            $http.post('/api/cv/cvs', $scope.cv)
                 .success(function(data, status, headers, config) {
                     $scope.ignoreNextWatch = true;
                     $scope.loadUri(headers('Location'));
@@ -134,8 +126,32 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 });
         }
     };
+
+    var cvref = location.search.split('ref=')[1];
+    if (cvref) {
+        $scope.loadUri(cvref);
+    }
+
 }]);
 
+cv.directive('contenteditable', function() {                                                                                                      
+    return {                                                                                                                                      
+        require: 'ngModel',                                                                                                                       
+        link: function(scope, elm, attrs, ctrl) {                                                                                                 
+                                                                                                                                                  
+            // model -> view                                                                                                                      
+            ctrl.$render = function() {                                                                                                           
+                elm.html(ctrl.$viewValue);                                                                                                        
+            };                                                                                                                                    
+                                                                                                                                                  
+            elm.bind('keyup', function(event) {                                                                                                   
+                scope.$apply(function() {                                                                                                         
+                    ctrl.$setViewValue(elm.html());                                                                                               
+                });                                                                                                                               
+            });                                                                                                                                   
+        }                                                                                                                                         
+    }                                                                                                                                             
+});
 
 cv.directive('cvShortField', function() {
   return {
