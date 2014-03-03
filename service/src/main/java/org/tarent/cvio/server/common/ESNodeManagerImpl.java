@@ -16,11 +16,6 @@ import org.slf4j.LoggerFactory;
 public class ESNodeManagerImpl implements ESNodeManager {
 
     /**
-     * the 127.0.0.1.
-     */
-    private static final String LOCAL_HOST = "127.0.0.1";
-
-    /**
      * the logger.
      */
     private final Logger logger = LoggerFactory
@@ -32,18 +27,28 @@ public class ESNodeManagerImpl implements ESNodeManager {
     private Node esNode;
 
     /**
+     * the global service configuration.
+     */
+    private CVIOConfiguration configuration;
+
+    /**
      * Creates a new local node.
      * 
      * @param cfg the global service configuration
      */
     public ESNodeManagerImpl(final CVIOConfiguration cfg) {
+        this.configuration = cfg;
+    }
+
+    @Override
+    public void start() throws Exception {
         logger.info("starting new Elasticsearch cvio node with cluster name 'cvio' and data dir: "
-                + cfg.getDataDirectory());
+                + configuration.getDataDirectory());
         Settings settings = ImmutableSettings.builder()
-                .put("path.data", cfg.getDataDirectory())
+                .put("path.data", configuration.getDataDirectory())
                 .put("node.name", "local")
-                .put("network.host", cfg.getElasticsearchBindHost())
-                .put("http.enabled", cfg.isElasticsearchEnableHttp())
+                .put("network.host", configuration.getElasticsearchBindHost())
+                .put("http.enabled", configuration.isElasticsearchEnableHttp())
                 .build();
 
         esNode = new NodeBuilder()
@@ -51,10 +56,6 @@ public class ESNodeManagerImpl implements ESNodeManager {
                 .clusterName("cvio")
                 .settings(settings)
                 .node();
-    }
-
-    @Override
-    public void start() throws Exception {
     }
 
     @Override
