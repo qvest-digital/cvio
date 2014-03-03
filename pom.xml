@@ -1,0 +1,12 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.tarent.cvio</groupId>
+    <artifactId>cvio</artifactId>
+    <version>0.1.0</version>
+
+    <packaging>pom</packaging>
+    <modules>
+        <module>service</module>     
+    </modules>
+</project>
