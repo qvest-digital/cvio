@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.tarent.cvio.server.CVIOConfiguration;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 
 public class CVResourceTest {
 

@@ -4,10 +4,10 @@ import java.util.List;
 
 public interface SkillDB {
 	
-	public List<Skill> getAllSkills();
+	List<Skill> getAllSkills();
 
-	public Skill getSkillByName(String name);
+	Skill getSkillByName(String name);
 
-	public void createSkill(Skill newSkill);
+	void createSkill(Skill newSkill);
 
 }

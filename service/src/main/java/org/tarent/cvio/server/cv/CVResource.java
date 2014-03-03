@@ -20,7 +20,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.tarent.cvio.server.CVIOConfiguration;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 
 /**
  * The cv resource encapsulates all management operations for the cv handling.

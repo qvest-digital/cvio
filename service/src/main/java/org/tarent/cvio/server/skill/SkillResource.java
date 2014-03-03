@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.yammer.metrics.annotation.Timed;
 
@@ -44,8 +43,9 @@ public class SkillResource {
     @Timed
     public Response getSkillByName(@PathParam("name") String name) {
 		Skill skill = skillDB.getSkillByName(name);
-		if (skill == null)
+		if (skill == null) {
 			return Response.status(Status.NOT_FOUND).build();
+		}
 		return Response.ok(skill).build();
     }
 
@@ -53,8 +53,9 @@ public class SkillResource {
     @Path("/skills")
     @Timed
     public Response createSkill(Skill newSkill) {
-    	if (skillDB.getSkillByName(newSkill.getName()) != null)
+    	if (skillDB.getSkillByName(newSkill.getName()) != null) {
     		return Response.status(Status.CONFLICT).entity("Skill name does already exist "+newSkill.getName()).build();
+    	}
     	URI uri = null;
 		try {
 			uri = new URI("/bla/"+ newSkill.getName());

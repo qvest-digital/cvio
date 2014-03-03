@@ -15,13 +15,13 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.tooling.GlobalGraphOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tarent.cvio.server.CVIOConfiguration;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 
 import com.google.inject.Inject;
 
 public class SkillDBService implements SkillDB {
 	
-	private static final Logger logger = LoggerFactory.getLogger(SkillDBService.class);
+	private static Logger logger = LoggerFactory.getLogger(SkillDBService.class);
 	
 	private static final String NAME = "name";
 	private static final String DESCRIPTION = "description";
@@ -30,7 +30,7 @@ public class SkillDBService implements SkillDB {
 
 	private enum SkillLabels implements Label { SKILL, CATEGOY };
 	
-	GraphDatabaseService graphDb;
+	private GraphDatabaseService graphDb;
 	
 	@Inject
 	public SkillDBService(CVIOConfiguration cfg) {
@@ -53,7 +53,7 @@ public class SkillDBService implements SkillDB {
 	@Override
 	public List<Skill> getAllSkills() {
 		try ( Transaction tx = graphDb.beginTx() ) {		
-			ArrayList<Skill> result = new ArrayList<Skill>(100);
+			ArrayList<Skill> result = new ArrayList<Skill>();
 			for (Node node : GlobalGraphOperations.at(graphDb).getAllNodesWithLabel(SkillLabels.SKILL)) {
 				result.add(skillFromNode(node));
 			}
@@ -68,9 +68,10 @@ public class SkillDBService implements SkillDB {
 		Skill skill = null;
 		try ( Transaction tx = graphDb.beginTx() ) {		
 			Iterator<Node> iter = graphDb.findNodesByLabelAndProperty(SkillLabels.SKILL, NAME, name).iterator();
-			if (iter.hasNext())
+			if (iter.hasNext()) {
 				skill = skillFromNode(iter.next());
-
+			}
+			
 			tx.success();
 			return skill;
         }

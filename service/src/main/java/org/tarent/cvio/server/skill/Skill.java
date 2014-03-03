@@ -1,7 +1,5 @@
 package org.tarent.cvio.server.skill;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
 
 public class Skill {
