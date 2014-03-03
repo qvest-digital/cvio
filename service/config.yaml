@@ -1,3 +1,7 @@
-databasePath: /tmp/skill-db
+dataDirectory: /tmp/cvio-db
 
 uriPrefix: http://127.0.0.1:8080
+
+elasticsearchBindHost: 127.0.0.1
+
+elasticsearchEnableHttp: true
