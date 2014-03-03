@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="cv">
+  <head>
+    <title>Profile</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/ui/jquery-ui.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+ 
+   <script src="cvio.js"></script>
+  </head>
+  <body>
+    <div class="container" ng-controller="ListCtrl">
+      <h1>Profile verwalten</h1>
+      <div>
+        <a href="cv.html"
+           class="btn btn-default btn-md">
+          <span class="glyphicon glyphicon-plus"></span> Neuer CV
+        </a>
+      </div>
+      <br/>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Vorname</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="cv in cvs">
+            <td><a href="cv.html?ref={{cv.ref}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
+            <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
