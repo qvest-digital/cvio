@@ -1,15 +1,14 @@
 var cv = angular.module('cv', []);
 
-$( "#all-items-box #beginner-box" ).sortable({
-//$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
-//    connectWith: ".connectedSortable"
-});//.disableSelection();
-
-//$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).droppable({
-//    drop: function(event, ui) {
-//    }
-//});
-
+$(function() {
+$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
+	 connectWith: "#all-items-box, #beginner-box, #advanced-box, #expert-box",
+	 cursor: "move",
+	 update: function(event, ui) {
+         console.log(ui.item);
+     },
+}).disableSelection();
+});
 
 cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.cvs =  { };
@@ -98,6 +97,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
             .success(function(data, status, headers, config) {
                 $scope.cv = data;
                 $scope.currentUri = uri;
+                $scope.ignoreNextWatch = true;
                 $scope.modified = false;
             })
             .error(function(data, status, headers, config) {
