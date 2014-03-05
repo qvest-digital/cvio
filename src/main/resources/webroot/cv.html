@@ -21,9 +21,9 @@
       <br/>
       
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#general" data-toggle="tab">Allgemein</a></li>
+      <li><a href="#general" data-toggle="tab">Allgemein</a></li>
       <li><a href="#experience" data-toggle="tab">Erfahrungen</a></li>
-      <li><a href="#skills" data-toggle="tab">Skills</a></li>
+      <li class="active"><a href="#skills" data-toggle="tab">Skills</a></li>
       <li  class="pull-right">
           <!-- Navigation -->
 	      <div>
@@ -42,7 +42,7 @@
     </ul>
 <br>
     <div class="tab-content">
-      <div id="general" class="tab-pane active" >
+      <div id="general" class="tab-pane" >
       <!-- Allgemeine Daten -->
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -215,7 +215,7 @@
     </div>
     
     
-    <div id="skills" class="tab-pane" >
+    <div id="skills" class="tab-pane active">
       <!-- Skills -->
       <div ng-controller="SkillCtrl">
         <ul class="nav nav-pills">
@@ -226,7 +226,7 @@
         </ul>
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body">
-            <div   id="skill_item_{{item.name}}" ng-repeat="item in ratingItems | filter:byCategory(selection)"
+            <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byCategory(selection)"
                  style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></span></small></div>
           </div>
         </div>
@@ -245,6 +245,9 @@
               </span>
             </div>
             <div style="height: 250px;" class="panel-body" id="beginner-box">
+                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byBox('beginner')"
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></span></small></div>
+            
             </div>            
           </div>
         </div>

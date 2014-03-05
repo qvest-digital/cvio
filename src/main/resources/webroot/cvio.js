@@ -1,15 +1,5 @@
 var cv = angular.module('cv', []);
 
-$(function() {
-$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
-	 connectWith: "#all-items-box, #beginner-box, #advanced-box, #expert-box",
-	 cursor: "move",
-	 update: function(event, ui) {
-         console.log(ui.item);
-     },
-}).disableSelection();
-});
-
 cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.cvs =  { };
 
@@ -22,24 +12,42 @@ cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
 
 cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
 
+    $http.get('http://127.0.0.1/tech-rating/api/default/ratingitem')
+    	.success(function(data, status, headers, config) {
+        $scope.ratingItems = data;
+    })
+    .error(function(data, status, headers, config) {
+        alert("error while loading "+status);
+    });
+
     $scope.ratingItems = [];
     $scope.selection = 'prog';
+    $scope.cvSkills = {"49" : 1,
+                       "165" : 1};
 
     $scope.byCategory = function(category) {
         return function(item) {
             return item.category == category;
         }
     }
-
-    $http.get('http://127.0.0.1/tech-rating/api/default/ratingitem')
-        .success(function(data, status, headers, config) {
-            $scope.ratingItems = data;
-        })
-        .error(function(data, status, headers, config) {
-            alert("error while loading "+status);
-        });
     
-        
+    $scope.byBox= function(skillselection) {
+        return function(item) {
+            return item.id == category;
+        }
+    }
+    
+    /**
+     * enable drag'n drop in the boxes
+     */
+    $( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
+    	connectWith: "#all-items-box, #beginner-box, #advanced-box, #expert-box",
+   	 	cursor: "move",
+   	 	update: function(event, ui) {
+   	 		console.log(ui.item);
+   	 	},
+    }).disableSelection()
+
 }]);
 
 cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
