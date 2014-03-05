@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * ES client manager creating a local es node.
+ * Here we start an embedded elastic search server. 
+ * For security reasons, this elasicsearch does not open
+ * the http port, if not wanted.
  * 
  * @author smancke
  */

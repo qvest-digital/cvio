@@ -17,12 +17,14 @@ import com.google.inject.AbstractModule;
 /**
  * This is the central configuration for the dependency injection.
  * 
+ * @see https://code.google.com/p/google-guice/
+ * 
  * @author smancke
  */
 public class CVIOGuiceModule extends AbstractModule {
 
     /**
-     * the condiguration instance.
+     * the configuration instance.
      */
     private CVIOConfiguration configuration;
 
@@ -35,17 +37,25 @@ public class CVIOGuiceModule extends AbstractModule {
         this.configuration = cfg;
     }
 
+    /**
+     * Wire everything up.
+     */
     @Override
     protected void configure() {
 
+        // The configuration
         bind(CVIOConfiguration.class).toInstance(configuration);
 
+        // The Elasticsearch manager
         bind(ESNodeManager.class).toInstance(
                 new ESNodeManagerImpl(configuration));
 
+        // Our /cv ressource and the corresponding database
         bind(CVResource.class);
         bind(CVDB.class).to(CVDBService.class);
 
+        // The /skill resource
+        // and a dummy db implementation
         bind(SkillResource.class);
         bind(SkillDB.class).toInstance(new SkillDB() {
             public List<Skill> getAllSkills() {
