@@ -11,7 +11,7 @@
     <script src="lib/ui/jquery-ui.js"></script>
     <script src="lib/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
-
+    <script src="lib/angular-resource.min.js"></script>
     <script src="cvio.js"></script>
   </head>
   <body>
@@ -19,7 +19,7 @@
     <div class="container" ng-controller="CvCtrl">
      <h3>Profil {{cv.givenName}} {{cv.familyName}}</h3>
       <br/>
-      
+    
     <ul class="nav nav-tabs">
       <li><a href="#general" data-toggle="tab">Allgemein</a></li>
       <li><a href="#experience" data-toggle="tab">Erfahrungen</a></li>
@@ -215,9 +215,9 @@
     </div>
     
     
-    <div id="skills" class="tab-pane active">
+    <div id="skills" class="tab-pane active" ng-controller="SkillCtrl" ng-init="init()">
       <!-- Skills -->
-      <div ng-controller="SkillCtrl">
+      <div>
         <ul class="nav nav-pills">
           <li class="active"><a href="#" ng-click="selection = 'prog'" data-toggle="tab">Programmierung</a></li>
           <li><a href="#" ng-click="selection = 'tooling'" data-toggle="tab">Tools</a></li>
@@ -227,7 +227,7 @@
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body">
             <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byCategory(selection)"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></span></small></div>
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}</div>
           </div>
         </div>
       </div>
@@ -236,7 +236,7 @@
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>Anfänger</strong></span>
+              <span class="panel-title"><strong>{{skillHeader['beginner']}}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
                 <input type="text" class="input-sm form-control">
                 <span class="input-group-btn">
@@ -244,10 +244,13 @@
                 </span>
               </span>
             </div>
-            <div style="height: 250px;" class="panel-body" id="beginner-box">
-                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byBox('beginner')"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}} <small><span style="color: #cccccc" class="glyphicon glyphicon-remove"></span></small></div>
-            
+            <div style="height: 250px;" class="panel-body" id="beginner">
+
+                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('beginner')"
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                </div>
+
             </div>            
           </div>
         </div>
@@ -255,7 +258,7 @@
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>Fortgeschritten</strong></span>
+              <span class="panel-title"><strong>{{skillHeader['advanced'] }}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
                 <input type="text" class="input-sm form-control">
                 <span class="input-group-btn">
@@ -263,15 +266,21 @@
                 </span>
               </span>
             </div>
-            <div style="height: 250px;" class="panel-body" id="advanced-box">
-            </div>
+            <div style="height: 250px;" class="panel-body" id="advanced">
+
+                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('advanced')"
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                </div>
+
+            </div>            
           </div>
         </div>
 
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>Experte</strong></span>
+              <span class="panel-title"><strong>{{skillHeader['expert']}}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
                 <input type="text" class="input-sm form-control">
                 <span class="input-group-btn">
@@ -279,11 +288,16 @@
                 </span>
               </span>
             </div>
-            <div style="height: 250px;" class="panel-body" id="expert-box">
-            </div>
+            <div style="height: 250px;" class="panel-body" id="expert">
+
+                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('expert')"
+                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                </div>
+
+            </div>            
           </div>
         </div>
-
       </div>
 
     </div>

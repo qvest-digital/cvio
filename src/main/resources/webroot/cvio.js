@@ -2,7 +2,7 @@
 /**
  * the angular main module for the cv application
  */
-var cv = angular.module('cvio', []);
+var cv = angular.module('cvio', ['ngResource']);
 
 /**
  * The controller for List view of the application
@@ -28,7 +28,8 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     /** 
      * The cv model.
      */
-    $scope.cv =  { 
+    $scope.cv =  {
+    	'skills' : {},
         'educations': [ {} ],
         'jobs': [
             {},           
@@ -169,85 +170,98 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
 
 }]);
 
+/**
+ * This is a factory for an $response to access the skill items on the server
+ */
+cv.factory('Skills', function($resource){
+    return $resource('http://127.0.0.1/tech-rating/api/default/ratingitem', {}, {
+        query: {method:'GET', params:{}, isArray:true},
+    });
+});
 
 /**
  * Controller for the skill tab
  * This is not ready for now
  */
-cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
+cv.controller('SkillCtrl', ['$scope', 'Skills', function($scope, Skills) {
 
-//    $http.get('http://127.0.0.1/tech-rating/api/default/ratingitem')
-//    	.success(function(data, status, headers, config) {
-//        $scope.ratingItems = data;
-//    })
-//    .error(function(data, status, headers, config) {
-//        alert("error while loading "+status);
-//    });
-//
-//    $scope.ratingItems = [];
-
-	//example data for development
-	$scope.ratingItems = [
-	       {
-		      "name" : "Wireshark",
-		      "category" : "tooling",
-		      "id" : 82,
-		   },
-		   {
-		      "name" : "WS/SOAP",
-		      "category" : "paradigm",
-		      "id" : 51,
-		   },
-		   {
-		      "name" : "XSLT",
-		      "category" : "prog",
-		      "id" : 165,
-		   },
-		   {
-		      "name" : "YourKit Profiler",
-		      "category" : "tooling",
-		      "id" : 83,
-		   },
-		   {
-		      "name" : "YouTrack",
-		      "description" : "http://www.jetbrains.com/youtrack/\n\nJetBrains Bugtracker mit Agile Project Management Support, etc...",
-		      "id" : 154,
-		   }
-	],
+    $scope.ratingItems = Skills.query(),
 	
     $scope.selection = 'prog';
-    $scope.cvSkills = {"49" : 1,
-                       "165" : 1};
+
+    $scope.skillHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertiese'};
+    $scope.skillLevels = {
+    						"beginner": 1,
+    						"advanced": 2,
+    						"expert": 3
+    					 };    					
+    
+    /**
+     * Sets the Skill for an items.
+     * @param itemId the id of the item
+     * @param skillKey the string key of the skill level, e.g. 'beginner'
+     */
+    $scope.setSkill = function(itemId, skillKey) {
+    	$scope.cv['skills'][itemId] = $scope.skillLevels[skillKey];
+    }
+
+    /**
+     * Removes the the skill from the item
+     * @param itemId the id of the item
+     */
+    $scope.removeSkill = function(itemId) {
+    	delete $scope.cv['skills'][itemId];
+    }
+
+    /**
+     * Filter for the elements which are 
+     * selected in the skill boxes
+     * @param skillLevel The skill selvel of the box
+     */
+    $scope.bySkillSelection = function(skillLevel) {
+        return function(item) {
+        	return $scope.cv['skills'][item.id] == $scope.skillLevels[skillLevel];  
+        }
+    }
 
     /**
      * Filter for filtering by category
      */
     $scope.byCategory = function(category) {
         return function(item) {
-            return item.category == category;
+            return item.category == category &&
+            	! $scope.cv['skills'][item.id] ;
         }
     }
     
     /**
-     * Filter for fill the different skill boxes
+     * enable drag'n drop in the boxes using jquery-
      */
-    $scope.byBox= function(skillselection) {
-        return function(item) {
-            return item.id == category;
-        }
+    $scope.init = function() {
+	    $( "#all-items-box, #beginner, #advanced, #expert" ).sortable({
+	    	connectWith: "#all-items-box, #beginner, #advanced, #expert",
+	   	 	cursor: "move",
+	    }).disableSelection()
+	    
+	    $("#beginner, #advanced, #expert").droppable({
+	        drop: function(event, ui) {
+        		var skill= $(this).attr('id'); // we use the calling box id as skill name
+	        	$scope.$apply( function() {
+	        		var idDraggable = ui.draggable.attr('id').substring("skill_item_".length);
+	        		$scope.setSkill(idDraggable, skill);
+	        	})
+	        }	    	
+	    });
+	    $("#all-items-box").droppable({
+	        drop: function(event, ui) {
+	        	$scope.$apply( function() {
+		            var idDraggable = ui.draggable.attr('id').substring("skill_item_".length);
+		            $scope.removeSkill(idDraggable);
+	        	})
+	        }	    	
+	    });
     }
     
-    /**
-     * enable drag'n drop in the boxes
-     */
-    $( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
-    	connectWith: "#all-items-box, #beginner-box, #advanced-box, #expert-box",
-   	 	cursor: "move",
-   	 	update: function(event, ui) {
-   	 		console.log(ui.item);
-   	 	},
-    }).disableSelection()
-
 }]);
 
 /**
