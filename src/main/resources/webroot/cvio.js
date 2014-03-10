@@ -15,8 +15,10 @@ cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
     $http.get('/api/cv/cvs')
         .success(function(data, status, headers, config) {
             $scope.cvs = data;
-        });        
-
+        })
+        .error(function(data, status, headers, config) {
+            alert("error while loading "+status);
+        });
 }]);
 
 
