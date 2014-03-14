@@ -6,22 +6,29 @@ Web application for management of skills and personal cv's.
 
 
 .deb packaging
-===============
+-----------------
+It is easy to create a .deb package of the application. This
+package was tested under ubunut 13.10 and should work with others,
+but it is faw away from being an debian-policy complient package.
 
 To create a debian package do the following:
 ```
-git checkout debian
-git merge master     #if you have changes in master
-mvn clean package
-dpkg-buildpackage
+git checkout debian     # change to the debian branch
+git merge master        # if you have changes in master
+mvn clean package       # build the java package *
+dpkg-buildpackage       # build the debian package
 ```
 
-(It would be better cleaner to trigger the maven build
+(* It would be better cleaner to trigger the maven build
 from the debian build process, but because of the fakeroot
 this runs into an error)
 
 In the result, you will get a package in the parent directory.
-Install it with:
+
+.deb installation
+-------------------
+
+Install the package with:
         
 ```
 sudo dpkg -i ../cvio_0.1.0_all.deb
