@@ -30,6 +30,11 @@ public class Skill {
     private DateTime creationTime;
 
     /**
+     * The id of the Skill.
+     */
+    private String id;
+
+    /**
      * returns the name.
      * 
      * @return the name
@@ -99,5 +104,23 @@ public class Skill {
      */
     public void setCreationDate(final DateTime theTime) {
         this.creationTime = theTime;
+    }
+
+    /**
+     * Sets the id.
+     * 
+     * @param theId the skill id
+     */
+    public void setId(final String theId) {
+        this.id = theId;
+    }
+
+    /**
+     * Returns the id.
+     * 
+     * @return the skill id
+     */
+    public String getId() {
+        return this.id;
     }
 }

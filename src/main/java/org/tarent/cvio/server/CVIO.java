@@ -5,6 +5,8 @@ import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.cv.CVResource;
 import org.tarent.cvio.server.skill.SkillResource;
 
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.yammer.dropwizard.Service;
@@ -44,12 +46,19 @@ public class CVIO extends Service<CVIOConfiguration> {
     public void initialize(final Bootstrap<CVIOConfiguration> bootstrap) {
         bootstrap.setName("cvio server");
 
-        /**
+        /*
          * The Assets Bundle enables surfing of static web from the /webroot
          * directory with the classpath, provides in the / root directory of the
          * service
          */
         bootstrap.addBundle(new AssetsBundle("/webroot/", "/"));
+
+        /*
+         * configure proper date serialisation for joda time
+         */
+        bootstrap.getObjectMapperFactory().registerModule(new JodaModule());
+        bootstrap.getObjectMapperFactory().setDateFormat(
+                new ISO8601DateFormat());
     }
 
     /**

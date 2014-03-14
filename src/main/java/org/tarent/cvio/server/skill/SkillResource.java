@@ -55,16 +55,16 @@ public class SkillResource {
     }
 
     /**
-     * Returns a skill by its name.
+     * Returns a skill by its id.
      * 
-     * @param theName the skill name
+     * @param theId the skill id
      * @return the skill
      */
     @GET()
-    @Path("/skills/{name}")
+    @Path("/skills/{id}")
     @Timed
-    public Response getSkillByName(@PathParam("name") final String theName) {
-        Skill skill = skillDB.getSkillByName(theName);
+    public Response getSkillByid(@PathParam("id") final String theId) {
+        Skill skill = skillDB.getSkillById(theId);
         if (skill == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
@@ -81,7 +81,7 @@ public class SkillResource {
     @Path("/skills")
     @Timed
     public Response createSkill(final Skill newSkill) {
-        if (skillDB.getSkillByName(newSkill.getName()) != null) {
+        if (skillDB.getSkillById(newSkill.getName()) != null) {
             return Response
                     .status(Status.CONFLICT)
                     .entity("Skill name does already exist "
