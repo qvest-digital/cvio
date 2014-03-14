@@ -3,6 +3,16 @@ cvmanager [![Build Status](https://travis-ci.org/tarent/cvio.png)](https://travi
 
 Web application for management of skills and personal cv's. 
 
+Building and running the service
+---------------------------------
+You need __maven__ (>=2.2) and a __jdk__ (>=7).
+```
+git clone https://github.com/tarent/cvio.git
+cd cvio
+mvn package
+java -jar target/cvserver-*.jar server config.yaml 
+firefox http://127.0.0.1:8080
+```
 
 
 .deb packaging
