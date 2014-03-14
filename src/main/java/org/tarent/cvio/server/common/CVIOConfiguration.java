@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 
 /**
- * This ist the application configuration for cvio.
+ * This is the application configuration for cvio. It is automatically created
+ * and filled by dropwizard, reading the configuration file supplied at startup.
  * 
  * @author smancke
  */
@@ -27,7 +28,7 @@ public class CVIOConfiguration extends Configuration {
     private String uriPrefix;
 
     /**
-     * to which port addess shoudl eslasticsearch bind, if http is enabled (e.g.
+     * To which address should eslasticsearch bind, if http is enabled (e.g.
      * 127.0.0.1, 0.0.0.0)?
      */
     @NotEmpty
@@ -60,7 +61,7 @@ public class CVIOConfiguration extends Configuration {
     }
 
     /**
-     * to which port addess shoudl eslasticsearch bind, if http is enabled (e.g.
+     * to which addess should eslasticsearch bind, if http is enabled (e.g.
      * 127.0.0.1, 0.0.0.0)?
      * 
      * @return the address to bind

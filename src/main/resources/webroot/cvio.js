@@ -1,89 +1,90 @@
-var cv = angular.module('cv', []);
 
-$(function() {
-$( "#all-items-box, #beginner-box, #advanced-box, #expert-box" ).sortable({
-	 connectWith: "#all-items-box, #beginner-box, #advanced-box, #expert-box",
-	 cursor: "move",
-	 update: function(event, ui) {
-         console.log(ui.item);
-     },
-}).disableSelection();
-});
+/**
+ * the angular main module for the cv application
+ */
+var cv = angular.module('cvio', ['ngResource']);
 
+/**
+ * The controller for List view of the application
+ */
 cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
-    $scope.cvs =  { };
 
+	$scope.cvs =  { };
+
+    // just load the list of all cvs into $scope.cvs
     $http.get('/api/cv/cvs')
         .success(function(data, status, headers, config) {
             $scope.cvs = data;
-        });        
-}]);
-
-
-cv.controller('SkillCtrl', ['$scope', '$http', function($scope, $http) {
-
-    $scope.ratingItems = [];
-    $scope.selection = 'prog';
-
-    $scope.byCategory = function(category) {
-        return function(item) {
-            return item.category == category;
-        }
-    }
-
-    $http.get('http://127.0.0.1/tech-rating/api/default/ratingitem')
-        .success(function(data, status, headers, config) {
-            $scope.ratingItems = data;
         })
         .error(function(data, status, headers, config) {
             alert("error while loading "+status);
         });
-    
-        
 }]);
 
+
+/**
+ * This is the main controller for the cv.
+ */
 cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
 
-    $scope.modified = false;
-    $scope.cv =  { 
+    /** 
+     * The cv model.
+     */
+    $scope.cv =  {
+    	'skills' : {},
         'educations': [ {} ],
         'jobs': [
             {},           
         ],
     };
+
+	/**
+	 * Flag to show the user, that the data was modified and may be saved.
+	 */
+    $scope.modified = false;
+    
+    /**
+     * This fields indicated, that the next call of watch() should be ignored
+     * because is was not a user action, but caused by a loading roundtrip.
+     * This is nor a clean solution.
+     */
     $scope.ignoreNextWatch = false;
 
+    /**
+     * Event hook: Add's an entry to the education list.
+     */
     $scope.addEducation = function() {
         $scope.cv.educations.unshift({});
     }
-
-    $scope.deleteFromCollection = function(collection, item) {
-        var pos = -1;
-        for (var i=0; i<collection.length; i++) {
-            if (job == collection[i]) {
-                pos = i;
-                break;
-            }
-        }
-        if (pos != -1) {
-            collection.splice(pos, 1);
-        }            
-    }
-
+    
+    /**
+     * Event hook: Removes the supplied education from the list
+     */
     $scope.deleteEducation = function(education) {
         $scope.deleteFromCollection($scope.cv.educations, education);
     }
 
+    /**
+     * Event hook: Add's an entry to the job list.
+     */
     $scope.addJob = function() {
         $scope.cv.jobs.unshift({});
     }
 
+    /**
+     * Event hook: Removes the supplied job from the list
+     */
     $scope.deleteJob = function(job) {
         $scope.deleteFromCollection($scope.cv.jobs, education);
     }
-        
+
+    /**
+     * The $watch method is an angular method, which is called,
+     * whenever the data under the selected path (here 'cv') has changed.
+     * We use this here only to show the user, that he/she has to save.
+     */
     $scope.$watch('cv', function(newValue, oldValue) {
-        if ($scope.ignoreNextWatch) {
+        if ($scope.ignoreNextWatch) { // if we expect to get called because of loading
             $scope.ignoreNextWatch = false;
             return;
         }
@@ -92,6 +93,9 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
         }
     }, true);        
 
+    /**
+     * Loads the cv data model from the supplied uri
+     */
     $scope.loadUri = function(uri) {
         $http.get(uri)
             .success(function(data, status, headers, config) {
@@ -105,6 +109,11 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
             });
     }
 
+    /**
+     * Saves the cv data.
+     * If the currentUri is known, this will be an update of the cv.
+     * Otherwise we create a new one.
+     */
     $scope.save = function() {
         if ($scope.currentUri) { // update
             $http.put($scope.currentUri, $scope.cv)
@@ -119,7 +128,9 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
             $http.post('/api/cv/cvs', $scope.cv)
                 .success(function(data, status, headers, config) {
                     $scope.ignoreNextWatch = true;
-                    $scope.loadUri(headers('Location'));
+                    // Load the newly created cv data from the server
+                    // supplied with the http location header
+                    $scope.loadUri(headers('Location'));                    
                 })
                 .error(function(data, status, headers, config) {
                     alert("error while saving "+status);
@@ -127,6 +138,33 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
         }
     };
 
+    /**
+     * Helper Method:
+     * Deletes one item entry from the supplied list.
+     * Maybe there is a shorter way in JavaScript
+     */
+    $scope.deleteFromCollection = function(collection, item) {
+    	// find the right item
+        var pos = -1;       
+        for (var i=0; i<collection.length; i++) {
+            if (item == collection[i]) {
+                pos = i;
+                break;
+            }
+        }
+        // if we found it: delete it from the collection
+        if (pos != -1) {
+            collection.splice(pos, 1);
+        }            
+    }
+
+    /**
+     * Basic initialisation:
+     * We search for the ref parameter in the browser locationURI.
+     * If is was supplied, we use this for loading of the cv.
+     * Attention: The parsing of the location string is implemented very simple, 
+     * so that it will only work, it is the last parameter in the string!
+     */
     var cvref = location.search.split('ref=')[1];
     if (cvref) {
         $scope.loadUri(cvref);
@@ -134,6 +172,104 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
 
 }]);
 
+/**
+ * This is a factory for an $response to access the skill items on the server
+ */
+cv.factory('Skills', function($resource){
+    return $resource('http://127.0.0.1/tech-rating/api/default/ratingitem', {}, {
+        query: {method:'GET', params:{}, isArray:true},
+    });
+});
+
+/**
+ * Controller for the skill tab
+ * This is not ready for now
+ */
+cv.controller('SkillCtrl', ['$scope', 'Skills', function($scope, Skills) {
+
+    $scope.ratingItems = Skills.query(),
+	
+    $scope.selection = 'prog';
+
+    $scope.skillHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertiese'};
+    $scope.skillLevels = {
+    						"beginner": 1,
+    						"advanced": 2,
+    						"expert": 3
+    					 };    					
+    
+    /**
+     * Sets the Skill for an items.
+     * @param itemId the id of the item
+     * @param skillKey the string key of the skill level, e.g. 'beginner'
+     */
+    $scope.setSkill = function(itemId, skillKey) {
+    	$scope.cv['skills'][itemId] = $scope.skillLevels[skillKey];
+    }
+
+    /**
+     * Removes the the skill from the item
+     * @param itemId the id of the item
+     */
+    $scope.removeSkill = function(itemId) {
+    	delete $scope.cv['skills'][itemId];
+    }
+
+    /**
+     * Filter for the elements which are 
+     * selected in the skill boxes
+     * @param skillLevel The skill selvel of the box
+     */
+    $scope.bySkillSelection = function(skillLevel) {
+        return function(item) {
+        	return $scope.cv['skills'][item.id] == $scope.skillLevels[skillLevel];  
+        }
+    }
+
+    /**
+     * Filter for filtering by category
+     */
+    $scope.byCategory = function(category) {
+        return function(item) {
+            return item.category == category &&
+            	! $scope.cv['skills'][item.id] ;
+        }
+    }
+    
+    /**
+     * enable drag'n drop in the boxes using jquery-
+     */
+    $scope.init = function() {
+	    $( "#all-items-box, #beginner, #advanced, #expert" ).sortable({
+	    	connectWith: "#all-items-box, #beginner, #advanced, #expert",
+	   	 	cursor: "move",
+	    }).disableSelection()
+	    
+	    $("#beginner, #advanced, #expert").droppable({
+	        drop: function(event, ui) {
+        		var skill= $(this).attr('id'); // we use the calling box id as skill name
+	        	$scope.$apply( function() {
+	        		var idDraggable = ui.draggable.attr('id').substring("skill_item_".length);
+	        		$scope.setSkill(idDraggable, skill);
+	        	})
+	        }	    	
+	    });
+	    $("#all-items-box").droppable({
+	        drop: function(event, ui) {
+	        	$scope.$apply( function() {
+		            var idDraggable = ui.draggable.attr('id').substring("skill_item_".length);
+		            $scope.removeSkill(idDraggable);
+	        	})
+	        }	    	
+	    });
+    }
+    
+}]);
+
+/**
+ * Directive to make contenteditable fields work with a 
+ * ng-model attribute.
+ */
 cv.directive('contenteditable', function() {                                                                                                      
     return {                                                                                                                                      
         require: 'ngModel',                                                                                                                       
@@ -153,6 +289,9 @@ cv.directive('contenteditable', function() {
     }                                                                                                                                             
 });
 
+/**
+ * Directive for simple formular fields.
+ */
 cv.directive('cvShortField', function() {
   return {
       restrict: 'E',
@@ -171,6 +310,9 @@ cv.directive('cvShortField', function() {
   }
 });
 
+/**
+ * Directive for form rows using a content editable
+ */
 cv.directive('cvCeFormRow', function() {
   return {
       restrict: 'E',
@@ -187,6 +329,10 @@ cv.directive('cvCeFormRow', function() {
   }
 });
 
+/**
+ * Simple function to generate the option-list for the years select box
+ * @returns {String}
+ */
 function generateOptionYearList() {
     var out = '';
     for (var i=new Date().getFullYear(); i>=1980; i--) {
@@ -194,6 +340,10 @@ function generateOptionYearList() {
     }
     return out;
 }
+
+/**
+ * Directive for the compound date field of month an year.
+ */
 cv.directive('cvDateField', function() {
     return {
       restrict: 'E',

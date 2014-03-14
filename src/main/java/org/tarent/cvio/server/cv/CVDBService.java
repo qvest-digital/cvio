@@ -16,7 +16,7 @@ import org.tarent.cvio.server.common.ESNodeManager;
 import com.google.inject.Inject;
 
 /**
- * elasticsearch based implementation of the CVDB.
+ * Elasticsearch based implementation of the CVDB.
  * 
  * @author smancke
  */
@@ -50,9 +50,6 @@ public class CVDBService implements CVDB {
     @Inject
     public CVDBService(final ESNodeManager esNode) {
         es = esNode;
-
-        // es = new TransportClient().addTransportAddress(new
-        // InetSocketTransportAddress("127.0.0.1", 9300));
     }
 
     @Override
@@ -69,9 +66,11 @@ public class CVDBService implements CVDB {
             Map<String, String> hitEntry = new HashMap<String, String>();
             Map<String, Object> source = hit.getSource();
             for (String key : source.keySet()) {
-                hitEntry.put(key,
-                        source.get(key) == null ? null : source.get(key)
-                                .toString());
+                if (source.get(key) != null) {
+                    hitEntry.put(key, source.get(key).toString());
+                } else {
+                    hitEntry.put(key, null);
+                }
             }
             hitEntry.put("id", hit.getId());
             result.add(hitEntry);

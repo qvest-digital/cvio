@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ES client manager creating a local es node.
+ * ES client manager creating a local es node. Here we start an embedded elastic
+ * search server. For security reasons, this elasicsearch does not open the http
+ * port, if not wanted.
  * 
  * @author smancke
  */
@@ -60,7 +62,7 @@ public class ESNodeManagerImpl implements ESNodeManager {
 
     @Override
     public void stop() throws Exception {
-        logger.info("starting new Elasticsearch cvio node with cluster name 'cvio'");
+        logger.info("stoping Elasticsearch");
         esNode.close();
     }
 

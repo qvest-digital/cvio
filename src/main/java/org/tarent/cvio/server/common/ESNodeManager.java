@@ -6,14 +6,16 @@ import com.yammer.dropwizard.lifecycle.Managed;
 
 /**
  * Interface for providing access to the elasticsearch client.
+ * 
  * @author smancke
  */
 public interface ESNodeManager extends Managed {
 
-	/**
-	 * returns an es client instance.
-	 * @return the client
-	 */
-	Client client();
-	
+    /**
+     * returns an es client instance.
+     * 
+     * @return the client
+     */
+    Client client();
+
 }

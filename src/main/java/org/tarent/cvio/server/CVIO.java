@@ -35,21 +35,47 @@ public class CVIO extends Service<CVIOConfiguration> {
         }
     }
 
+    /**
+     * Initialisation of the service.
+     * 
+     * @param bootstrap The Dropwizard Bootstrap Instance
+     */
     @Override
     public void initialize(final Bootstrap<CVIOConfiguration> bootstrap) {
         bootstrap.setName("cvio server");
+
+        /**
+         * The Assets Bundle enables surfing of static web from the /webroot
+         * directory with the classpath, provides in the / root directory of the
+         * service
+         */
         bootstrap.addBundle(new AssetsBundle("/webroot/", "/"));
     }
 
+    /**
+     * The run method does the essential service configuration. Here we add all
+     * Resources, Management Classes and HealthChecks.
+     * 
+     * @param configuration the configuration
+     * @param environment the dropwizard environment
+     */
     @Override
     public void run(final CVIOConfiguration configuration,
             final Environment environment) {
+
+        // We are using Googe Guice for creating and wiring of our instances
+        // see https://code.google.com/p/google-guice/
         Injector injector = Guice.createInjector(new CVIOGuiceModule(
                 configuration));
 
+        // Elasticsearch Manager
         environment.manage(injector.getInstance(ESNodeManager.class));
+
+        // Our Resou rces
         environment.addResource(injector.getInstance(CVResource.class));
         environment.addResource(injector.getInstance(SkillResource.class));
+
+        // An example HealthCheck
         environment.addHealthCheck(new Health());
     }
 }
