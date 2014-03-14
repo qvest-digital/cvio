@@ -1,4 +1,4 @@
-cvmanager
+cvmanager [![Build Status](https://travis-ci.org/tarent/cvio.png)](https://travis-ci.org/tarent/cvio)
 =========
 
 Web application for management of skills and personal cv's. 
