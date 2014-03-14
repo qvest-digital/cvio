@@ -46,6 +46,11 @@ sudo apt-get install -f      #for the dependencies
 ```
 
 After that, you have an installed and running application on port __5050__.
+At port __5051__ the service has opened a monitoring interface. It is secured my
+username/password from the config.yaml 
+
+managing the service 
+-----------------------
 Starting and stoping ist managed by the linux daemon-tools, as follows:
 
 ```
@@ -65,3 +70,4 @@ dpkg -L cvio    # shows you the installed files
 /etc/cvio/deamon_options    # JVM settings
 /etc/cvio/config.yaml       # service configuration
 ```
+
