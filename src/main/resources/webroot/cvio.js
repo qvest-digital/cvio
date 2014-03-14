@@ -37,6 +37,11 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
             {},           
         ],
     };
+    
+    /**
+     * Flag to show if http request is running
+     */
+    $scope.isBusy = false;
 
 	/**
 	 * Flag to show the user, that the data was modified and may be saved.
@@ -103,8 +108,10 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 $scope.currentUri = uri;
                 $scope.ignoreNextWatch = true;
                 $scope.modified = false;
+                $scope.isBusy = false;
             })
             .error(function(data, status, headers, config) {
+            	$scope.isBusy = false;
                 alert("error while loading "+status);
             });
     }
@@ -115,27 +122,34 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Otherwise we create a new one.
      */
     $scope.save = function() {
-        if ($scope.currentUri) { // update
-            $http.put($scope.currentUri, $scope.cv)
-                .success(function(data, status, headers, config) {
-                    $scope.modified = false;
-                })
-                .error(function(data, status, headers, config) {
-                    alert("error while saving "+status);
-                });
-
-        } else { // create new
-            $http.post('/api/cv/cvs', $scope.cv)
-                .success(function(data, status, headers, config) {
-                    $scope.ignoreNextWatch = true;
-                    // Load the newly created cv data from the server
-                    // supplied with the http location header
-                    $scope.loadUri(headers('Location'));                    
-                })
-                .error(function(data, status, headers, config) {
-                    alert("error while saving "+status);
-                });
-        }
+    	//preventive dual cv creation
+    	if(!$scope.isBusy) {
+    		$scope.isBusy = true;
+	        if ($scope.currentUri) { // update
+	            $http.put($scope.currentUri, $scope.cv)
+	                .success(function(data, status, headers, config) {
+	                    $scope.modified = false;
+	                    $scope.isBusy = false;
+	                })
+	                .error(function(data, status, headers, config) {
+	                	$scope.isBusy = false;
+	                    alert("error while saving "+status);
+	                });
+	
+	        } else { // create new
+	            $http.post('/api/cv/cvs', $scope.cv)
+	                .success(function(data, status, headers, config) {
+	                    $scope.ignoreNextWatch = true;
+	                    // Load the newly created cv data from the server
+	                    // supplied with the http location header
+	                    $scope.loadUri(headers('Location'));                    
+	                })
+	                .error(function(data, status, headers, config) {
+	                	$scope.isBusy = false;
+	                    alert("error while saving "+status);
+	                });
+	        }
+    	}
     };
 
     /**
