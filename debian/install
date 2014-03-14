@@ -1,4 +1,3 @@
 target/cvserver-0.1.0.jar	usr/share/cvio
 
-config.yaml	etc/cvio
-
+debian/etc/*                    etc/cvio

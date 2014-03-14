@@ -8,6 +8,6 @@ Homepage: https://github.com/tarent/cvio
 
 Package: cvio
 Architecture: all
-Depends: openjdk-7-jre,
+Depends: openjdk-7-jre, daemontools (>> 1:0.76), daemontools-run (>> 1:0.76),
     ${misc:Depends}
-Description: cv and skill management application
+Description: cv and skill management web application
