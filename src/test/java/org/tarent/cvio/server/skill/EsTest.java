@@ -38,18 +38,26 @@ public class EsTest {
 
             @Override
             public boolean isElasticsearchEnableHttp() {
-                return false;
+                return true;
+            }
+
+            @Override
+            public String getElasticsearchBindHost() {
+                return "127.0.0.1";
             }
         });
 
         esNode.start();
-
     }
 
     @After
     public void tearDownEs() throws Exception {
         esNode.stop();
         FileUtils.deleteDirectory(dataDir);
+    }
+
+    protected void refreshIndexes() {
+        esNode().client().admin().indices().prepareRefresh().execute().actionGet();
     }
 
     protected ESNodeManager esNode() {
