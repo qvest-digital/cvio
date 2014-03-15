@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.tarent.cvio.server.ConfigurationHelper;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 
 public class CVResourceTest {
@@ -38,7 +39,7 @@ public class CVResourceTest {
     public void testCreateCV() throws URISyntaxException {
 
         // given
-        CVIOConfiguration aConfiguration = getConfiguration();
+        CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
         CVResource aRessource = new CVResource(dbMock, aConfiguration);
         Mockito.when(dbMock.createCV(DEMO_JSON)).thenReturn(CV_ID);
 
@@ -53,13 +54,13 @@ public class CVResourceTest {
         assertEquals(201, httpResponse.getStatus());
 
         // and the location header
-        locationHeaderIsValid(aConfiguration, httpResponse);
+        ConfigurationHelper.locationHeaderIsValid(aConfiguration, httpResponse, CV_ID);
     }
 
     @Test
     public void getCV() {
         // given
-        CVIOConfiguration aConfiguration = getConfiguration();
+        CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
         CVResource aRessource = new CVResource(dbMock, aConfiguration);
         Mockito.when(dbMock.getCVById(CV_ID)).thenReturn(DEMO_JSON);
 
@@ -73,7 +74,7 @@ public class CVResourceTest {
     @Test
     public void getAllCVs() {
         // given
-        CVIOConfiguration aConfiguration = getConfiguration();
+        CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
         CVResource aRessource = new CVResource(dbMock, aConfiguration);
         String[] someFields = { "demo" };
 
@@ -115,23 +116,6 @@ public class CVResourceTest {
                         put("name", "Bob");
                     }
                 });
-            }
-        };
-    }
-
-    private void locationHeaderIsValid(CVIOConfiguration aConfiguration,
-            Response httpResponse) {
-        String locationHeader = httpResponse.getMetadata().get("Location")
-                .get(0).toString();
-        assertTrue(locationHeader.startsWith(aConfiguration.getUriPrefix()));
-        assertTrue(locationHeader.endsWith(CV_ID));
-    }
-
-    private CVIOConfiguration getConfiguration() {
-        return new CVIOConfiguration() {
-            @Override
-            public String getUriPrefix() {
-                return "http://example.org:8080/bla";
             }
         };
     }

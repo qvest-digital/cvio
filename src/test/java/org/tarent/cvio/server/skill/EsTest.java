@@ -38,7 +38,7 @@ public class EsTest {
 
             @Override
             public boolean isElasticsearchEnableHttp() {
-                return true;
+                return false;
             }
 
             @Override

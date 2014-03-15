@@ -10,6 +10,11 @@ import org.joda.time.DateTime;
 public class Skill {
 
     /**
+     * The id of the Skill.
+     */
+    private String id;
+
+    /**
      * the name.
      */
     private String name;
@@ -28,11 +33,6 @@ public class Skill {
      * creation time of the item.
      */
     private DateTime creationTime;
-
-    /**
-     * The id of the Skill.
-     */
-    private String id;
 
     /**
      * returns the name.

@@ -12,7 +12,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+
+import org.tarent.cvio.server.common.CVIOConfiguration;
 
 import com.google.inject.Inject;
 import com.yammer.metrics.annotation.Timed;
@@ -22,7 +23,7 @@ import com.yammer.metrics.annotation.Timed;
  * 
  * @author smancke
  */
-@Path("/skill")
+@Path("/skills")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SkillResource {
@@ -33,13 +34,20 @@ public class SkillResource {
     private SkillDB skillDB;
 
     /**
+     * the global configuration.
+     */
+    private CVIOConfiguration configuration;
+
+    /**
      * Create the resource.
      * 
      * @param theSkillDB skill db implementation
+     * @param cvioConfiguration
      */
     @Inject
-    public SkillResource(final SkillDB theSkillDB) {
+    public SkillResource(final SkillDB theSkillDB, CVIOConfiguration theConfiguration) {
         this.skillDB = theSkillDB;
+        this.configuration = theConfiguration;
     }
 
     /**
@@ -48,7 +56,6 @@ public class SkillResource {
      * @return list of skills
      */
     @GET()
-    @Path("/skills")
     @Timed
     public List<Skill> getAllSkills() {
         return skillDB.getAllSkills();
@@ -61,14 +68,12 @@ public class SkillResource {
      * @return the skill
      */
     @GET()
-    @Path("/skills/{id}")
+    @Path("/{id}")
     @Timed
-    public Response getSkillByid(@PathParam("id") final String theId) {
+    public Skill getSkillByid(@PathParam("id") final String theId) {
         Skill skill = skillDB.getSkillById(theId);
-        if (skill == null) {
-            return Response.status(Status.NOT_FOUND).build();
-        }
-        return Response.ok(skill).build();
+        System.out.println("skill: " + skill);
+        return skill;
     }
 
     /**
@@ -76,26 +81,15 @@ public class SkillResource {
      * 
      * @param newSkill the skill to create
      * @return http response object
+     * @throws URISyntaxException in case of a miss configuration
      */
     @POST()
-    @Path("/skills")
     @Timed
-    public Response createSkill(final Skill newSkill) {
-        if (skillDB.getSkillById(newSkill.getName()) != null) {
-            return Response
-                    .status(Status.CONFLICT)
-                    .entity("Skill name does already exist "
-                            + newSkill.getName()).build();
-        }
-        URI uri = null;
-        try {
-            uri = new URI("/bla/" + newSkill.getName());
-        } catch (URISyntaxException e) {
-
-            throw new RuntimeException(e);
-        }
-        skillDB.createSkill(newSkill);
-        return Response.created(uri).build();
+    public Response createSkill(final Skill newSkill) throws URISyntaxException {
+        String id = skillDB.createSkill(newSkill);
+        return Response
+                .created(new URI(configuration.getUriPrefix() + "/skills/" + id))
+                .build();
     }
 
 }

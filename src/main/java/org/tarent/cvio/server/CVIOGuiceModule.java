@@ -45,7 +45,7 @@ public class CVIOGuiceModule extends AbstractModule {
         bind(CVIOConfiguration.class).toInstance(configuration);
 
         // The Elasticsearch manager
-        bind(ESNodeManager.class).to(ESNodeManagerImpl.class);
+        bind(ESNodeManager.class).to(ESNodeManagerImpl.class).asEagerSingleton();
 
         // Our /cv ressource and the corresponding database
         bind(CVResource.class);
