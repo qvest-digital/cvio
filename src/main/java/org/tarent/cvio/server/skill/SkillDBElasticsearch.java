@@ -92,7 +92,6 @@ public class SkillDBElasticsearch implements SkillDB {
         String sourceString = es.client()
                 .prepareGet(INDEX_SKILL, TYPE_SKILL, id).execute()
                 .actionGet().getSourceAsString();
-        System.out.println(sourceString);
         return mapper.readValue(sourceString, Skill.class);
     }
 

@@ -72,7 +72,6 @@ public class SkillResource {
     @Timed
     public Skill getSkillByid(@PathParam("id") final String theId) {
         Skill skill = skillDB.getSkillById(theId);
-        System.out.println("skill: " + skill);
         return skill;
     }
 
