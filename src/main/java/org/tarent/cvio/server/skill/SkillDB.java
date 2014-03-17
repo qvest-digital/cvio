@@ -20,16 +20,17 @@ public interface SkillDB {
     /**
      * returns a skill by name.
      * 
-     * @param name name of the skill
+     * @param id of the skill
      * @return the skill
      */
-    Skill getSkillByName(String name);
+    Skill getSkillById(String id);
 
     /**
      * creates a skill.
      * 
      * @param newSkill the new skill to create
+     * @return returns the skill id
      */
-    void createSkill(Skill newSkill);
+    String createSkill(Skill newSkill);
 
 }

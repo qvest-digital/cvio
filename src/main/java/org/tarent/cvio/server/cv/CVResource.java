@@ -120,9 +120,7 @@ public class CVResource {
         // Use JsonNode for json handling, if needed
         String cvid = cvdb.createCV(content);
         return Response
-                .created(
-                        new URI(configuration.getUriPrefix() + "/cv/cvs/"
-                                + cvid))
+                .created(new URI(configuration.getUriPrefix() + "/cv/cvs/" + cvid))
                 .build();
     }
 }

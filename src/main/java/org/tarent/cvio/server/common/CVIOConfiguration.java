@@ -61,12 +61,16 @@ public class CVIOConfiguration extends Configuration {
     }
 
     /**
-     * to which addess should eslasticsearch bind, if http is enabled (e.g.
-     * 127.0.0.1, 0.0.0.0)?
+     * to which addess should eslasticsearch bind, if http is enabled (default
+     * is 127.0.0.1, 0.0.0.0)?
      * 
      * @return the address to bind
      */
     public String getElasticsearchBindHost() {
+        if (elasticsearchBindHost == null) {
+            return "127.0.0.1";
+        }
+
         return elasticsearchBindHost;
     }
 

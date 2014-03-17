@@ -8,6 +8,8 @@ import org.elasticsearch.node.NodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 /**
  * ES client manager creating a local es node. Here we start an embedded elastic
  * search server. For security reasons, this elasicsearch does not open the http
@@ -38,6 +40,7 @@ public class ESNodeManagerImpl implements ESNodeManager {
      * 
      * @param cfg the global service configuration
      */
+    @Inject
     public ESNodeManagerImpl(final CVIOConfiguration cfg) {
         this.configuration = cfg;
     }

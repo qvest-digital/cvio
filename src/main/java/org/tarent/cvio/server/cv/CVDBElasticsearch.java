@@ -20,12 +20,13 @@ import com.google.inject.Inject;
  * 
  * @author smancke
  */
-public class CVDBService implements CVDB {
+public class CVDBElasticsearch implements CVDB {
 
     /**
      * the logger.
      */
-    private final Logger logger = LoggerFactory.getLogger(CVDBService.class);
+    private final Logger logger = LoggerFactory
+            .getLogger(CVDBElasticsearch.class);
 
     /**
      * The eslasticsearch type for CV documents.
@@ -48,7 +49,7 @@ public class CVDBService implements CVDB {
      * @param esNode the access to elasticsearch
      */
     @Inject
-    public CVDBService(final ESNodeManager esNode) {
+    public CVDBElasticsearch(final ESNodeManager esNode) {
         es = esNode;
     }
 
