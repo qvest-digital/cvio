@@ -23,8 +23,6 @@ but it is faw away from being an debian-policy complient package.
 
 To create a debian package do the following:
 ```
-git checkout debian     # change to the debian branch
-git merge master        # if you have changes in master
 mvn clean package       # build the java package *
 dpkg-buildpackage       # build the debian package
 ```
