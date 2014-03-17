@@ -1,0 +1,5 @@
+cvio (0.1.0) tarent; urgency=low
+
+  * First Debian package
+
+ -- Sebastian Mancke <s.mancke@tarent.de>  Fri, 05 Mar 2014 13:40:13 +0100

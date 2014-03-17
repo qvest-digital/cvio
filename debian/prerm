@@ -1,0 +1,10 @@
+#!/bin/sh
+# prerm script for cvio
+
+
+update-service --remove /etc/cvio/cvio
+sleep 2
+
+#DEBHELPER#
+
+exit 0

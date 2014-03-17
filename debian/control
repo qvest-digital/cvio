@@ -1,0 +1,13 @@
+Source: cvio
+Maintainer: Sebastian Mancke <s.mancke@tarent.de>
+Section: non-free/web
+Priority: optional
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 9)
+Homepage: https://github.com/tarent/cvio
+
+Package: cvio
+Architecture: all
+Depends: openjdk-7-jre, daemontools (>> 1:0.76), daemontools-run (>> 1:0.76),
+    ${misc:Depends}
+Description: cv and skill management web application
