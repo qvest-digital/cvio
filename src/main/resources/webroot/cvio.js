@@ -24,6 +24,8 @@ function deleteFromCollection(collection, item) {
  * Matches two strings ignoring case, and non characters
  */
 function fuzzyMatch(string1, string2) {
+	if (string1 == null || string2 == null)
+		return;
 	string1 = string1.replace(/[^a-z0-9]/gi, '');
 	string2 = string2.replace(/[^a-z0-9]/gi, '');
 	return string1.toLowerCase() == string2.toLowerCase(); 
@@ -63,7 +65,8 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     $scope.addSearchTerm = function(term) {
         for (var i=0; i<$scope.skillItems.length; i++) {
         	var item = $scope.skillItems[i];
-            if (fuzzyMatch(item.name, term)) {
+        	//console.log("fuzzyMatch("+item.name+", "+term+"): "+ fuzzyMatch(item.name, term));
+            if (fuzzyMatch(item.name, term)) {            	
             	$scope.searchSkillItems.push(item);
             	$scope.searchTerm = '';
                 break;
@@ -81,6 +84,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
 	    	var cvSkills = cvEntry.skills;
 	    	for (var i=0; i<$scope.searchSkillItems.length; i++) {
 	           	var skillItem = $scope.searchSkillItems[i];
+	           	//console.log(cvEntry.familyName + ', '+ JSON.stringify(cvSkills) +', ' + JSON.stringify(skillItem) + ': '+ cvSkills[skillItem.id]);
 	           	if (! cvSkills[skillItem.id] > 0 )
 	           		return false;
 	    	}

@@ -26,22 +26,29 @@
         </a>
       </div>
       <br/>
-
-      <div style="width: 400px;" class="pull-right" id="beginner">
-        <div ng-repeat="item in searchSkillItems"
-           class="skillItem pull-right">{{item.name}}
-           <small ng-click="removeSearchSkill(item)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
-        </div>
-      </div>            
-      <br><br>      
-      <cv-skill-entry submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
+	    <div class="container">
+	        <div class="row">
+		      <div style="width: 400px;" class="pull-right">
+		        <div ng-repeat="item in searchSkillItems"
+		           class="skillItem pull-right">{{item.name}}
+		           <small ng-click="removeSearchSkill(item)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
+		        </div>
+		      </div>            
+	       </div>
+	       <div class="row">	
+		      <cv-skill-entry submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
+		   </div>
+		</div>
       
+    <div class="container">
+     <div class="row">
       <table class="table table-striped">
         <thead>
           <tr>
             <th></th>
             <th>Name</th>
             <th>Vorname</th>
+            <th ng-repeat="item in searchSkillItems" style="text-align: right;">{{item.name}}</th>
           </tr>
         </thead>
         <tbody>
@@ -49,9 +56,14 @@
             <td><a href="cv.html?ref={{cv.ref}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>
+            <td ng-repeat="item in searchSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>            
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
+      
+    </div>
+    
   </body>
 </html>
