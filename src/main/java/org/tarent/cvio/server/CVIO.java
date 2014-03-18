@@ -1,6 +1,5 @@
 package org.tarent.cvio.server;
 
-import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.cv.CVResource;
@@ -14,18 +13,6 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import com.yammer.dropwizard.auth.Authenticator;
-import com.yammer.dropwizard.auth.CachingAuthenticator;
-import com.yammer.dropwizard.auth.basic.BasicAuthProvider;
-import com.yammer.dropwizard.auth.basic.BasicCredentials;
-import com.yammer.dropwizard.authenticator.LdapAuthenticator;
-import com.yammer.dropwizard.authenticator.LdapCanAuthenticate;
-import com.yammer.dropwizard.authenticator.LdapConfiguration;
-import com.yammer.dropwizard.authenticator.ResourceAuthenticator;
-import com.yammer.dropwizard.authenticator.healthchecks.LdapHealthCheck;
-import com.yammer.dropwizard.config.Configuration;
-
-
 
 /**
  * This is the central starting point for the cvio service. It is based on the
@@ -84,12 +71,11 @@ public class CVIO extends Service<CVIOConfiguration> {
     @Override
     public void run(final CVIOConfiguration configuration,
             final Environment environment) throws Exception {
-    
-    	// ldap config
-    	CVLdapAuthConf conf = new CVLdapAuthConf();
-    	LdapAuthenticator authenticator = new LdapAuthenticator(conf);
-    	//authenticator.authenticate(new BasicCredentials("user", "password"));
-    	
+
+        // ldap config
+        // CVLdapAuthConf conf = new CVLdapAuthConf();
+        // LdapAuthenticator authenticator = new LdapAuthenticator(conf);
+        // authenticator.authenticate(new BasicCredentials("user", "password"));
 
         // We are using Googe Guice for creating and wiring of our instances
         // see https://code.google.com/p/google-guice/
@@ -105,7 +91,7 @@ public class CVIO extends Service<CVIOConfiguration> {
 
         // An example HealthCheck
         environment.addHealthCheck(new Health());
-	    
+
     }
-    
+
 }
