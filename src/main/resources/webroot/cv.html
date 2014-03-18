@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link href="cv.css" rel="stylesheet" media="screen"/>
     <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
 
     <script src="lib/jquery.min.js"></script>
@@ -223,8 +224,8 @@
         </ul>
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body" style="min-height: 150px;">
-            <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byCategory(categorySelection)"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}</div>
+            <div ng-repeat="item in skillItems | filter:byCategory(categorySelection)"
+                 id="skill_item_{{item.id}}" class="skillItem">{{item.name}}</div>
           </div>
         </div>
       </div>
@@ -234,19 +235,12 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['beginner']}}</strong></span>
-              <span class="input-group pull-right" style="width: 180px;">
-                <form ng-submit="addNewSkill('beginner')">
-                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.beginner">
-                    <span class="input-group-btn">
-                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
-                    </span>
-                </form>
-              </span>
+              <cv-skill-entry submit-function="addNewSkill(newSkill.beginner, 'beginner')" ng-model="newSkill.beginner"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="beginner">
-                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('beginner')"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
-                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('beginner')"
+                  id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
             </div>            
@@ -257,20 +251,13 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['advanced'] }}</strong></span>
-              <span class="input-group pull-right" style="width: 180px;">
-                <form ng-submit="addNewSkill('advanced')">
-                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.advanced">
-                    <span class="input-group-btn">
-                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
-                    </span>
-                </form>
-              </span>
+              <cv-skill-entry submit-function="addNewSkill(newSkill.advanced, 'advanced')" ng-model="newSkill.advanced"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="advanced">
 
-                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('advanced')"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
-                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('advanced')"
+                    id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
             </div>            
@@ -281,20 +268,13 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['expert']}}</strong></span>
-              <span class="input-group pull-right" style="width: 180px;">
-                <form ng-submit="addNewSkill('expert', newSkill.expert)">
-                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.expert">
-                    <span class="input-group-btn">
-                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
-                    </span>
-                </form>
-              </span>
+              <cv-skill-entry submit-function="addNewSkill(newSkill.expert, 'expert')" ng-model="newSkill.expert"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="expert">
 
-                <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('expert')"
-                 style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
-                 <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('expert')"
+                    id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                 <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
             </div>            

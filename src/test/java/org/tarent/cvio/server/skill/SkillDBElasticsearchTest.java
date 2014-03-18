@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import java.util.List;
 
 import org.junit.Test;
+import org.tarent.cvio.server.EsTest;
 
 public class SkillDBElasticsearchTest extends EsTest {
 
@@ -20,7 +21,7 @@ public class SkillDBElasticsearchTest extends EsTest {
         String id = skillDB.createSkill(newSkill);
         assertNotNull(id);
 
-        // the I can retrieve it by its name later
+        // then I can retrieve it by its name later
         Skill retrievedSkill = skillDB.getSkillById(id);
         assertNotNull(retrievedSkill.getId());
         SkillHelper.skillsEqualWitoutId(newSkill, retrievedSkill);
@@ -39,7 +40,7 @@ public class SkillDBElasticsearchTest extends EsTest {
 
         refreshIndexes();
 
-        // the I can retrieve it by its name later
+        // then I can retrieve the list later
         List<Skill> retrievedSkills = skillDB.getAllSkills();
 
         assertEquals(3, retrievedSkills.size());

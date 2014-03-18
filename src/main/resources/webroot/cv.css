@@ -1,0 +1,17 @@
+
+.skillItem {
+	
+	display: inline-block;
+	margin: 4px;
+	padding: 2px;
+	padding-left: 6px;
+	padding-right: 6px;
+	border: solid 1px #cccccc;
+	border-radius: 3px;
+	
+}
+
+.skillRemoveIcon {	
+	color: #cccccc;
+	padding: 3px;
+}

@@ -1,5 +1,36 @@
 
 /**
+ * Helper Function:
+ * Deletes one item entry from the supplied list.
+ * Maybe there is a shorter way in JavaScript
+ */
+function deleteFromCollection(collection, item) {
+	// find the right item
+	var pos = -1;       
+	for (var i=0; i<collection.length; i++) {
+		if (item == collection[i]) {
+			pos = i;
+			break;
+		}
+	}
+	// if we found it: delete it from the collection
+	if (pos != -1) {
+		collection.splice(pos, 1);
+	}            
+}
+
+/**
+ * Helper Function:
+ * Matches two strings ignoring case, and non characters
+ */
+function fuzzyMatch(string1, string2) {
+	string1 = string1.replace(/[^a-z0-9]/gi, '');
+	string2 = string2.replace(/[^a-z0-9]/gi, '');
+	return string1.toLowerCase() == string2.toLowerCase(); 
+}
+
+
+/**
  * the angular main module for the cv application
  */
 var cv = angular.module('cvio', ['ngResource']);
@@ -7,20 +38,56 @@ var cv = angular.module('cvio', ['ngResource']);
 /**
  * The controller for List view of the application
  */
-cv.controller('ListCtrl', ['$scope', '$http', function($scope, $http) {
+cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
 
 	$scope.cvs =  { };
 
+	
+    $scope.skillItems = Skills.query();
+
+    $scope.searchSkillItems = [];
+
     // just load the list of all cvs into $scope.cvs
-    $http.get('/api/cv/cvs')
+    $http.get('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills')
         .success(function(data, status, headers, config) {
             $scope.cvs = data;
         })
         .error(function(data, status, headers, config) {
             alert("error while loading "+status);
         });
-}]);
 
+    $scope.removeSearchSkill = function(skillItem) {
+    	deleteFromCollection($scope.searchSkillItems, skillItem);
+    }
+    
+    $scope.addSearchTerm = function(term) {
+        for (var i=0; i<$scope.skillItems.length; i++) {
+        	var item = $scope.skillItems[i];
+            if (fuzzyMatch(item.name, term)) {
+            	$scope.searchSkillItems.push(item);
+            	$scope.searchTerm = '';
+                break;
+            }
+        }
+    }
+    
+    /**
+     * Filter for a list of cvs.
+     * The filter checks, if all of the currently selected search items are
+     * selected in the cv.
+     */
+    $scope.bySearchCriteria = function() {
+    	return function(cvEntry) {
+	    	var cvSkills = cvEntry.skills;
+	    	for (var i=0; i<$scope.searchSkillItems.length; i++) {
+	           	var skillItem = $scope.searchSkillItems[i];
+	           	if (! cvSkills[skillItem.id] > 0 )
+	           		return false;
+	    	}
+	    	return true;    	
+	    }
+    }
+}]);
 
 /**
  * This is the main controller for the cv.
@@ -80,7 +147,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Event hook: Removes the supplied job from the list
      */
     $scope.deleteJob = function(job) {
-        $scope.deleteFromCollection($scope.cv.jobs, education);
+        deleteFromCollection($scope.cv.jobs, education);
     }
 
     /**
@@ -153,26 +220,6 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     /**
-     * Helper Method:
-     * Deletes one item entry from the supplied list.
-     * Maybe there is a shorter way in JavaScript
-     */
-    $scope.deleteFromCollection = function(collection, item) {
-    	// find the right item
-        var pos = -1;       
-        for (var i=0; i<collection.length; i++) {
-            if (item == collection[i]) {
-                pos = i;
-                break;
-            }
-        }
-        // if we found it: delete it from the collection
-        if (pos != -1) {
-            collection.splice(pos, 1);
-        }            
-    }
-
-    /**
      * Basic initialisation:
      * We search for the ref parameter in the browser locationURI.
      * If is was supplied, we use this for loading of the cv.
@@ -201,7 +248,7 @@ cv.factory('Skills', function($resource){
  */
 cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
 
-    $scope.ratingItems = Skills.query(),
+    $scope.skillItems = Skills.query(),
 	
     $scope.categorySelection = 'prog';
     $scope.categories = [
@@ -265,14 +312,14 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
     /**
      * Create a new Skill and put it within the supplied box.
      */
-    $scope.addNewSkill = function(skillLevel) {    
+    $scope.addNewSkill = function(skillName, skillLevel) {    
     	var newSkill = new Skills();
-    	newSkill.name = $scope.newSkill[skillLevel];
+    	newSkill.name = skillName;
     	newSkill.category = 'other';
     	newSkill.$save(function(object, responseHeaders) {
     		$http.get(responseHeaders("Location")).success(
     			      function (newObject) {
-    		    			$scope.ratingItems.push(newObject);
+    		    			$scope.skillItems.push(newObject);
     		    			$scope.setSkill(newObject.id, skillLevel);
     			      });
     		$scope.newSkill[skillLevel] = '';
@@ -361,6 +408,29 @@ cv.directive('contenteditable', function() {
 });
 
 /**
+ * Directive for skill entry with autocompletion.
+ */
+cv.directive('cvSkillEntry', function() {
+  return {
+      restrict: 'E',
+      require: 'ngModel',
+      scope: {
+          'ngModel': '=',
+          'submitFunction': '&',
+      },
+      template: '<span class="input-group pull-right" style="width: 180px;">\
+    	  				<form ng-submit="submitFunction()">\
+      					<input type="text" class="input-sm form-control" style="width:130px" ng-model="ngModel">\
+      					<span class="input-group-btn">\
+      						<input type="submit" class="input-sm btn btn-default" value="Ok"/>\
+      					</span>\
+      				</form>\
+    	  		</span>'
+  
+  }
+});
+
+/**
  * Directive for simple formular fields.
  */
 cv.directive('cvShortField', function() {
@@ -368,7 +438,7 @@ cv.directive('cvShortField', function() {
       restrict: 'E',
       require: 'ngModel',
       scope: {
-          'ngModel': '=',
+    	  'ngModel': '=',
           'label': '@',
           'input-id': '@',
       },

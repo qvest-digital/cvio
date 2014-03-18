@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="cv.css" rel="stylesheet" media="screen"/>
 
     <script src="lib/jquery.min.js"></script>
     <script src="lib/ui/jquery-ui.js"></script>
@@ -26,6 +27,15 @@
       </div>
       <br/>
 
+      <div style="width: 400px;" class="pull-right" id="beginner">
+        <div ng-repeat="item in searchSkillItems"
+           class="skillItem pull-right">{{item.name}}
+           <small ng-click="removeSearchSkill(item)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
+        </div>
+      </div>            
+      <br><br>      
+      <cv-skill-entry submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
+      
       <table class="table table-striped">
         <thead>
           <tr>
@@ -35,7 +45,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="cv in cvs">
+          <tr ng-repeat="cv in cvs | filter:bySearchCriteria()">
             <td><a href="cv.html?ref={{cv.ref}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>
