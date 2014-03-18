@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="authenticate">
+<head>
+    <title>Login</title>
+    <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/ui/jquery-ui.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="cvio.js"></script>
+    <script src="login.js"></script>
+    <style type="text/css">
+        .form-signin{
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<section id="login">
+    <div class="container" ng-controller="loginCon">
+
+        <form class="form-signin" role="form">
+            <h2 class="form-signin-heading">Bitte Anmelden</h2>
+            <input type="text" class="form-control" placeholder="User" required="" autofocus="" ng-model="user">
+            <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
+            <button class="btn btn-lg btn-primary btn-block" ng-click="login()">Login</button>
+        </form>
+
+    </div>
+</section>
+</body>
+</html>
