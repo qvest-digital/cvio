@@ -14,6 +14,10 @@ public class ConfigurationHelper {
         public String getUriPrefix() {
             return "http://example.org:8080/bla";
         }
+
+        public int getDefaultEsFetchSize() {
+            return 5;
+        }
     };
 
     public static void locationHeaderIsValid(CVIOConfiguration aConfiguration,

@@ -11,6 +11,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 
 import com.google.inject.Inject;
@@ -44,13 +45,20 @@ public class CVDBElasticsearch implements CVDB {
     private ESNodeManager es;
 
     /**
+     * The global Configuration.
+     */
+    private CVIOConfiguration config;
+
+    /**
      * Create a new CVDBService based on elastic search.
      * 
      * @param esNode the access to elasticsearch
+     * @param theConfiguration The global Configuration
      */
     @Inject
-    public CVDBElasticsearch(final ESNodeManager esNode) {
+    public CVDBElasticsearch(final ESNodeManager esNode, final CVIOConfiguration theConfiguration) {
         es = esNode;
+        config = theConfiguration;
     }
 
     @Override
@@ -62,9 +70,14 @@ public class CVDBElasticsearch implements CVDB {
         logger.trace("searching for all cvs in es");
         SearchRequestBuilder search = es.client().prepareSearch()
                 .setIndices(INDEX_CVS).setTypes(TYPE_CV)
-                .setFetchSource(fields, null);
+                .setFetchSource(fields, null)
+                .setSize(config.getDefaultEsFetchSize());
 
         SearchResponse response = search.execute().actionGet();
+        if (response.getHits().getHits().length < response.getHits().getTotalHits()) {
+            search.setSize((int) response.getHits().getTotalHits());
+            response = search.execute().actionGet();
+        }
 
         ArrayList<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
         for (SearchHit hit : response.getHits().getHits()) {
