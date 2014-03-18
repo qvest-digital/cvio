@@ -272,7 +272,6 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
     	newSkill.$save(function(object, responseHeaders) {
     		$http.get(responseHeaders("Location")).success(
     			      function (newObject) {
-    			    		console.log("newSkill.id "+ newObject.id);
     		    			$scope.ratingItems.push(newObject);
     		    			$scope.setSkill(newObject.id, skillLevel);
     			      });
@@ -305,7 +304,6 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
      * Sets the categorySelection for later filtering
      */
     $scope.setCategorySelection = function(categorySelecttion) {
-    	console.log(categorySelecttion);
     	$scope.categorySelection = categorySelecttion;
     }
     
