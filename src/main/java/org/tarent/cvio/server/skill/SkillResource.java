@@ -42,10 +42,10 @@ public class SkillResource {
      * Create the resource.
      * 
      * @param theSkillDB skill db implementation
-     * @param cvioConfiguration
+     * @param theConfiguration the global configuration
      */
     @Inject
-    public SkillResource(final SkillDB theSkillDB, CVIOConfiguration theConfiguration) {
+    public SkillResource(final SkillDB theSkillDB, final CVIOConfiguration theConfiguration) {
         this.skillDB = theSkillDB;
         this.configuration = theConfiguration;
     }

@@ -1,0 +1,4 @@
+etc/cvio
+usr/share/cvio/
+var/lib/cvio/data
+var/log/cvio

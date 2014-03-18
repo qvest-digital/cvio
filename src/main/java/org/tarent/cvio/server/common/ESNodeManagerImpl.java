@@ -73,4 +73,11 @@ public class ESNodeManagerImpl implements ESNodeManager {
     public Client client() {
         return esNode.client();
     }
+
+    @Override
+    public boolean doesIndexExist(String index) {
+        return esNode.client().admin().indices().prepareExists(index)
+                .execute().actionGet().isExists();
+
+    }
 }

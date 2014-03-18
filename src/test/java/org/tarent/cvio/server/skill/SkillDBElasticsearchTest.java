@@ -2,6 +2,7 @@ package org.tarent.cvio.server.skill;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class SkillDBElasticsearchTest extends EsTest {
 
         // the I can retrieve it by its name later
         Skill retrievedSkill = skillDB.getSkillById(id);
-        SkillHelper.skillsEqual(newSkill, retrievedSkill);
+        assertNotNull(retrievedSkill.getId());
+        SkillHelper.skillsEqualWitoutId(newSkill, retrievedSkill);
     }
 
     @Test
@@ -44,7 +46,16 @@ public class SkillDBElasticsearchTest extends EsTest {
 
         Skill retrievedSkill = SkillHelper.findSkillById(retrievedSkills, id);
         assertNotNull(retrievedSkill);
-        SkillHelper.skillsEqual(newSkill, retrievedSkill);
+        SkillHelper.skillsEqualWitoutId(newSkill, retrievedSkill);
         assertNotNull(retrievedSkill.getId());
+    }
+
+    @Test
+    public void testNullValuesOnNonExistingIndexex() {
+        // given a fresh database
+        SkillDBElasticsearch skillDB = new SkillDBElasticsearch(esNode());
+
+        assertEquals(0, skillDB.getAllSkills().size());
+        assertNull(skillDB.getSkillById("foo"));
     }
 }

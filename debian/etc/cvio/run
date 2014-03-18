@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. /etc/cvio/deamon_options
+
+echo `date` 'starting cvio service' >> $STARTUP_LOG_FILE
+
+#exec setuidgid nobody sh -c '
+
+ exec $JAVA_CMD -Xmx$JAVA_HEAP_SPACE -jar /usr/share/cvio/cvserver-0.1.0.jar  server /etc/cvio/config.yaml  >&1 >> $STARTUP_LOG_FILE
+
+#'

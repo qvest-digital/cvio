@@ -54,7 +54,7 @@ public class SkillResourceTest {
 
         // then the it is returned
         Skill retrievedSkill = aResource.getSkillByid("idxx");
-        SkillHelper.skillsEqual(newSkill, retrievedSkill);
+        SkillHelper.skillsEqualWitoutId(newSkill, retrievedSkill);
     }
 
     @Test

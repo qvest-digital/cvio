@@ -214,19 +214,16 @@
       </div>
     </div>
     
-    
     <div id="skills" class="tab-pane active" ng-controller="SkillCtrl" ng-init="init()">
       <!-- Skills -->
+
       <div>
         <ul class="nav nav-pills">
-          <li class="active"><a href="#" ng-click="selection = 'prog'" data-toggle="tab">Programmierung</a></li>
-          <li><a href="#" ng-click="selection = 'tooling'" data-toggle="tab">Tools</a></li>
-          <li><a href="#" ng-click="selection = 'test'" data-toggle="tab">Testing</a></li>
-          <li><a href="#" ng-click="selection = 'paradigm'" data-toggle="tab">Konzepte</a></li>
+          <li class="active" ng-repeat="category in categories"><a href="#" ng-click="setCategorySelection(category.id)" data-toggle="tab">{{category.name}}</a></li>
         </ul>
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body">
-            <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byCategory(selection)"
+            <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:byCategory(categorySelection)"
                  style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}</div>
           </div>
         </div>
@@ -236,16 +233,17 @@
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>{{skillHeader['beginner']}}</strong></span>
+              <span class="panel-title"><strong>{{skillLevelHeader['beginner']}}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
-                <input type="text" class="input-sm form-control">
-                <span class="input-group-btn">
-                  <button class="input-sm btn btn-default" type="button">Hinzu</button>
-                </span>
+                <form ng-submit="addNewSkill('beginner')">
+                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.beginner">
+                    <span class="input-group-btn">
+                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
+                    </span>
+                </form>
               </span>
             </div>
             <div style="height: 250px;" class="panel-body" id="beginner">
-
                 <div id="skill_item_{{item.id}}" ng-repeat="item in ratingItems | filter:bySkillSelection('beginner')"
                  style="display: inline-block; margin: 4px; padding: 2px; padding-left: 6px; padding-right: 6px; border: solid 1px #cccccc; border-radius: 3px;">{{item.name}}
                  <small ng-click="removeSkill(item.id)" style="color: #cccccc; padding: 3px;"><span class="glyphicon glyphicon-remove"></span></small>
@@ -258,12 +256,14 @@
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>{{skillHeader['advanced'] }}</strong></span>
+              <span class="panel-title"><strong>{{skillLevelHeader['advanced'] }}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
-                <input type="text" class="input-sm form-control">
-                <span class="input-group-btn">
-                  <button class="input-sm btn btn-default" type="button">Hinzu</button>
-                </span>
+                <form ng-submit="addNewSkill('advanced')">
+                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.advanced">
+                    <span class="input-group-btn">
+                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
+                    </span>
+                </form>
               </span>
             </div>
             <div style="height: 250px;" class="panel-body" id="advanced">
@@ -280,12 +280,14 @@
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
-              <span class="panel-title"><strong>{{skillHeader['expert']}}</strong></span>
+              <span class="panel-title"><strong>{{skillLevelHeader['expert']}}</strong></span>
               <span class="input-group pull-right" style="width: 180px;">
-                <input type="text" class="input-sm form-control">
-                <span class="input-group-btn">
-                  <button class="input-sm btn btn-default" type="button">Hinzu</button>
-                </span>
+                <form ng-submit="addNewSkill('expert', newSkill.expert)">
+                    <input type="text" class="input-sm form-control" style="width:130px" ng-model="newSkill.expert">
+                    <span class="input-group-btn">
+                        <input type="submit" class="input-sm btn btn-default" value="Neu"/>
+                    </span>
+                </form>
               </span>
             </div>
             <div style="height: 250px;" class="panel-body" id="expert">

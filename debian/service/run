@@ -1,0 +1,5 @@
+#!/bin/sh
+#exec setuidgid nobody sh -c '
+
+ exec java -jar /usr/share/cvio/cvserver-0.1.0.jar  server /etc/cvio/config.yaml  >&1 #> /var/log/cvio/cvio.log
+#'

@@ -18,4 +18,12 @@ public interface ESNodeManager extends Managed {
      */
     Client client();
 
+    /**
+     * Tests, if the supplied index exist.
+     * 
+     * @param index the index to test
+     * @return true, if the index exsts
+     */
+    boolean doesIndexExist(String index);
+
 }
