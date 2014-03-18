@@ -1,5 +1,6 @@
 package org.tarent.cvio.server;
 
+import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.cv.CVResource;
@@ -85,7 +86,7 @@ public class CVIO extends Service<CVIOConfiguration> {
             final Environment environment) throws Exception {
     
     	// ldap config
-    	LdapConfiguration conf = new LdapConfiguration();
+    	CVLdapAuthConf conf = new CVLdapAuthConf();
     	LdapAuthenticator authenticator = new LdapAuthenticator(conf);
     	//authenticator.authenticate(new BasicCredentials("user", "password"));
     	
@@ -104,17 +105,6 @@ public class CVIO extends Service<CVIOConfiguration> {
 
         // An example HealthCheck
         environment.addHealthCheck(new Health());
-        
-        
-        // Ldap Auth
-        LdapConfiguration ldapConfiguration = conf;
-	    Authenticator<BasicCredentials, BasicCredentials> ldapAuthenticator =
-	        CachingAuthenticator.wrap(
-	            new ResourceAuthenticator(new LdapAuthenticator(ldapConfiguration)),
-	            ldapConfiguration.getCachePolicy());
-
-	    environment.addProvider(new BasicAuthProvider<>(ldapAuthenticator, "realm"));
-	    environment.addHealthCheck(new LdapHealthCheck(new ResourceAuthenticator(new LdapCanAuthenticate(ldapConfiguration))));
 	    
     }
     
