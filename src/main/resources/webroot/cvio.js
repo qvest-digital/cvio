@@ -190,7 +190,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
  * This is a factory for an $response to access the skill items on the server
  */
 cv.factory('Skills', function($resource){
-    return $resource('http://127.0.0.1/tech-rating/api/default/ratingitem', {}, {
+    return $resource('/api/skills' + '/:item', {item: '@id'}, {
         query: {method:'GET', params:{}, isArray:true},
     });
 });
@@ -199,26 +199,59 @@ cv.factory('Skills', function($resource){
  * Controller for the skill tab
  * This is not ready for now
  */
-cv.controller('SkillCtrl', ['$scope', 'Skills', function($scope, Skills) {
+cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
 
     $scope.ratingItems = Skills.query(),
 	
-    $scope.selection = 'prog';
+    $scope.categorySelection = 'prog';
+    $scope.categories = [
+                         {
+                        	 'id': 'prog',
+                        	 'name': 'Programmiersprachen und Frameworks',
+                         },
+                         {
+                        	 'id': 'build',
+                        	 'name': 'Build, Deploymnet und Plattformen',
+                         },
+                         {
+                        	 'id': 'db',
+                        	 'name': 'Datenbanken',
+                         },
+                         {
+                        	 'id': 'test',
+                        	 'name': 'Software Testing',
+                         },
+                         {
+                        	 'id': 'concept',
+                        	 'name': 'Konzepte und Vorgehen',
+                         },
+                         {
+                        	 'id': 'other',
+                        	 'name': 'Sonstiges',
+                         }                                                  
+                         ];
+    
 
-    $scope.skillHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertiese'};
+    $scope.skillLevelHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertiese'};
     $scope.skillLevels = {
     						"beginner": 1,
     						"advanced": 2,
     						"expert": 3
     					 };    					
+
+    /**
+     * This is a model map,
+     * for new entries of skills, used by addNewSkill.
+     */
+    $scope.newSkill = {};
     
     /**
      * Sets the Skill for an items.
      * @param itemId the id of the item
-     * @param skillKey the string key of the skill level, e.g. 'beginner'
+     * @param skillLevel string key of the skill level, e.g. 'beginner'
      */
-    $scope.setSkill = function(itemId, skillKey) {
-    	$scope.cv['skills'][itemId] = $scope.skillLevels[skillKey];
+    $scope.setSkill = function(itemId, skillLevel) {
+    	$scope.cv['skills'][itemId] = $scope.skillLevels[skillLevel];
     }
 
     /**
@@ -227,6 +260,24 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', function($scope, Skills) {
      */
     $scope.removeSkill = function(itemId) {
     	delete $scope.cv['skills'][itemId];
+    }
+    
+    /**
+     * Create a new Skill and put it within the supplied box.
+     */
+    $scope.addNewSkill = function(skillLevel) {    
+    	var newSkill = new Skills();
+    	newSkill.name = $scope.newSkill[skillLevel];
+    	newSkill.category = 'other';
+    	newSkill.$save(function(object, responseHeaders) {
+    		$http.get(responseHeaders("Location")).success(
+    			      function (newObject) {
+    			    		console.log("newSkill.id "+ newObject.id);
+    		    			$scope.ratingItems.push(newObject);
+    		    			$scope.setSkill(newObject.id, skillLevel);
+    			      });
+    		$scope.newSkill[skillLevel] = '';
+    	});
     }
 
     /**
@@ -248,6 +299,14 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', function($scope, Skills) {
             return item.category == category &&
             	! $scope.cv['skills'][item.id] ;
         }
+    }
+    
+    /**
+     * Sets the categorySelection for later filtering
+     */
+    $scope.setCategorySelection = function(categorySelecttion) {
+    	console.log(categorySelecttion);
+    	$scope.categorySelection = categorySelecttion;
     }
     
     /**

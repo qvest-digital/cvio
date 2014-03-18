@@ -18,7 +18,7 @@ public class SkillHelper {
         return null;
     }
 
-    static void skillsEqual(Skill newSkill, Skill retrievedSkill) {
+    static void skillsEqualWitoutId(Skill newSkill, Skill retrievedSkill) {
         assertEquals(retrievedSkill.getCategory(), newSkill.getCategory());
         assertTrue(retrievedSkill.getCreationTime().isEqual(newSkill.getCreationTime()));
         assertEquals(retrievedSkill.getDescription(), newSkill.getDescription());

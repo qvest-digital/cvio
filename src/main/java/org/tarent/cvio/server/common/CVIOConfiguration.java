@@ -80,6 +80,6 @@ public class CVIOConfiguration extends Configuration {
      * @return true or false
      */
     public boolean isElasticsearchEnableHttp() {
-        return new Boolean(elasticsearchEnableHttp);
+        return Boolean.parseBoolean(elasticsearchEnableHttp);
     }
 }

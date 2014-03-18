@@ -55,6 +55,10 @@ public class CVDBElasticsearch implements CVDB {
 
     @Override
     public List<Map<String, String>> getAllCVs(final String[] fields) {
+        if (!es.doesIndexExist(INDEX_CVS)) {
+            logger.warn("index " + INDEX_CVS + " does not exist.");
+            return new ArrayList<Map<String, String>>();
+        }
         logger.trace("searching for all cvs in es");
         SearchRequestBuilder search = es.client().prepareSearch()
                 .setIndices(INDEX_CVS).setTypes(TYPE_CV)
@@ -89,6 +93,10 @@ public class CVDBElasticsearch implements CVDB {
 
     @Override
     public String getCVById(final String id) {
+        if (!es.doesIndexExist(INDEX_CVS)) {
+            logger.warn("index " + INDEX_CVS + " does not exist.");
+            return null;
+        }
         logger.trace("fetching one cv with id " + id + " in es");
         return es.client().prepareGet(INDEX_CVS, TYPE_CV, id).execute()
                 .actionGet().getSourceAsString();

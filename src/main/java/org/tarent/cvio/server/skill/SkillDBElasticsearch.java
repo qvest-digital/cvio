@@ -59,6 +59,12 @@ public class SkillDBElasticsearch implements SkillDB {
 
     @Override
     public List<Skill> getAllSkills() {
+
+        if (!es.doesIndexExist(INDEX_SKILL)) {
+            logger.warn("index " + INDEX_SKILL + " does not exist.");
+            return new ArrayList<Skill>();
+
+        }
         logger.trace("searching for all skills es");
         SearchRequestBuilder search = es.client().prepareSearch()
                 .setIndices(INDEX_SKILL).setTypes(TYPE_SKILL);
@@ -66,6 +72,33 @@ public class SkillDBElasticsearch implements SkillDB {
         SearchResponse response = search.execute().actionGet();
 
         return skillListFromResponse(response);
+    }
+
+    @Override
+    public Skill getSkillById(final String id) {
+
+        if (!es.doesIndexExist(INDEX_SKILL)) {
+            logger.warn("index " + INDEX_SKILL + " does not exist.");
+            return null;
+        }
+
+        logger.trace("fetching one skill with name " + id + " in es");
+        String sourceString = es.client()
+                .prepareGet(INDEX_SKILL, TYPE_SKILL, id).execute()
+                .actionGet().getSourceAsString();
+
+        Skill result = mapper.readValue(sourceString, Skill.class);
+        result.setId(id);
+        return result;
+    }
+
+    @Override
+    public String createSkill(final Skill newSkill) {
+        logger.trace("create a skill in es: " + newSkill.getName());
+        IndexResponse resp = es.client().prepareIndex(INDEX_SKILL, TYPE_SKILL)
+                .setSource(mapper.writeValueAsString(newSkill)).execute()
+                .actionGet();
+        return resp.getId();
     }
 
     /**
@@ -84,23 +117,5 @@ public class SkillDBElasticsearch implements SkillDB {
             result.add(skill);
         }
         return result;
-    }
-
-    @Override
-    public Skill getSkillById(final String id) {
-        logger.trace("fetching one skill with name " + id + " in es");
-        String sourceString = es.client()
-                .prepareGet(INDEX_SKILL, TYPE_SKILL, id).execute()
-                .actionGet().getSourceAsString();
-        return mapper.readValue(sourceString, Skill.class);
-    }
-
-    @Override
-    public String createSkill(final Skill newSkill) {
-        logger.trace("create a skill in es: " + newSkill.getName());
-        IndexResponse resp = es.client().prepareIndex(INDEX_SKILL, TYPE_SKILL)
-                .setSource(mapper.writeValueAsString(newSkill)).execute()
-                .actionGet();
-        return resp.getId();
     }
 }
