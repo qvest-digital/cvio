@@ -36,7 +36,7 @@
 		      </div>            
 	       </div>
 	       <div class="row">	
-		      <cv-skill-entry submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
+		      <cv-skill-entry label="Suche" submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
 		   </div>
 		</div>
       
@@ -49,14 +49,16 @@
             <th>Name</th>
             <th>Vorname</th>
             <th ng-repeat="item in searchSkillItems" style="text-align: right;">{{item.name}}</th>
+            <th ng-if="searchSkillItems.length > 0" style="text-align: right;">%</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="cv in cvs | filter:bySearchCriteria()">
+          <tr ng-repeat="cv in cvs | filter:bySearchCriteria() | orderBy:calculateSearchScorePercent:true ">
             <td><a href="cv.html?ref={{cv.ref}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>
-            <td ng-repeat="item in searchSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>            
+            <td ng-repeat="item in searchSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>
+            <td ng-if="searchSkillItems.length > 0" style="text-align: right;">{{calculateSearchScorePercent(cv)}}</td>                        
           </tr>
         </tbody>
       </table>

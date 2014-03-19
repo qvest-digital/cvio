@@ -75,20 +75,32 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     }
     
     /**
+     * calculates the match of an cv for a search in $scope.searchSkillItems
+     * @return returns an interger value between 0 an 100
+     */    
+    $scope.calculateSearchScorePercent = function(cvEntry) {
+    	if (! $scope.searchSkillItems.length > 0) {
+    		return 100;
+    	}
+    	var cvSkills = cvEntry.skills;
+    	var score = 0;
+    	for (var i=0; i<$scope.searchSkillItems.length; i++) {
+           	var skillItem = $scope.searchSkillItems[i];
+           	if (cvSkills[skillItem.id] > 0 ) {
+           		score += cvSkills[skillItem.id];
+           	}
+    	}
+    	return Math.round(100 * score / ($scope.searchSkillItems.length * 3));
+    }
+    
+    /**
      * Filter for a list of cvs.
      * The filter checks, if all of the currently selected search items are
      * selected in the cv.
      */
     $scope.bySearchCriteria = function() {
     	return function(cvEntry) {
-	    	var cvSkills = cvEntry.skills;
-	    	for (var i=0; i<$scope.searchSkillItems.length; i++) {
-	           	var skillItem = $scope.searchSkillItems[i];
-	           	//console.log(cvEntry.familyName + ', '+ JSON.stringify(cvSkills) +', ' + JSON.stringify(skillItem) + ': '+ cvSkills[skillItem.id]);
-	           	if (! cvSkills[skillItem.id] > 0 )
-	           		return false;
-	    	}
-	    	return true;    	
+    		return $scope.calculateSearchScorePercent(cvEntry) > 0;
 	    }
     }
 }]);
@@ -421,16 +433,16 @@ cv.directive('cvSkillEntry', function() {
       scope: {
           'ngModel': '=',
           'submitFunction': '&',
+          'label': '@',
       },
-      template: '<span class="input-group pull-right" style="width: 180px;">\
-    	  				<form ng-submit="submitFunction()">\
+      template: '<form  style="display:inline" ng-submit="submitFunction()">\
+    	  			<span class="input-group pull-right" style="width: 180px;">\
       					<input type="text" class="input-sm form-control" style="width:130px" ng-model="ngModel">\
       					<span class="input-group-btn">\
-      						<input type="submit" class="input-sm btn btn-default" value="Ok"/>\
+      						<input type="submit" class="input-sm btn btn-default" value="{{label}}"/>\
       					</span>\
-      				</form>\
-    	  		</span>'
-  
+    	  			</span>\
+    	  		</form>'  
   }
 });
 
