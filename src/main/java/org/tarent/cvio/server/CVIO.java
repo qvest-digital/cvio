@@ -14,16 +14,7 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import com.yammer.dropwizard.auth.Authenticator;
-import com.yammer.dropwizard.auth.CachingAuthenticator;
-import com.yammer.dropwizard.auth.basic.BasicAuthProvider;
-import com.yammer.dropwizard.auth.basic.BasicCredentials;
 import com.yammer.dropwizard.authenticator.LdapAuthenticator;
-import com.yammer.dropwizard.authenticator.LdapCanAuthenticate;
-import com.yammer.dropwizard.authenticator.LdapConfiguration;
-import com.yammer.dropwizard.authenticator.ResourceAuthenticator;
-import com.yammer.dropwizard.authenticator.healthchecks.LdapHealthCheck;
-import com.yammer.dropwizard.config.Configuration;
 
 
 

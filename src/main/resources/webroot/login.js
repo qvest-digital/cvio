@@ -12,6 +12,6 @@ auth.controller('loginCon', ['$scope', '$http', function ($scope, $http) {
             user:$scope.user,
             password:$scope.password
         }
-        $http.post('/login/user/', data).success();
+        $http.post('/api/login/', data).success();
     }
 }]);
