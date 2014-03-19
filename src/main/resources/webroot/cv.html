@@ -235,7 +235,7 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['beginner']}}</strong></span>
-              <cv-skill-entry submit-function="addNewSkill(newSkill.beginner, 'beginner')" ng-model="newSkill.beginner"></cv-skill-entry>
+              <cv-skill-entry label="Hinzu" submit-function="addNewSkill(newSkill.beginner, 'beginner')" ng-model="newSkill.beginner"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="beginner">
                 <div ng-repeat="item in skillItems | filter:bySkillSelection('beginner')"
@@ -251,7 +251,7 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['advanced'] }}</strong></span>
-              <cv-skill-entry submit-function="addNewSkill(newSkill.advanced, 'advanced')" ng-model="newSkill.advanced"></cv-skill-entry>
+              <cv-skill-entry label="Hinzu" submit-function="addNewSkill(newSkill.advanced, 'advanced')" ng-model="newSkill.advanced"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="advanced">
 
@@ -268,7 +268,7 @@
           <div class="panel panel-default">
             <div class="panel-heading clearfix">
               <span class="panel-title"><strong>{{skillLevelHeader['expert']}}</strong></span>
-              <cv-skill-entry submit-function="addNewSkill(newSkill.expert, 'expert')" ng-model="newSkill.expert"></cv-skill-entry>
+              <cv-skill-entry label="Hinzu" submit-function="addNewSkill(newSkill.expert, 'expert')" ng-model="newSkill.expert"></cv-skill-entry>
             </div>
             <div style="height: 250px;" class="panel-body" id="expert">
 

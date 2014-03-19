@@ -44,7 +44,7 @@ describe('Skill controller', function() {
 
         beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
         	$httpBackend = _$httpBackend_;
-        	$httpBackend.expectGET('http://127.0.0.1/tech-rating/api/default/ratingitem').respond(allSkillList);
+        	$httpBackend.expectGET('/api/skills').respond(allSkillList);
         	
             scope = $rootScope.$new();
             scope.cv = {};
@@ -54,7 +54,7 @@ describe('Skill controller', function() {
         }));
 
         it('should have loaded some items', function() {        
-       	 expect(scope.ratingItems).toEqualData(allSkillList);
+       	 expect(scope.skillItems).toEqualData(allSkillList);
         });
 
         it('the category filters for the main box should work', function() {
