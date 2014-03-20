@@ -35,13 +35,16 @@ function fuzzyMatch(string1, string2) {
 /**
  * the angular main module for the cv application
  */
-var cv = angular.module('cvio', ['ngResource']);
+var cv = angular.module('cvio', ['ngResource', 'ui.bootstrap']);
 
 /**
  * The controller for List view of the application
  */
 cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
-
+	  $scope.selected = undefined;
+	  $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+	  
+	
 	$scope.cvs =  { };
 
 	
@@ -63,10 +66,11 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     }
     
     $scope.addSearchTerm = function(term) {
+    	console.log(term);
         for (var i=0; i<$scope.skillItems.length; i++) {
         	var item = $scope.skillItems[i];
         	//console.log("fuzzyMatch("+item.name+", "+term+"): "+ fuzzyMatch(item.name, term));
-            if (fuzzyMatch(item.name, term)) {            	
+             	if (item.name == term && $scope.searchSkillItems.indexOf(item) == -1) {            	
             	$scope.searchSkillItems.push(item);
             	$scope.searchTerm = '';
                 break;
@@ -434,12 +438,15 @@ cv.directive('cvSkillEntry', function() {
           'ngModel': '=',
           'submitFunction': '&',
           'label': '@',
+          'skillList': '=',
       },
+      
       template: '<form  style="display:inline" ng-submit="submitFunction()">\
     	  			<span class="input-group pull-right" style="width: 180px;">\
-      					<input type="text" class="input-sm form-control" style="width:130px" ng-model="ngModel">\
+      					<input type="text" class="input-sm form-control skillTypeahead" style="width:130px" ng-model="ngModel"\
+    	  					typeahead="skill.name for skill in skillList| filter:$viewValue | limitTo:30">\
       					<span class="input-group-btn">\
-      						<input type="submit" class="input-sm btn btn-default" value="{{label}}"/>\
+      						<input type="submit" class="input-sm btn btn-default " value="{{label}}"/>\
       					</span>\
     	  			</span>\
     	  		</form>'  
