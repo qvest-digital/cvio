@@ -1,5 +1,3 @@
-
-
 dataDirectory: /tmp/cvio-db
 
 uriPrefix: http://127.0.0.1:8080/api
@@ -130,4 +128,5 @@ logging:
 
     # Sets the level for 'com.example.app' to DEBUG.
     org.tarent.cvio.server: TRACE
+
 

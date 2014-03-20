@@ -1,5 +1,7 @@
 package org.tarent.cvio.server;
 
+import org.tarent.cvio.server.auth.CVLdapAuth;
+import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.common.ESNodeManagerImpl;
@@ -25,6 +27,8 @@ public class CVIOGuiceModule extends AbstractModule {
      * the configuration instance.
      */
     private CVIOConfiguration configuration;
+    
+    private CVLdapAuthConf ldapconf;
 
     /**
      * creates an instance of the guice configuration.
@@ -54,5 +58,9 @@ public class CVIOGuiceModule extends AbstractModule {
         // The /skill resource
         bind(SkillResource.class);
         bind(SkillDB.class).to(SkillDBElasticsearch.class);
+        
+        // the auth resource
+        //bind(CVLdapAuthConf.class).toInstance(ldapconf);
+        bind(CVLdapAuth.class);
     }
 }
