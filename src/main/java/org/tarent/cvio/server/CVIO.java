@@ -1,5 +1,9 @@
 package org.tarent.cvio.server;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.tarent.cvio.server.auth.CVLdapAuth;
 import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
@@ -14,6 +18,7 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.auth.basic.BasicCredentials;
 import com.yammer.dropwizard.authenticator.LdapAuthenticator;
 
 
@@ -76,10 +81,7 @@ public class CVIO extends Service<CVIOConfiguration> {
     public void run(final CVIOConfiguration configuration,
             final Environment environment) throws Exception {
     
-    	// ldap config
-    	CVLdapAuthConf conf = new CVLdapAuthConf();
-    	LdapAuthenticator authenticator = new LdapAuthenticator(conf);
-    	//authenticator.authenticate(new BasicCredentials("user", "password"));
+    	
     	
 
         // We are using Googe Guice for creating and wiring of our instances
@@ -93,6 +95,12 @@ public class CVIO extends Service<CVIOConfiguration> {
         // Our Resou rces
         environment.addResource(injector.getInstance(CVResource.class));
         environment.addResource(injector.getInstance(SkillResource.class));
+        
+        // test for ldap auth
+        environment.addResource(injector.getInstance(CVLdapAuth.class));
+        
+       
+        
 
         // An example HealthCheck
         environment.addHealthCheck(new Health());
