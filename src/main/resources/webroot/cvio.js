@@ -2,17 +2,9 @@
 /**
  * Helper Function:
  * Deletes one item entry from the supplied list.
- * Maybe there is a shorter way in JavaScript
  */
 function deleteFromCollection(collection, item) {
-	// find the right item
-	var pos = -1;       
-	for (var i=0; i<collection.length; i++) {
-		if (item == collection[i]) {
-			pos = i;
-			break;
-		}
-	}
+	var pos = collection.indexOf(item);       
 	// if we found it: delete it from the collection
 	if (pos != -1) {
 		collection.splice(pos, 1);
