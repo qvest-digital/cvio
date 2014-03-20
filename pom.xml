@@ -18,6 +18,7 @@
         </configuration>
       </plugin>
       
+      <!--  packaging of a single .jar with maven-shade-plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -52,6 +53,66 @@
           </execution>
         </executions>
       </plugin>
+      
+      <!-- JavaScrpt unit testing with karma -->
+      <plugin>
+        <groupId>com.kelveden</groupId>
+        <artifactId>maven-karma-plugin</artifactId>
+        <version>1.5</version>
+ 
+        <executions>
+          <execution>
+            <goals> <goal>start</goal> </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <configFile>${basedir}/src/test/javascript/karma-maven.conf.js</configFile>
+          <karmaExecutable>${basedir}/node_modules/.bin/karma</karmaExecutable>
+          <browsers>PhantomJS</browsers>
+          <reporters>dots,coverage</reporters>
+          <colors>false</colors>
+          <autoWatch>false</autoWatch>
+        </configuration>
+      </plugin>
+ 
+ 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+ 
+        <executions>
+          <execution>
+            <id>npm-install</id>
+            <phase>initialize</phase>
+            <goals> <goal>run</goal> </goals>
+ 
+            <configuration>
+              <target>
+                <exec executable="cmd" dir="${basedir}" osfamily="windows"
+                    failonerror="true">
+                  <arg line="/c npm config set color false"/>
+                </exec>
+                <exec executable="bash" dir="${basedir}" osfamily="unix"
+                    failonerror="true">
+                  <arg line="npm config set color false"/>
+                </exec>
+ 
+                <exec executable="cmd" dir="${basedir}" osfamily="windows"
+                    failonerror="true">
+                  <arg line="/c npm install"/>
+                </exec>
+                <exec executable="bash" dir="${basedir}" osfamily="unix"
+                    failonerror="true">
+                  <arg line="npm install"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+ 
+        </executions>
+      </plugin>
+ 
     
     </plugins>
   </build>

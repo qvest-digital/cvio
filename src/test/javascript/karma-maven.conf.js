@@ -8,7 +8,7 @@ module.exports = function (config) {
         'main/resources/webroot/lib/angular.min.js',
         'main/resources/webroot/lib/angular-resource.min.js',
         'main/resources/webroot/lib/ui-bootstrap-tpls.min.js',
-	'main/resources/webroot/*.js',
+        'main/resources/webroot/*.js',
         'test/javascript/lib/angular-mocks.js',
         'test/javascript/unit/*.js',	
     ],
@@ -22,6 +22,16 @@ module.exports = function (config) {
     junitReporter: {
       outputFile: '../target/karma_unit.xml',
       suite: 'unit'
+    },
+
+    preprocessors: {
+      // ..
+      'js/*.js': 'coverage'         // (1)
+    },
+ 
+    coverageReporter: {
+      type : 'html',                // (2)
+      dir : 'target/karma-coverage'
     }
   });
 };
