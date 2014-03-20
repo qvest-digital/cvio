@@ -75,11 +75,10 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     }
 
     /**
-     * Add a Skill-Item (fuzzy)matching the supplied name
+     * Add a Skill-Item matching the supplied name
      * to the search filter. 
      */
     $scope.addSearchTerm = function(term) {
-    	console.log(term);
         for (var i=0; i<$scope.skillItems.length; i++) {
         	var item = $scope.skillItems[i];
            	if (item.name == term && $scope.searchSkillItems.indexOf(item) == -1) {            	
@@ -287,7 +286,7 @@ cv.factory('Skills', function($resource){
 cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
 
     $scope.skillItems = Skills.query(),
-	
+
     $scope.categorySelection = 'prog';
     $scope.categories = [
                          {
@@ -327,11 +326,13 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
     /**
      * This is a model map,
      * for new entries of skills, used by addNewSkill.
+     * The keys in this map are the keys for the skill-boxed, and the values are the 
+     * currently entered skill names.
      */
     $scope.newSkill = {};
     
     /**
-     * Sets the Skill for an items.
+     * Sets the Skill for an items by its Id.
      * @param itemId the id of the item
      * @param skillLevel string key of the skill level, e.g. 'beginner'
      */
@@ -348,9 +349,24 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
     }
     
     /**
-     * Create a new Skill and put it within the supplied box.
+     * Create a new Skill and put it in the supplied box.
+     * If we find a skill, with a (fuzzy-)matching name,
+     * than no new skill is created, but we puth this skill in the box. 
      */
-    $scope.addNewSkill = function(skillName, skillLevel) {    
+    $scope.addNewSkill = function(skillName, skillLevel) {
+    	
+    	// if we find an item with the same name
+    	// we put this in the box
+    	for (var i=0; i<$scope.skillItems.length; i++) {
+    		var skillItem = $scope.skillItems[i];
+    		if (fuzzyMatch(skillItem.name, skillName)) {
+    			$scope.setSkill(skillItem.id, skillLevel);
+        		$scope.newSkill[skillLevel] = '';
+    			return;
+    		}
+    	}
+    	
+    	// otherwise, we create a new one
     	var newSkill = new Skills();
     	newSkill.name = skillName;
     	newSkill.category = 'other';
