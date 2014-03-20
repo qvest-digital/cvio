@@ -354,6 +354,11 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
      * than no new skill is created, but we puth this skill in the box. 
      */
     $scope.addNewSkill = function(skillName, skillLevel) {
+    	if (skillName == null)
+    		return;
+    	skillName = skillName.trim();
+    	if (skillName == '')
+    		return;
     	
     	// if we find an item with the same name
     	// we put this in the box
