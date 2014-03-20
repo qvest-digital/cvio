@@ -41,16 +41,22 @@ var cv = angular.module('cvio', ['ngResource', 'ui.bootstrap']);
  * The controller for List view of the application
  */
 cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
-	  $scope.selected = undefined;
-	  $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-	  
 	
-	$scope.cvs =  { };
-
-	
+	/**
+	 * The List of Skill-Items
+	 */
     $scope.skillItems = Skills.query();
 
+    /**
+     * The Skill-Items, which are currently selected as search filter
+     */
     $scope.searchSkillItems = [];
+
+	/**
+	 * The list of CVSs
+	 */
+	$scope.cvs =  { };
+
 
     // just load the list of all cvs into $scope.cvs
     $http.get('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills')
@@ -61,16 +67,22 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
             alert("error while loading "+status);
         });
 
+    /**
+     * Remove one Skill-Item from the search filter
+     */
     $scope.removeSearchSkill = function(skillItem) {
     	deleteFromCollection($scope.searchSkillItems, skillItem);
     }
-    
+
+    /**
+     * Add a Skill-Item (fuzzy)matching the supplied name
+     * to the search filter. 
+     */
     $scope.addSearchTerm = function(term) {
     	console.log(term);
         for (var i=0; i<$scope.skillItems.length; i++) {
         	var item = $scope.skillItems[i];
-        	//console.log("fuzzyMatch("+item.name+", "+term+"): "+ fuzzyMatch(item.name, term));
-             	if (item.name == term && $scope.searchSkillItems.indexOf(item) == -1) {            	
+           	if (item.name == term && $scope.searchSkillItems.indexOf(item) == -1) {            	
             	$scope.searchSkillItems.push(item);
             	$scope.searchTerm = '';
                 break;
@@ -128,7 +140,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     /**
      * Flag to show if http request is running
      */
-    $scope.isBusy = false;
+    $scope.isBusySithSaving = false;
 
 	/**
 	 * Flag to show the user, that the data was modified and may be saved.
@@ -195,10 +207,10 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 $scope.currentUri = uri;
                 $scope.ignoreNextWatch = true;
                 $scope.modified = false;
-                $scope.isBusy = false;
+                $scope.isBusySithSaving = false;
             })
             .error(function(data, status, headers, config) {
-            	$scope.isBusy = false;
+            	$scope.isBusySithSaving = false;
                 alert("error while loading "+status);
             });
     }
@@ -209,34 +221,40 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Otherwise we create a new one.
      */
     $scope.save = function() {
-    	//preventive dual cv creation
-    	if(!$scope.isBusy) {
-    		$scope.isBusy = true;
-	        if ($scope.currentUri) { // update
-	            $http.put($scope.currentUri, $scope.cv)
-	                .success(function(data, status, headers, config) {
-	                    $scope.modified = false;
-	                    $scope.isBusy = false;
-	                })
-	                .error(function(data, status, headers, config) {
-	                	$scope.isBusy = false;
-	                    alert("error while saving "+status);
-	                });
-	
-	        } else { // create new
-	            $http.post('/api/cv/cvs', $scope.cv)
-	                .success(function(data, status, headers, config) {
-	                    $scope.ignoreNextWatch = true;
-	                    // Load the newly created cv data from the server
-	                    // supplied with the http location header
-	                    $scope.loadUri(headers('Location'));                    
-	                })
-	                .error(function(data, status, headers, config) {
-	                	$scope.isBusy = false;
-	                    alert("error while saving "+status);
-	                });
-	        }
-    	}
+
+    	// prevent from double saving
+    	if($scope.isBusySithSaving)
+    		return;    	
+    	$scope.isBusySithSaving = true;
+    	
+    	// update
+        if ($scope.currentUri) { 
+            $http.put($scope.currentUri, $scope.cv)
+                .success(function(data, status, headers, config) {
+                    $scope.modified = false;
+                    $scope.isBusySithSaving = false;
+                })
+                .error(function(data, status, headers, config) {
+                	$scope.isBusySithSaving = false;
+                    alert("error while saving "+status);
+                });
+
+        } 
+        
+        // create new
+        else { 
+            $http.post('/api/cv/cvs', $scope.cv)
+                .success(function(data, status, headers, config) {
+                    $scope.ignoreNextWatch = true;
+                    // Load the newly created cv data from the server
+                    // supplied with the http location header
+                    $scope.loadUri(headers('Location'));                    
+                })
+                .error(function(data, status, headers, config) {
+                	$scope.isBusySithSaving = false;
+                    alert("error while saving "+status);
+                });
+        }
     };
 
     /**
