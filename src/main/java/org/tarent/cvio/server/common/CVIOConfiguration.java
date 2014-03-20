@@ -1,5 +1,7 @@
 package org.tarent.cvio.server.common;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,6 +45,13 @@ public class CVIOConfiguration extends Configuration {
     private String elasticsearchEnableHttp;
 
     /**
+     * Default size for search operations within the Elasticsearch.
+     */
+    @NotNull
+    @JsonProperty
+    private int defaultEsFetchSize;
+
+    /**
      * Path to the folder of the database.
      * 
      * @return the path
@@ -81,5 +90,14 @@ public class CVIOConfiguration extends Configuration {
      */
     public boolean isElasticsearchEnableHttp() {
         return Boolean.parseBoolean(elasticsearchEnableHttp);
+    }
+
+    /**
+     * Default size for search operations within the Elasticsearch.
+     * 
+     * @return the default fetch size
+     */
+    public int getDefaultEsFetchSize() {
+        return defaultEsFetchSize;
     }
 }

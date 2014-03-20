@@ -1,10 +1,6 @@
 package org.tarent.cvio.server;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.tarent.cvio.server.auth.CVLdapAuth;
-import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.cv.CVResource;
@@ -18,8 +14,6 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import com.yammer.dropwizard.auth.basic.BasicCredentials;
-import com.yammer.dropwizard.authenticator.LdapAuthenticator;
 
 
 
@@ -80,9 +74,7 @@ public class CVIO extends Service<CVIOConfiguration> {
     @Override
     public void run(final CVIOConfiguration configuration,
             final Environment environment) throws Exception {
-    
-    	
-    	
+
 
         // We are using Googe Guice for creating and wiring of our instances
         // see https://code.google.com/p/google-guice/
@@ -104,7 +96,7 @@ public class CVIO extends Service<CVIOConfiguration> {
 
         // An example HealthCheck
         environment.addHealthCheck(new Health());
-	    
+
     }
-    
+
 }

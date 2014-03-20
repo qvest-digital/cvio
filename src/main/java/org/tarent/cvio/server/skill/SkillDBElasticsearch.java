@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.common.SilentObjectMapper;
 
@@ -48,13 +49,20 @@ public class SkillDBElasticsearch implements SkillDB {
     private ESNodeManager es;
 
     /**
+     * The global Configuration.
+     */
+    private CVIOConfiguration config;
+
+    /**
      * Create a new SkillDBService based on elasticsearch.
      * 
      * @param esNode the access to elasticsearch
+     * @param theConfiguration The global Configuration
      */
     @Inject
-    public SkillDBElasticsearch(final ESNodeManager esNode) {
+    public SkillDBElasticsearch(final ESNodeManager esNode, final CVIOConfiguration theConfiguration) {
         es = esNode;
+        config = theConfiguration;
     }
 
     @Override
@@ -67,9 +75,14 @@ public class SkillDBElasticsearch implements SkillDB {
         }
         logger.trace("searching for all skills es");
         SearchRequestBuilder search = es.client().prepareSearch()
-                .setIndices(INDEX_SKILL).setTypes(TYPE_SKILL);
+                .setIndices(INDEX_SKILL).setTypes(TYPE_SKILL)
+                .setSize(config.getDefaultEsFetchSize());
 
         SearchResponse response = search.execute().actionGet();
+        if (response.getHits().getHits().length < response.getHits().getTotalHits()) {
+            search.setSize((int) response.getHits().getTotalHits());
+            response = search.execute().actionGet();
+        }
 
         return skillListFromResponse(response);
     }

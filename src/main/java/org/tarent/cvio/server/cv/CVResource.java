@@ -65,11 +65,10 @@ public class CVResource {
     @Timed
     @GET
     @Path("/cvs")
-    public List<Map<String, String>> getCVs(
+    public List<Map<String, Object>> getCVs(
             @QueryParam("fields") final List<String> fields) {
-        List<Map<String, String>> cvs = cvdb.getAllCVs(fields
-                .toArray(new String[0]));
-        for (Map<String, String> entry : cvs) {
+        List<Map<String, Object>> cvs = cvdb.getAllCVs(fields.toArray(new String[0]));
+        for (Map<String, Object> entry : cvs) {
             entry.put("ref",
                     configuration.getUriPrefix() + "/cv/cvs/" + entry.get("id"));
         }

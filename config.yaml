@@ -6,6 +6,7 @@ elasticsearchBindHost: 127.0.0.1
 
 elasticsearchEnableHttp: true
 
+defaultEsFetchSize: 500
 
 
 ####################################

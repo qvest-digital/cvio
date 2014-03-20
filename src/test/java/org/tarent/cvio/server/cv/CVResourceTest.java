@@ -78,11 +78,11 @@ public class CVResourceTest {
         CVResource aRessource = new CVResource(dbMock, aConfiguration);
         String[] someFields = { "demo" };
 
-        List<Map<String, String>> demoResultData = demoResultData();
+        List<Map<String, Object>> demoResultData = demoResultData();
         Mockito.when(dbMock.getAllCVs(someFields)).thenReturn(demoResultData);
 
         // when I request a CV
-        List<Map<String, String>> result = aRessource.getCVs(Arrays
+        List<Map<String, Object>> result = aRessource.getCVs(Arrays
                 .asList(someFields));
 
         // then
@@ -92,25 +92,25 @@ public class CVResourceTest {
 
         // and entries have a valid uri ref
         assertNotNull(result.get(0).get("ref"));
-        assertTrue(result.get(0).get("ref")
+        assertTrue(result.get(0).get("ref").toString()
                 .startsWith(aConfiguration.getUriPrefix()));
 
         assertNotNull(result.get(1).get("ref"));
-        assertTrue(result.get(1).get("ref")
+        assertTrue(result.get(1).get("ref").toString()
                 .startsWith(aConfiguration.getUriPrefix()));
     }
 
-    private List<Map<String, String>> demoResultData() {
-        return new ArrayList<Map<String, String>>() {
+    private List<Map<String, Object>> demoResultData() {
+        return new ArrayList<Map<String, Object>>() {
             {
                 ;
-                add(new HashMap<String, String>() {
+                add(new HashMap<String, Object>() {
                     {
                         put("demo", "data");
                         put("name", "Alice");
                     }
                 });
-                add(new HashMap<String, String>() {
+                add(new HashMap<String, Object>() {
                     {
                         put("demo", "data");
                         put("name", "Bob");

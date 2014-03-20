@@ -7,6 +7,8 @@ elasticsearchBindHost: 127.0.0.1
 
 elasticsearchEnableHttp: false
 
+defaultEsFetchSize: 500
+
 
 ####################################
 ## Dropwizard options (some of them)             

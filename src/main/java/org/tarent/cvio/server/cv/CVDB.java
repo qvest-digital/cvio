@@ -18,7 +18,7 @@ public interface CVDB {
      * @return List of Maps with the requested fields and a special field '_id'
      *         for the document id.
      */
-    List<Map<String, String>> getAllCVs(String[] fields);
+    List<Map<String, Object>> getAllCVs(String[] fields);
 
     /**
      * Creates a CV with the supplied JSON-Document.

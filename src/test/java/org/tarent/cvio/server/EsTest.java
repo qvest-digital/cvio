@@ -1,4 +1,4 @@
-package org.tarent.cvio.server.skill;
+package org.tarent.cvio.server;
 
 import java.io.File;
 import java.util.UUID;
