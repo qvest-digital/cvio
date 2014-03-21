@@ -88,5 +88,29 @@ describe('List controller', function() {
        	 	expect(true).toEqual( scope.bySearchCriteria()(cvNonMatch) );
         });
 
+        it('is possible to add and remove search terms', function() {
+        	scope.skillItems = allSkillList;
+
+       	 	expect(0).toEqual( scope.searchSkillItems.length );
+       	 	
+       	 	// direct match
+       	 	scope.addSearchTerm('Wireshark');  
+       	 	scope.addSearchTerm('WS/SOAP');  
+       	 	expect(2).toEqual( scope.searchSkillItems.length );
+       	 	
+       	 	// no match -> nothing happens
+       	 	scope.addSearchTerm('lkmlmlkml kmlkml kmlk');  
+       	 	expect(2).toEqual( scope.searchSkillItems.length );
+       	 	
+       	 	// adding twice -> nothing happens
+       	 	scope.addSearchTerm('Wireshark');  
+       	 	expect(2).toEqual( scope.searchSkillItems.length );
+       	 	
+       	 	// remove one item -> removed
+       	 	var leavingItem = scope.searchSkillItems[1];
+       	 	scope.removeSearchSkill(scope.searchSkillItems[0]);  
+       	 	expect(1).toEqual( scope.searchSkillItems.length );
+       	 	expect(leavingItem).toEqual( scope.searchSkillItems[0]);
+        });
 	});
 });
