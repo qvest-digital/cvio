@@ -131,7 +131,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     /**
      * Flag to show if http request is running
      */
-    $scope.isBusySithSaving = false;
+    $scope.isBusyWithSaving = false;
 
 	/**
 	 * Flag to show the user, that the data was modified and may be saved.
@@ -198,10 +198,10 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 $scope.currentUri = uri;
                 $scope.ignoreNextWatch = true;
                 $scope.modified = false;
-                $scope.isBusySithSaving = false;
+                $scope.isBusyWithSaving = false;
             })
             .error(function(data, status, headers, config) {
-            	$scope.isBusySithSaving = false;
+            	$scope.isBusyWithSaving = false;
                 alert("error while loading "+status);
             });
     }
@@ -214,19 +214,19 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.save = function() {
 
     	// prevent from double saving
-    	if($scope.isBusySithSaving)
+    	if($scope.isBusyWithSaving)
     		return;    	
-    	$scope.isBusySithSaving = true;
+    	$scope.isBusyWithSaving = true;
     	
     	// update
         if ($scope.currentUri) { 
             $http.put($scope.currentUri, $scope.cv)
                 .success(function(data, status, headers, config) {
                     $scope.modified = false;
-                    $scope.isBusySithSaving = false;
+                    $scope.isBusyWithSaving = false;
                 })
                 .error(function(data, status, headers, config) {
-                	$scope.isBusySithSaving = false;
+                	$scope.isBusyWithSaving = false;
                     alert("error while saving "+status);
                 });
 
@@ -242,7 +242,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.loadUri(headers('Location'));                    
                 })
                 .error(function(data, status, headers, config) {
-                	$scope.isBusySithSaving = false;
+                	$scope.isBusyWithSaving = false;
                     alert("error while saving "+status);
                 });
         }
