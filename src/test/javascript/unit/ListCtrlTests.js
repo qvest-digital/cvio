@@ -40,7 +40,7 @@ describe('List controller', function() {
         beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
         	$httpBackend = _$httpBackend_;
         	$httpBackend.whenGET('/api/skills').respond(allSkillList);
-        	$httpBackend.whenGET('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills').respond([]);
+        	$httpBackend.whenGET('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills').respond([{'givenName' : 'Bob'}]);
         	
             scope = $rootScope.$new();
             scope.cv = {};
@@ -48,6 +48,10 @@ describe('List controller', function() {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.flush();
         }));
+
+        it('should load the cvs at startup', function() {
+        	expect('Bob').toEqual(scope.cvs[0]['givenName']);        	
+        });
 
         it('calculateSearchScorePercent works correct', function() {
         	var cv = {
