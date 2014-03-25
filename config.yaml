@@ -8,6 +8,9 @@ elasticsearchEnableHttp: true
 
 defaultEsFetchSize: 500
 
+defaultUser: changeit
+
+defaultPW: changeit
 
 ####################################
 ## Dropwizard options (some of them)             

@@ -40,7 +40,7 @@ public class SkillResourceTest {
         when(dbMock.getAllSkills()).thenReturn(skillList);
 
         // then the list is returned
-        List<Skill> result = aResource.getAllSkills();
+        List<Skill> result = aResource.getAllSkills(true);
         assertEquals(skillList.size(), result.size());
     }
 
@@ -53,7 +53,7 @@ public class SkillResourceTest {
         when(dbMock.getSkillById("idxx")).thenReturn(newSkill);
 
         // then the it is returned
-        Skill retrievedSkill = aResource.getSkillByid("idxx");
+        Skill retrievedSkill = aResource.getSkillByid("idxx", true);
         SkillHelper.skillsEqualWitoutId(newSkill, retrievedSkill);
     }
 
@@ -64,7 +64,7 @@ public class SkillResourceTest {
         when(dbMock.getSkillById("idxx")).thenReturn(null);
 
         // then the it is returned
-        assertNull(aResource.getSkillByid("idxx"));
+        assertNull(aResource.getSkillByid("idxx", true));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class SkillResourceTest {
         when(dbMock.createSkill(newSkill)).thenReturn("anyID");
 
         // when skill is created
-        Response httpResponse = aResource.createSkill(newSkill);
+        Response httpResponse = aResource.createSkill(newSkill, true);
 
         // then database get called to persist the skill
         verify(dbMock, times(1)).createSkill(newSkill);

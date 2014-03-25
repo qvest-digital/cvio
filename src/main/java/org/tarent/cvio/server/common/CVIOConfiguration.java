@@ -54,7 +54,24 @@ public class CVIOConfiguration extends Configuration {
     @NotNull
     @JsonProperty
     private int defaultEsFetchSize;
+    
+    /**
+     * A default user for the basic authentication to access resources
+     */
+    @NotNull
+    @JsonProperty
+    private String defaultUser;
+    
+    /**
+     * The default password for the default user
+     */
+    @NotNull
+    @JsonProperty
+    private String defaultPW;
 
+    /**
+     * Ldap configuration
+     */
     @Valid
     @NotNull
     @JsonProperty
@@ -109,7 +126,30 @@ public class CVIOConfiguration extends Configuration {
     public int getDefaultEsFetchSize() {
         return defaultEsFetchSize;
     }
+    
+    /**
+     * Returns the default user
+     * 
+     * @return String default user
+     */
+    public String getDefaultUser() {
+    	return defaultUser;
+    }
+    
+    /**
+     * Returns the default password for the default user.
+     * 
+     * @return String - default pw
+     */
+    public String getDefaultPW() {
+    	return defaultPW;
+    }
 
+    /**
+     * Returns the ldap configuration
+     * 
+     * @return {@link LdapConfiguration} the configuration
+     */
     public LdapConfiguration getLdapConf() {        
      return ldap;     
     }

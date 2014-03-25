@@ -86,7 +86,7 @@ public class CVResource {
     @Timed
     @GET
     @Path("/cvs/{id}")
-    public String getCV(@PathParam("id") final String id) {
+    public String getCV(@PathParam("id") final String id, @Auth Boolean isAuthenticated) {
         return cvdb.getCVById(id);
     }
 
@@ -101,7 +101,7 @@ public class CVResource {
     @PUT()
     @Path("/cvs/{id}")
     public Response updateCV(@PathParam("id") final String id,
-            final String content) {
+            final String content, @Auth Boolean isAuthenticated) {
         cvdb.updateCV(id, content);
         return Response.ok().build();
     }
@@ -117,7 +117,7 @@ public class CVResource {
     @Timed
     @POST
     @Path("/cvs")
-    public Response createCV(final String content) throws URISyntaxException {
+    public Response createCV(final String content, @Auth Boolean isAuthenticated) throws URISyntaxException {
         // Use JsonNode for json handling, if needed
         String cvid = cvdb.createCV(content);
         return Response

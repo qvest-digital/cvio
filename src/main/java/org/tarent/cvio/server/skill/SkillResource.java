@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 
 import com.google.inject.Inject;
+import com.yammer.dropwizard.auth.Auth;
 import com.yammer.metrics.annotation.Timed;
 
 /**
@@ -57,7 +58,7 @@ public class SkillResource {
      */
     @GET()
     @Timed
-    public List<Skill> getAllSkills() {
+    public List<Skill> getAllSkills(@Auth Boolean isAuthenticated) {
         return skillDB.getAllSkills();
     }
 
@@ -70,7 +71,7 @@ public class SkillResource {
     @GET()
     @Path("/{id}")
     @Timed
-    public Skill getSkillByid(@PathParam("id") final String theId) {
+    public Skill getSkillByid(@PathParam("id") final String theId, @Auth Boolean isAuthenticated) {
         Skill skill = skillDB.getSkillById(theId);
         return skill;
     }
@@ -84,7 +85,7 @@ public class SkillResource {
      */
     @POST()
     @Timed
-    public Response createSkill(final Skill newSkill) throws URISyntaxException {
+    public Response createSkill(final Skill newSkill, @Auth Boolean isAuthenticated) throws URISyntaxException {
         String id = skillDB.createSkill(newSkill);
         return Response
                 .created(new URI(configuration.getUriPrefix() + "/skills/" + id))

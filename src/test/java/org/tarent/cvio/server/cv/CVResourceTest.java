@@ -44,7 +44,7 @@ public class CVResourceTest {
         Mockito.when(dbMock.createCV(DEMO_JSON)).thenReturn(CV_ID);
 
         // when creating a new CV
-        Response httpResponse = aRessource.createCV(DEMO_JSON);
+        Response httpResponse = aRessource.createCV(DEMO_JSON, true);
 
         // then
         // cv was created in the database
@@ -65,7 +65,7 @@ public class CVResourceTest {
         Mockito.when(dbMock.getCVById(CV_ID)).thenReturn(DEMO_JSON);
 
         // when I request a CV
-        String result = aRessource.getCV(CV_ID);
+        String result = aRessource.getCV(CV_ID, true);
 
         // then
         assertEquals(DEMO_JSON, result);
