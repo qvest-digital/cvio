@@ -8,8 +8,12 @@ build-arch:
 
 build: build-indep
 build-indep:
+#	run the maven buid within
+#	the debian build.
+#	mvn -Dmaven.repo.local=$(CURDIR)/debian/maven-repo package
 
 clean:
+#	mvn -Dmaven.repo.local=$(CURDIR)/debian/maven-repo clean
 	dh_testdir
 	dh_testroot
 	dh_clean
