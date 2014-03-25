@@ -83,7 +83,7 @@ public class CVResourceTest {
 
         // when I request a CV
         List<Map<String, Object>> result = aRessource.getCVs(Arrays
-                .asList(someFields));
+                .asList(someFields), true);
 
         // then
         // data matches:

@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 
 import com.google.inject.Inject;
+import com.yammer.dropwizard.auth.Auth;
 import com.yammer.metrics.annotation.Timed;
 
 /**
@@ -29,6 +30,7 @@ import com.yammer.metrics.annotation.Timed;
  * @author smancke
  * 
  */
+
 @Path("/cv")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -66,7 +68,7 @@ public class CVResource {
     @GET
     @Path("/cvs")
     public List<Map<String, Object>> getCVs(
-            @QueryParam("fields") final List<String> fields) {
+            @QueryParam("fields") final List<String> fields, @Auth Boolean isAuthenticated) {
         List<Map<String, Object>> cvs = cvdb.getAllCVs(fields.toArray(new String[0]));
         for (Map<String, Object> entry : cvs) {
             entry.put("ref",
