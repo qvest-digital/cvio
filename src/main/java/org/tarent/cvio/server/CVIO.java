@@ -13,7 +13,18 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
+
 import com.yammer.dropwizard.auth.basic.BasicAuthProvider;
+
+import com.yammer.dropwizard.auth.Authenticator;
+import com.yammer.dropwizard.auth.CachingAuthenticator;
+import com.yammer.dropwizard.auth.basic.BasicAuthProvider;
+import com.yammer.dropwizard.auth.basic.BasicCredentials;
+import com.yammer.dropwizard.authenticator.LdapAuthenticator;
+import com.yammer.dropwizard.authenticator.LdapCanAuthenticate;
+import com.yammer.dropwizard.authenticator.ResourceAuthenticator;
+import com.yammer.dropwizard.authenticator.healthchecks.LdapHealthCheck;
+
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 
@@ -97,6 +108,15 @@ public class CVIO extends Service<CVIOConfiguration> {
         
         // An example HealthCheck
         environment.addHealthCheck(new Health());
+        
+        Authenticator<BasicCredentials, BasicCredentials> ldapAuthenticator =
+        CachingAuthenticator.wrap(
+                    new ResourceAuthenticator(new LdapAuthenticator(configuration.getLdapConf())),
+                    configuration.getLdapConf().getCachePolicy()
+                    );
+
+        environment.addProvider(new BasicAuthProvider<>(ldapAuthenticator, "realm"));
+        environment.addHealthCheck(new LdapHealthCheck(new ResourceAuthenticator(new LdapCanAuthenticate(configuration.getLdapConf()))));
 
     }
 

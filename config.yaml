@@ -130,3 +130,17 @@ logging:
     org.tarent.cvio.server: TRACE
 
 
+ldapconf:
+    uri: ldaps://dc-slave.lan.tarent.de:7389
+    cachePolicy: maximumSize=10000, expireAfterAccess=10m
+    userFilter: cn=users,dc=tarent,dc=de
+    groupFilter: cn=groups,dc=tarent,dc=de
+    userNameAttribute: cn
+    groupNameAttribute: cn
+    groupMembershipAttribute: gidNumber
+    restrictToGroups:
+        - user
+        - admin
+        - bots
+    connectTimeout: 500ms
+    readTimeout: 500ms

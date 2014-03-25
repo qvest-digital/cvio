@@ -4,7 +4,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.tarent.cvio.server.auth.CVLdapAuthConf;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -56,6 +55,11 @@ public class CVIOConfiguration extends Configuration {
     @JsonProperty
     private int defaultEsFetchSize;
 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private LdapConfiguration ldap = new LdapConfiguration();
+    
     /**
      * Path to the folder of the database.
      * 
@@ -105,14 +109,8 @@ public class CVIOConfiguration extends Configuration {
     public int getDefaultEsFetchSize() {
         return defaultEsFetchSize;
     }
-    
-    
-    @Valid
-    @NotNull
-    private CVLdapAuthConf ldap = new CVLdapAuthConf();
 
-    @JsonProperty("ldapconf")
-    public CVLdapAuthConf getLdapConf() {        
+    public LdapConfiguration getLdapConf() {        
      return ldap;     
     }
 }

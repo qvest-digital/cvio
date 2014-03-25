@@ -1,7 +1,6 @@
 package org.tarent.cvio.server;
 
 import org.tarent.cvio.server.auth.CVLdapAuth;
-import org.tarent.cvio.server.auth.CVLdapAuthConf;
 import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.common.ESNodeManagerImpl;

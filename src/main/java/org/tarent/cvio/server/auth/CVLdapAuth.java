@@ -35,11 +35,14 @@ public class CVLdapAuth {
 	// Test for ldap
 	private CVIOConfiguration configuration;
 
+	@Inject
+	public CVLdapAuth(CVIOConfiguration conf) {
+		this.configuration = conf;
+	}
 	
 	@Timed
     @POST
 	public String userForAuth(final String content) throws URISyntaxException {
-		System.out.println(content);
 		String name = null;
 		String pw = null;
 	        
