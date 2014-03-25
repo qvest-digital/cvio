@@ -1,10 +1,14 @@
 package org.tarent.cvio.server.common;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.tarent.cvio.server.auth.CVLdapAuthConf;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yammer.dropwizard.authenticator.LdapConfiguration;
 import com.yammer.dropwizard.config.Configuration;
 
 /**
@@ -13,6 +17,7 @@ import com.yammer.dropwizard.config.Configuration;
  * 
  * @author smancke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CVIOConfiguration extends Configuration {
 
     /**
@@ -99,5 +104,15 @@ public class CVIOConfiguration extends Configuration {
      */
     public int getDefaultEsFetchSize() {
         return defaultEsFetchSize;
+    }
+    
+    
+    @Valid
+    @NotNull
+    private CVLdapAuthConf ldap = new CVLdapAuthConf();
+
+    @JsonProperty("ldapconf")
+    public CVLdapAuthConf getLdapConf() {        
+     return ldap;     
     }
 }

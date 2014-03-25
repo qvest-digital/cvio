@@ -17,7 +17,9 @@ import javax.ws.rs.core.Response;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.tarent.cvio.server.common.CVIOConfiguration;
 
+import com.google.inject.Inject;
 import com.yammer.dropwizard.auth.AuthenticationException;
 import com.yammer.dropwizard.auth.basic.BasicCredentials;
 import com.yammer.dropwizard.authenticator.LdapAuthenticator;
@@ -29,10 +31,15 @@ import com.yammer.metrics.annotation.Timed;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CVLdapAuth {
 	
+	
+	// Test for ldap
+	private CVIOConfiguration configuration;
+
+	
 	@Timed
     @POST
 	public String userForAuth(final String content) throws URISyntaxException {
-		System.out.println(content);		
+		System.out.println(content);
 		String name = null;
 		String pw = null;
 	        
@@ -45,14 +52,13 @@ public class CVLdapAuth {
 				e.printStackTrace();
 			}
 	        
-	        /*
 	    	try {
+	    		LdapAuthenticator authenticator = new LdapAuthenticator(this.configuration.getLdapConf()); 
 				authenticator.authenticate(new BasicCredentials(name, pw));
 			} catch (AuthenticationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
 		
 		
 		

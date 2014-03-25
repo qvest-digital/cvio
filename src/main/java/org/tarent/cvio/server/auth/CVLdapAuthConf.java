@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.tarent.cvio.server.common.CVIOConfiguration;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.cache.CacheBuilderSpec;
 import com.google.common.collect.Sets;
@@ -13,6 +15,7 @@ import com.yammer.dropwizard.authenticator.LdapConfiguration;
 import com.yammer.dropwizard.util.Duration;
 
 public class CVLdapAuthConf extends LdapConfiguration{
+	
 	  	@NotNull
 	    @JsonProperty
 	    private URI uri = URI.create("ldaps://myldap.com:636");
@@ -150,4 +153,5 @@ public class CVLdapAuthConf extends LdapConfiguration{
 	        restrictToGroups.add(group);
 	        return this;
 	    }
+	    
 }

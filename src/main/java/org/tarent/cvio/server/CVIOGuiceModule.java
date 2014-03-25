@@ -27,8 +27,6 @@ public class CVIOGuiceModule extends AbstractModule {
      * the configuration instance.
      */
     private CVIOConfiguration configuration;
-    
-    private CVLdapAuthConf ldapconf;
 
     /**
      * creates an instance of the guice configuration.
