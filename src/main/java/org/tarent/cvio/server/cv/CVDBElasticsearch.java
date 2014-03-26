@@ -121,4 +121,13 @@ public class CVDBElasticsearch implements CVDB {
         es.client().prepareIndex(INDEX_CVS, TYPE_CV, id).setSource(content)
                 .execute().actionGet();
     }
+    
+    @Override
+    public void deleteCV(final String id) {
+    	if (!es.doesIndexExist(INDEX_CVS)){
+    		logger.warn("cv with id: " + id + "does not exist.");
+    	}    	
+    	logger.trace("delete cv with id: " + id);
+    	es.client().prepareDelete(INDEX_CVS,TYPE_CV,id).execute().actionGet();
+    }
 }

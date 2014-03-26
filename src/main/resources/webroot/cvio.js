@@ -110,6 +110,24 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     		return $scope.calculateSearchScorePercent(cvEntry) > 0;
 	    }
     }
+    
+    
+    /**
+     + Delete cv
+     */
+    $scope.deleteCV = function(ref) {
+        var uri = ref;
+        $http.delete(uri);
+            /*.success(
+                alert("Der user mit der ID" + $scope.cv + "wurde gelöscht")
+            ).error(
+                alert("Ein fehler ist aufgetreten")
+            )
+            */
+    };
+    
+    
+    
 }]);
 
 /**
@@ -247,6 +265,8 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                 });
         }
     };
+    
+    
 
     /**
      * Basic initialisation:

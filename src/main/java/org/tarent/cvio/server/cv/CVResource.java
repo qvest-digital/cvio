@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -14,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import org.tarent.cvio.server.common.CVIOConfiguration;
@@ -123,5 +125,18 @@ public class CVResource {
         return Response
                 .created(new URI(configuration.getUriPrefix() + "/cv/cvs/" + cvid))
                 .build();
+    }
+    
+    /**
+     * Delte CV
+     * @param id the id of the cv
+     * @return Response Objet with the status of the action
+     * 
+     * */
+    @DELETE
+    @Path("/cvs/{id}")
+    public Response deleteCV(@PathParam("id") final String id,@Auth Boolean isAuthenticated){
+    	cvdb.deleteCV(id);
+    	return Response.noContent().build();
     }
 }

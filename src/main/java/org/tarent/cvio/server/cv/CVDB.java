@@ -44,5 +44,11 @@ public interface CVDB {
      * @param id the cv id
      */
     void updateCV(String id, String content);
-
+    
+    
+    /**
+     * Deltes a cv by id
+     * @param id the cv id
+     */
+    void deleteCV(String id);
 }

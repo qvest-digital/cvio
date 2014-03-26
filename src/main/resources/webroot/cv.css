@@ -73,3 +73,7 @@ width:100%;
 .tt-suggestion p {
   margin: 0;
 }
+
+.glyphicon-trash{
+    color:#ff0041;
+}
