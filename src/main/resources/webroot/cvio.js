@@ -117,13 +117,15 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
      */
     $scope.deleteCV = function(ref) {
         var uri = ref;
-        $http.delete(uri);
-            /*.success(
-                alert("Der user mit der ID" + $scope.cv + "wurde gelöscht")
-            ).error(
-                alert("Ein fehler ist aufgetreten")
-            )
-            */
+        var bool = confirm("Wirklich löschen ? ");;
+        if( bool == true){
+            $http.delete(uri);
+            window.setTimeout(reload,500);
+            function reload(){
+                window.location.reload();
+            }
+        }
+            // do nothing
     };
     
     
