@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="importer">
+<head>
+    <title>Skill Importer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="cv.css" rel="stylesheet" media="screen"/>
+    <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/ui/jquery-ui.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/ui-bootstrap-tpls.min.js"></script>
+    <script src="importer.js"></script>
+    <style type="text/css">
+        #import-box {
+        	margin-top: 1%;
+        }
+        
+        #skill-import {
+        	float:right;
+        	margin-top: 1%;
+        	margin-right: 7%;
+        }
+        
+        .form-signin{
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        
+    </style>
+</head>
+<body>
+<section id="importer">
+    <div class="container" ng-controller="importCtrl">
+    	<label style="margin-top: 4%;" for="import-box">Skills to import:</label>
+    	<textarea ng-model="textarea.name" id="import-box" rows="20" cols="170"></textarea>
+		
+		<label style="margin-top: 1%" for="select-box">Choose a category:</label>
+		<select style="margin-left: 1%" id="select box" ng-model="category" ng-options="c.name for c in categories">
+		</select>
+		
+		<button ng-click="readTextArea()" id="skill-import">Import</button>
+    </div>
+</section>
+</body>
+</html>
