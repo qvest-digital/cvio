@@ -120,10 +120,9 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
         var bool = confirm("Wirklich löschen ? ");;
         if( bool == true){
             $http.delete(uri);
-            window.setTimeout(reload,500);
-            function reload(){
-                window.location.reload();
-            }
+            setTimeout(function() {
+            	window.location.reload();
+            }, 500);
         }
             // do nothing
     };
