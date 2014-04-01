@@ -59,7 +59,7 @@
         <tbody>
           <tr ng-repeat="cv in cvs | filter:bySearchCriteria() | orderBy:calculateSearchScorePercent:true ">
             <td><a href="cv.html?ref={{cv.ref}}"><span class="glyphicon glyphicon-pencil"></span></a></td>
-            <td><button class="btn btn-default btn-md" ng-click="deleteCV(cv.ref)" type="button"><span class="glyphicon glyphicon-trash"></span></button></td>
+            <td><a ng-click="deleteCV(cv.ref)"><span class="glyphicon glyphicon-trash"></span></a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>            
             <td ng-repeat="item in searchSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>

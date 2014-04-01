@@ -122,7 +122,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
             $http.delete(uri);
             setTimeout(function() {
             	window.location.reload();
-            }, 500);
+            }, 650);
         }
             // do nothing
     };
