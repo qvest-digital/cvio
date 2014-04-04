@@ -23,6 +23,21 @@ function fuzzyMatch(string1, string2) {
 	return string1.toLowerCase() == string2.toLowerCase(); 
 }
 
+/**
+ * comparator for sorting by start start date
+ */
+function sortByStartDate(experienceA, experienceB) {
+	var a = experienceA.start;
+	var b = experienceB.start;
+	if (a == undefined)
+		return -1;
+	if (b == undefined)
+		return 1;
+	if (b.year-a.year != 0) {		
+		return b.year-a.year;
+	} 
+	return b.month-a.month;
+}
 
 /**
  * the angular main module for the cv application
@@ -115,16 +130,18 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     /**
      + Delete cv
      */
-    $scope.deleteCV = function(ref) {
-        var uri = ref;
-        var bool = confirm("Wirklich löschen ? ");;
-        if( bool == true){
-            $http.delete(uri);
-            setTimeout(function() {
-            	window.location.reload();
-            }, 650);
+    $scope.deleteCV = function(cv) {
+        var bool = confirm(cv.familyName+", " +cv.givenName + " wirklich löschen? ");
+
+        if(bool == true) {
+            $http.delete(cv.ref)
+            	.success(function(data, status, headers, config) {
+                    deleteFromCollection($scope.cvs, cv);
+            	})
+            	.error(function(data, status, headers, config) {
+            		alert("error while deletion");
+            	});
         }
-            // do nothing
     };
     
     
@@ -175,7 +192,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Event hook: Removes the supplied education from the list
      */
     $scope.deleteEducation = function(education) {
-        $scope.deleteFromCollection($scope.cv.educations, education);
+        deleteFromCollection($scope.cv.educations, education);
     }
 
     /**
@@ -189,7 +206,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Event hook: Removes the supplied job from the list
      */
     $scope.deleteJob = function(job) {
-        deleteFromCollection($scope.cv.jobs, education);
+        deleteFromCollection($scope.cv.jobs, job);
     }
 
     /**
@@ -231,11 +248,15 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
      * Otherwise we create a new one.
      */
     $scope.save = function() {
-
+    	
     	// prevent from double saving
     	if($scope.isBusyWithSaving)
     		return;    	
     	$scope.isBusyWithSaving = true;
+    	
+    	// sort experience lists
+    	$scope.cv.jobs.sort(sortByStartDate);
+    	$scope.cv.educations.sort(sortByStartDate);
     	
     	// update
         if ($scope.currentUri) { 
@@ -329,7 +350,7 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
                          ];
     
 
-    $scope.skillLevelHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertiese'};
+    $scope.skillLevelHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertise'};
     $scope.skillLevels = {
     						"beginner": 1,
     						"advanced": 2,
@@ -471,10 +492,10 @@ cv.directive('contenteditable', function() {
             };                                                                                                                                    
                                                                                                                                                   
             elm.bind('keyup', function(event) {                                                                                                   
-                scope.$apply(function() {                                                                                                         
+                scope.$apply(function() {
                     ctrl.$setViewValue(elm.html());                                                                                               
                 });                                                                                                                               
-            });                                                                                                                                   
+            }); 
         }                                                                                                                                         
     }                                                                                                                                             
 });
@@ -551,6 +572,7 @@ cv.directive('cvCeFormRow', function() {
  */
 function generateOptionYearList() {
     var out = '';
+    out += '                          <option value="">---</option>\n';
     for (var i=new Date().getFullYear(); i>=1980; i--) {
         out += '                          <option>' + i + '</option>\n';
     }
@@ -570,7 +592,8 @@ cv.directive('cvDateField', function() {
       template: '<div class="row" style="max-width: 170px;">\
                       <div class="col-sm-5" style="padding-right: 0px;">\
                         <select class="col-sm-6 form-control input-sm"  ng-model="ngModel.month">\
-                          <option>01</option>\
+    	                  <option value="">---</option>\
+    	                  <option>01</option>\
                           <option>02</option>\
                           <option>03</option>\
                           <option>04</option>\

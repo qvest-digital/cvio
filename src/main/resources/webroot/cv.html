@@ -23,9 +23,9 @@
       <br/>
     
     <ul class="nav nav-tabs">
-      <li><a href="#general" data-toggle="tab">Allgemein</a></li>
+      <li class="active"><a href="#general" data-toggle="tab">Allgemein</a></li>
       <li><a href="#experience" data-toggle="tab">Erfahrungen</a></li>
-      <li class="active"><a href="#skills" data-toggle="tab">Skills</a></li>
+      <li><a href="#skills" data-toggle="tab">Skills</a></li>
       <li  class="pull-right">
           <!-- Navigation -->
 	      <div>
@@ -44,7 +44,7 @@
     </ul>
 <br>
     <div class="tab-content">
-      <div id="general" class="tab-pane" >
+      <div id="general" class="tab-pane active" >
       <!-- Allgemeine Daten -->
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -76,7 +76,8 @@
           <form class="form-horizontal" role="form">
             <cv-short-field ng-model="cv.email" input-id="email" label="E-Mail"></cv-short-field>
             <cv-short-field ng-model="cv.phoneMobile" input-id="phoneMobile" label="Telefon (Mobil)"></cv-short-field>
-            <cv-short-field ng-model="cv.phoneFixed" input-id="phoneFixed" label="Telefon (Festnetz)"></cv-short-field>
+            <cv-short-field ng-model="cv.phoneFixed" input-id="phoneFixed" label="Telefon (Arbeit)"></cv-short-field>
+            <cv-short-field ng-model="cv.phoneFixedPrivate" input-id="phoneFixed" label="Telefon (Privat)"></cv-short-field>
             <cv-short-field ng-model="cv.xingProfile" input-id="xingProfile" label="Xing Profil"></cv-short-field>
 
             <hr/>
@@ -145,7 +146,7 @@
                         </select>
                       </div>
                     </div>
-                    <cv-ce-form-row label="Title" ng-model="education.title" font-style="font-weight: bold;"></cv-ce-form-row>
+                    <cv-ce-form-row label="Titel" ng-model="education.title" font-style="font-weight: bold;"></cv-ce-form-row>
                     <cv-ce-form-row label="Beschreibung" ng-model="education.description"></cv-ce-form-row>
                   </td>
                 </tr>
@@ -216,7 +217,7 @@
       </div>
     </div>
     
-    <div id="skills" class="tab-pane active" ng-controller="SkillCtrl" ng-init="init()">
+    <div id="skills" class="tab-pane" ng-controller="SkillCtrl" ng-init="init()">
       <!-- Skills -->
 
       <div>
@@ -225,7 +226,7 @@
         </ul>
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body" style="min-height: 150px;">
-            <div ng-repeat="item in skillItems | filter:byCategory(categorySelection)"
+            <div ng-repeat="item in skillItems | filter:byCategory(categorySelection) | orderBy:'name'"
                  id="skill_item_{{item.id}}" class="skillItem">{{item.name}}</div>
           </div>
         </div>
@@ -238,8 +239,8 @@
               <span class="panel-title"><strong>{{skillLevelHeader['beginner']}}</strong></span>
               <cv-skill-entry label="Hinzu" skill-list="skillItems" submit-function="addNewSkill(newSkill.beginner, 'beginner')" ng-model="newSkill.beginner"></cv-skill-entry>
             </div>
-            <div style="height: 250px;" class="panel-body" id="beginner">
-                <div ng-repeat="item in skillItems | filter:bySkillSelection('beginner')"
+            <div style="min-height: 250px;" class="panel-body" id="beginner">
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('beginner') | orderBy:'name'"
                   id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
@@ -254,9 +255,9 @@
               <span class="panel-title"><strong>{{skillLevelHeader['advanced'] }}</strong></span>
               <cv-skill-entry label="Hinzu" skill-list="skillItems" submit-function="addNewSkill(newSkill.advanced, 'advanced')" ng-model="newSkill.advanced"></cv-skill-entry>
             </div>
-            <div style="height: 250px;" class="panel-body" id="advanced">
+            <div style="min-height: 250px;" class="panel-body" id="advanced">
 
-                <div ng-repeat="item in skillItems | filter:bySkillSelection('advanced')"
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('advanced') | orderBy:'name'"
                     id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
@@ -271,9 +272,9 @@
               <span class="panel-title"><strong>{{skillLevelHeader['expert']}}</strong></span>
               <cv-skill-entry label="Hinzu" skill-list="skillItems" submit-function="addNewSkill(newSkill.expert, 'expert')" ng-model="newSkill.expert"></cv-skill-entry>
             </div>
-            <div style="height: 250px;" class="panel-body" id="expert">
+            <div style="min-height: 250px;" class="panel-body" id="expert">
 
-                <div ng-repeat="item in skillItems | filter:bySkillSelection('expert')"
+                <div ng-repeat="item in skillItems | filter:bySkillSelection('expert') | orderBy:'name'"
                     id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
