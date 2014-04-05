@@ -33,7 +33,7 @@
 	           class="btn btn-default btn-md">
 	          <span class="glyphicon glyphicon-chevron-left"></span> &Uuml;bersicht
 	        </a>
-	        <button ng-click="save()" type="button" class="btn btn-default btn-md">
+	        <button ng-click="save()" type="button" class="btn btn-default btn-md" ng-style="isBusyWithSaving && {'cursor': 'wait'}">
 	          <span ng-if="modified" class="glyphicon glyphicon-floppy-save text-danger"></span>
 	          <span ng-if="! modified" class="glyphicon glyphicon-floppy-saved text-success"></span>
 	          Speichern

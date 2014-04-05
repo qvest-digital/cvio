@@ -273,7 +273,8 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     	// sort experience lists
     	$scope.cv.jobs.sort(sortByStartDate);
     	$scope.cv.educations.sort(sortByStartDate);
-    	
+    
+
     	// update
         if ($scope.currentUri) { 
             $http.put($scope.currentUri, $scope.cv)
@@ -295,7 +296,8 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
                     $scope.ignoreNextWatch = true;
                     // Load the newly created cv data from the server
                     // supplied with the http location header
-                    $scope.loadUri(headers('Location'));                    
+                    $scope.loadUri(headers('Location'));
+                	$scope.isBusyWithSaving = false;
                 })
                 .error(function(data, status, headers, config) {
                 	$scope.isBusyWithSaving = false;
@@ -420,6 +422,9 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
     			return;
     		}
     	}
+    	
+    	if (!confirm('Eintrag '+ skillName +' anlegen?\nHaben sie gepr\u00FCft, dass es nicht bereits einen \u00E4hnlichen Eintrag gibt?'))
+    		return;
     	
     	// otherwise, we create a new one
     	var newSkill = new Skills();
