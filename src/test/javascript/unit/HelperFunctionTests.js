@@ -43,5 +43,17 @@ describe('Helper Functions', function() {
         });        
         
     });
+	
+	describe('revoveHTMLAndStyleButNotBr', function(){
 
+        it('should return clean text', function() {
+        	var html = '<style type="text/css">P { margin-bottom: 0.21cm; }P.western { font-family: "Museo Sans",sans-serif; font-size: 11pt; }P.cjk { font-size: 10pt; }A:link {  }</style>\
+        		<p style="margin-bottom: 0cm; background: #b3b3b3; border-top: 1px solid #ffffff; border-bottom: 1px solid #ffffff; border-left: 1px solid #ffffff; border-right: none; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm; font-variant: normal; font-weight: demi-bold">\
+        		<font color="#000000"><font face="Museo Sans, sans-serif"><span style="font-variant: normal"><font color="#000000"><font style="font-size: 11pt" size="2"><b>tarent\
+        		Gm</b></font></font></span><b>bH</b></font>\
+        		</font></br>Bonn</p>';
+
+        	expect('tarent GmbH </br>Bonn').toEqual(revoveHTMLAndStyleButNotBr(html));
+        });        
+    });
 });

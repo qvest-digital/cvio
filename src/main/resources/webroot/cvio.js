@@ -40,6 +40,22 @@ function sortByStartDate(experienceA, experienceB) {
 }
 
 /**
+ * removes all style information, html tags and multiple whitespaces
+ * but preserves line breaks.
+ *
+ * @param text
+ */
+function revoveHTMLAndStyleButNotBr(text) {
+	text = text.replace(/<style(.)*style>/gm, '');
+	text = text.replace(/\n/g, ' ');
+	text = text.replace(/<br>|<\/br>/gm, '\n');
+	text = $('<div/>').html(text).text();
+	text = text.replace(/[ \t\r]{2,}/g, ' ');
+	text = text.replace(/\n/gm, '</br>');	
+	return text.trim();
+}
+
+/**
  * the angular main module for the cv application
  */
 var cv = angular.module('cvio', ['ngResource', 'ui.bootstrap']);
@@ -496,6 +512,18 @@ cv.directive('contenteditable', function() {
                     ctrl.$setViewValue(elm.html());                                                                                               
                 });                                                                                                                               
             }); 
+            
+            elm.bind('paste', function(e) {
+            	setTimeout(function() {
+            		var text = revoveHTMLAndStyleButNotBr(elm.html());
+            		scope.$apply(function () {
+                		elm.html(text);
+                		ctrl.$setViewValue(text);  	
+            			console.log('paste: '+ text);	
+            		})
+            		
+            	}, 10);
+            });
         }                                                                                                                                         
     }                                                                                                                                             
 });
