@@ -160,6 +160,19 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
         }
     };
     
+    /**
+     * Download CV
+    */
+    $scope.downloadCV = function(cv){
+        $http.get('/api/CVS/export/'+cv.id)
+        .success(function(){
+            alert("funzt");
+        })
+        .error(function(){
+            alert("error while download");
+        })
+    };
+    
     
     
 }]);

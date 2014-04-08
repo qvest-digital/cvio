@@ -38,7 +38,10 @@
 	          <span ng-if="! modified" class="glyphicon glyphicon-floppy-saved text-success"></span>
 	          Speichern
 	        </button>
-	      </div>
+            <div ng-controller="ListCtrl" style="display:inline-block;">
+                <button ng-click="downloadCV(cv)" type="button" class="btn btn-default btn-md"><span class="glyphicon glyphicon-download" style="margin-right:5px"></span>Download</button>
+            </div>
+        </div>
       
       </li>
     </ul>
@@ -58,6 +61,7 @@
             <cv-short-field ng-model="cv.givenName" input-id="givenName" label="Vorname"></cv-short-field>
             <cv-short-field ng-model="cv.familyName" input-id="familyName" label="Nachname"></cv-short-field>
             <hr/>
+            <cv-short-field ng-model="cv.yearOfBirth" input-id="yearOfBirth" label="Geburtsjahr"></cv-short-field>
             <cv-short-field ng-model="cv.placeOfBirth" input-id="placeOfBirth" label="Geburtsort-/Land"></cv-short-field>
             <cv-short-field ng-model="cv.languages" input-id="languages" label="Sprachen"></cv-short-field>
             <cv-short-field ng-model="cv.familyStatus" input-id="familyStatus" label="Familienstand/Kinder"></cv-short-field>
