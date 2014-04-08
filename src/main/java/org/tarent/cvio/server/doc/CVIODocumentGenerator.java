@@ -3,6 +3,7 @@ package org.tarent.cvio.server.doc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 
 import net.sf.jooreports.templates.DocumentTemplate;
@@ -26,7 +27,6 @@ public class CVIODocumentGenerator {
      */
     private final Logger logger = LoggerFactory
             .getLogger(CVIODocumentGenerator.class);
-
 	
 	/**
 	 * Generates a document with all cv data.
@@ -38,12 +38,15 @@ public class CVIODocumentGenerator {
 		logger.trace("generating cv document");
 		
 		try {
-			DocumentTemplate template = fac.getTemplate(new File("cv-template.odt"));
+			final URL resource = this.getClass().getResource("cv-template.odt");
+			DocumentTemplate template = fac.getTemplate(resource.openStream());
 			template.createDocument(dataModel, new FileOutputStream("my-output.odt"));
 		} catch (IOException e) {
-			logger.error("error occured while creating the cv template", e.getMessage());
+			logger.error("error occured while creating the cv template");
+			e.printStackTrace();
 		} catch (DocumentTemplateException e) {
-			logger.error("error occured while parsing the cv template", e.getMessage());
+			logger.error("error occured while parsing the cv template");
+			e.printStackTrace();
 		}
 	}
 }
