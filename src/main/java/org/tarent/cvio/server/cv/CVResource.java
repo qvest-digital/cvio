@@ -2,6 +2,7 @@ package org.tarent.cvio.server.cv;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -157,8 +158,12 @@ public class CVResource {
      */
     @Path("cvs/export/{id}")
     public Response exportCV(@PathParam("id") final String id, @Auth Boolean isAuthenticated) {
-    	Map<String, Object> cvMapById = cvdb.getCVMapById(id);
-    	cvioDocGen.parseCVIOData(cvMapById);
+    	Map<String, Object> cvData = cvdb.getCVMapById(id);
+    	
+    	HashMap<Object, Object> dataModel = new HashMap<Object, Object>();
+    	dataModel.put("cv", cvData);
+    	cvioDocGen.generateDocument(dataModel);
+    	
     	return Response.noContent().build();
     }
 }
