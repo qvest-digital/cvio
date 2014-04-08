@@ -37,6 +37,14 @@ public interface CVDB {
     String getCVById(String id);
 
     /**
+     * Returns one cv by its id.
+     *  
+     * @param id the cv id
+     * @return the CV as a {@link Map} 
+     */
+    Map<String, Object> getCVMapById(String id);
+    
+     /**
      * Stores the new content of the cv.
      * 
      * @param content the cv as json string

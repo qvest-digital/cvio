@@ -15,10 +15,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import org.tarent.cvio.server.common.CVIOConfiguration;
+import org.tarent.cvio.server.doc.CVIODocumentGenerator;
 
 import com.google.inject.Inject;
 import com.yammer.dropwizard.auth.Auth;
@@ -47,6 +47,11 @@ public class CVResource {
      * The global configuration.
      */
     private CVIOConfiguration configuration;
+    
+    /**
+     * CVIO Document Generator
+     */
+    private CVIODocumentGenerator cvioDocGen;
 
     /**
      * Creates a new CV Resource.
@@ -55,9 +60,10 @@ public class CVResource {
      * @param cfg The global configuration.
      */
     @Inject
-    public CVResource(final CVDB cvdbImpl, final CVIOConfiguration cfg) {
+    public CVResource(final CVDB cvdbImpl, final CVIOConfiguration cfg, final CVIODocumentGenerator docGen) {
         this.cvdb = cvdbImpl;
         this.configuration = cfg;
+        this.cvioDocGen = docGen;
     }
 
     /**
@@ -137,6 +143,22 @@ public class CVResource {
     @Path("/cvs/{id}")
     public Response deleteCV(@PathParam("id") final String id,@Auth Boolean isAuthenticated){
     	cvdb.deleteCV(id);
+    	return Response.noContent().build();
+    }
+
+    /**
+     * Generates a document for one cv
+     * 
+     * @param id - the id of the cv
+     * @param isAuthenticated - to protect this resource
+     * 
+     * @return Response Object
+     * 
+     */
+    @Path("cvs/export/{id}")
+    public Response exportCV(@PathParam("id") final String id, @Auth Boolean isAuthenticated) {
+    	Map<String, Object> cvMapById = cvdb.getCVMapById(id);
+    	cvioDocGen.parseCVIOData(cvMapById);
     	return Response.noContent().build();
     }
 }

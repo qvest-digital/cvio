@@ -114,6 +114,17 @@ public class CVDBElasticsearch implements CVDB {
         return es.client().prepareGet(INDEX_CVS, TYPE_CV, id).execute()
                 .actionGet().getSourceAsString();
     }
+    
+    @Override
+    public Map<String, Object> getCVMapById(final String id) {
+    	if (!es.doesIndexExist(INDEX_CVS)) {
+            logger.warn("index " + INDEX_CVS + " does not exist.");
+            return null;
+        }
+        logger.trace("fetching one cv with id " + id + " in es");
+        return es.client().prepareGet(INDEX_CVS, TYPE_CV, id).execute()
+                .actionGet().getSource();
+    }
 
     @Override
     public void updateCV(final String id, final String content) {
