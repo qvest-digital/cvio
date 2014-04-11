@@ -7,6 +7,7 @@ import org.tarent.cvio.server.common.ESNodeManagerImpl;
 import org.tarent.cvio.server.cv.CVDB;
 import org.tarent.cvio.server.cv.CVDBElasticsearch;
 import org.tarent.cvio.server.cv.CVResource;
+import org.tarent.cvio.server.doc.DocumentResource;
 import org.tarent.cvio.server.skill.SkillDB;
 import org.tarent.cvio.server.skill.SkillDBElasticsearch;
 import org.tarent.cvio.server.skill.SkillResource;
@@ -55,6 +56,9 @@ public class CVIOGuiceModule extends AbstractModule {
         // The /skill resource
         bind(SkillResource.class);
         bind(SkillDB.class).to(SkillDBElasticsearch.class);
+        
+        //The /export resource
+        bind(DocumentResource.class);
         
         // the auth resource
         //bind(CVLdapAuthConf.class).toInstance(ldapconf);

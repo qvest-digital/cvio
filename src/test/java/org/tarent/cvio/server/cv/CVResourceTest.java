@@ -40,7 +40,7 @@ public class CVResourceTest {
 
         // given
         CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
-        CVResource aRessource = new CVResource(dbMock, aConfiguration, null);
+        CVResource aRessource = new CVResource(dbMock, aConfiguration);
         Mockito.when(dbMock.createCV(DEMO_JSON)).thenReturn(CV_ID);
 
         // when creating a new CV
@@ -61,7 +61,7 @@ public class CVResourceTest {
     public void getCV() {
         // given
         CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
-        CVResource aRessource = new CVResource(dbMock, aConfiguration, null);
+        CVResource aRessource = new CVResource(dbMock, aConfiguration);
         Mockito.when(dbMock.getCVById(CV_ID)).thenReturn(DEMO_JSON);
 
         // when I request a CV
@@ -75,7 +75,7 @@ public class CVResourceTest {
     public void getAllCVs() {
         // given
         CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
-        CVResource aRessource = new CVResource(dbMock, aConfiguration, null);
+        CVResource aRessource = new CVResource(dbMock, aConfiguration);
         String[] someFields = { "demo" };
 
         List<Map<String, Object>> demoResultData = demoResultData();

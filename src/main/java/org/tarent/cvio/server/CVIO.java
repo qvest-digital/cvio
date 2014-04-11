@@ -5,6 +5,7 @@ import org.tarent.cvio.server.common.CVIOConfiguration;
 import org.tarent.cvio.server.common.ESNodeManager;
 import org.tarent.cvio.server.cv.CVResource;
 import org.tarent.cvio.server.cv.CVIOBasicAuthenticator;
+import org.tarent.cvio.server.doc.DocumentResource;
 import org.tarent.cvio.server.skill.SkillResource;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
@@ -101,6 +102,7 @@ public class CVIO extends Service<CVIOConfiguration> {
         // Our Resou rces
         environment.addResource(injector.getInstance(CVResource.class));
         environment.addResource(injector.getInstance(SkillResource.class));
+        environment.addResource(injector.getInstance(DocumentResource.class));
         
         // test for ldap auth
         environment.addResource(injector.getInstance(CVLdapAuth.class));
