@@ -53,11 +53,9 @@ public class CVIODocumentGenerator {
 			
 			return response;
 		} catch (IOException e) {
-			logger.error("error occured while creating the cv template");
-			e.printStackTrace();
+			logger.error("error occured while creating the cv template", e);
 		} catch (DocumentTemplateException e) {
-			logger.error("error occured while parsing the cv template");
-			e.printStackTrace();
+			logger.error("error occured while parsing the cv template", e);
 		}
 		return null;
 	}

@@ -61,7 +61,6 @@ public class CVIOGuiceModule extends AbstractModule {
         bind(DocumentResource.class);
         
         // the auth resource
-        //bind(CVLdapAuthConf.class).toInstance(ldapconf);
         bind(CVLdapAuth.class);
     }
 }
