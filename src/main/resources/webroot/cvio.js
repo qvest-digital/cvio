@@ -69,7 +69,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
 	 * The List of Skill-Items
 	 */
     $scope.skillItems = Skills.query();
-
+    
     /**
      * The Skill-Items, which are currently selected as search filter
      */
@@ -79,7 +79,6 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
 	 * The list of CVSs
 	 */
 	$scope.cvs =  { };
-
 
     // just load the list of all cvs into $scope.cvs
     $http.get('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills')
@@ -159,22 +158,6 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
             	});
         }
     };
-    
-    /**
-     * Download CV
-    */
-    $scope.downloadCV = function(cv){
-        $http.get('/api/CVS/export/'+cv.id)
-        .success(function(){
-            alert("funzt");
-        })
-        .error(function(){
-            alert("error while download");
-        })
-    };
-    
-    
-    
 }]);
 
 /**
@@ -332,6 +315,11 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     if (cvref) {
         $scope.loadUri(cvref);
     }
+    
+    /**
+     * Save the current cv id for exporting the cv.
+     */
+    $scope.exportId = location.search.split('/api/cv/cvs/')[1];
 
 }]);
 

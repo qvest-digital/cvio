@@ -38,9 +38,9 @@
 	          <span ng-if="! modified" class="glyphicon glyphicon-floppy-saved text-success"></span>
 	          Speichern
 	        </button>
-            <div ng-controller="ListCtrl" style="display:inline-block;">
-                <button ng-click="downloadCV(cv)" type="button" class="btn btn-default btn-md"><span class="glyphicon glyphicon-download" style="margin-right:5px"></span>Download</button>
-            </div>
+            <a href="http://127.0.0.1:8080/api/export/doc/{{exportId}}" class="btn btn-default btn-md">
+               	<span class="glyphicon glyphicon-download" style="margin-right:5px"></span>Download
+            </a>
         </div>
       
       </li>
