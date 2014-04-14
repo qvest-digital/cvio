@@ -79,6 +79,11 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
 	 * The list of CVSs
 	 */
 	$scope.cvs =  { };
+	
+	/**
+	 * current host url for exporting a cv.
+	 */
+	$scope.host = location.href;
 
     // just load the list of all cvs into $scope.cvs
     $http.get('/api/cv/cvs?fields=familyName&fields=givenName&fields=skills')
