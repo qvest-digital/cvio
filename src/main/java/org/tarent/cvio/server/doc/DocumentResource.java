@@ -74,27 +74,32 @@ public class DocumentResource {
     	//Get cv data
 		Map<String, Object> cvData = cvdb.getCVMapById(id);
     	HashMap<Object, Object> dataModel = new HashMap<Object, Object>();
+    	
+    	//validate the model before adding
+    	validateCVData(cvData);
+    	
     	dataModel.put("cv", cvData);
     	
     	//get all ids of all used skills from a cv
     	@SuppressWarnings("unchecked")
 		HashMap<String, String> cvSkills = (HashMap<String, String>) cvData.get("skills");
+    	if(cvSkills != null) {
+	    	//get all available skills
+	    	List<Skill> allSkills = skilldb.getAllSkills();
+	    	
+	    	//filter all skills that are used in a cv. Also get the level of each skill
+	    	//an put them together.
+	    	Map<Skill, String> sortedSkillMap = new LinkedHashMap<Skill, String>();
+	    	for(Skill s : allSkills) {
+	    		if(cvSkills.containsKey(s.getId())) {
+	    			sortedSkillMap.put(s, String.valueOf(cvSkills.get(s.getId())));
+	    		}
+	    	}
+	    	
+	    	//sort the skills by category and add them to the template data model
+	    	cvioDocGen.matchCVSkills(sortedSkillMap, dataModel);
+    	} 
     	
-    	//get all available skills
-    	List<Skill> allSkills = skilldb.getAllSkills();
-    	
-    	//filter all skills that are used in a cv. Also get the level of each skill
-    	//an put them together.
-    	Map<Skill, String> sortedSkillMap = new LinkedHashMap<Skill, String>();
-    	for(Skill s : allSkills) {
-    		if(cvSkills.containsKey(s.getId())) {
-    			sortedSkillMap.put(s, String.valueOf(cvSkills.get(s.getId())));
-    		}
-    	}
-    	
-    	//sort the skills by category and add them to the template data model
-    	cvioDocGen.matchCVSkills(sortedSkillMap, dataModel);
-
     	//create the document with the generated datamodel
     	File doc = cvioDocGen.generateDocument(dataModel);
     	ResponseBuilder response = Response.ok(doc);
@@ -103,4 +108,22 @@ public class DocumentResource {
     	
 		return response.build();
     }
+
+	/**
+	 * check if certain values are "null" and remove them from the data model
+	 * 
+	 * @param cvData
+	 */
+	private void validateCVData(Map<String, Object> cvData) {
+		if(cvData.get("skills") == null || cvData.get("skills").toString().equals("{}"))
+			cvData.remove("skills");
+		
+		if(cvData.get("educations") == null || cvData.get("educations").toString().equals("[{}]"))
+			cvData.remove("educations");
+		
+		if(cvData.get("jobs") == null || cvData.get("jobs").toString().equals("[{}]"))
+			cvData.remove("jobs");
+		
+		System.out.println(cvData.toString());
+	}
 }
