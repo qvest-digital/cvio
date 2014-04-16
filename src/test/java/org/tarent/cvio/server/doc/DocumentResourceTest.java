@@ -1,15 +1,16 @@
 package org.tarent.cvio.server.doc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
-import static org.junit.Assert.*;
 
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
