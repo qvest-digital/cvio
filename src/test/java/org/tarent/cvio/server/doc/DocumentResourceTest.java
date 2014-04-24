@@ -2,6 +2,7 @@ package org.tarent.cvio.server.doc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -78,7 +79,7 @@ public class DocumentResourceTest {
 		assertNotNull(exportCV);
 		assertEquals(HttpStatus.OK_200, exportCV.getStatus());
 		File file = (File) exportCV.getEntity();
-		assertEquals("cv.odt", file.getName());
+		assertEquals("cv-Max-Mustermann.odt", file.getName());
 	}
 	
 	/**
@@ -88,10 +89,13 @@ public class DocumentResourceTest {
 	 */
 	@Test
 	public void testExportNullCV() throws URISyntaxException {
-		//empty hashmap as the data model
+		//hashmap as the data model. Contains only first and last name because it is
+		//necessary to create a name cv file.
 		HashMap<String, Object> EMPTY_CV_TEST_DATA = new HashMap<String, Object>();
+		EMPTY_CV_TEST_DATA.put("familyName", "emptyCVLastName");
+		EMPTY_CV_TEST_DATA.put("givenName", "emptyCVFirstName");
 		
-		//return the empty datamodel
+		//return the datamodel
 		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(EMPTY_CV_TEST_DATA);
 		
 		//and generate a document with this datamodel
@@ -100,14 +104,39 @@ public class DocumentResourceTest {
 		assertNotNull(exportCV);
 		assertEquals(HttpStatus.OK_200, exportCV.getStatus());
 		File file = (File) exportCV.getEntity();
-		assertEquals("cv.odt", file.getName());
+		assertEquals("cv-emptyCVFirstName-emptyCVLastName.odt", file.getName());
+	}
+	
+	/**
+	 * Test the export if the full name is null. It should not generate a cv file.
+	 * 
+	 * @throws URISyntaxException
+	 */
+	@Test
+	public void testExportCVWithoutFullName() throws URISyntaxException {
+		//empty hashmap as the data model
+		HashMap<String, Object> EMPTY_CV_TEST_DATA = new HashMap<String, Object>();
+				
+		//return the empty datamodel
+		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(EMPTY_CV_TEST_DATA);
+				
+		//and generate a document with this datamodel. The doc shouldn´t be generated
+		//if the full name is null.
+		Response exportCV = docResource.exportCV(CV_ID, true);
+				
+		assertNotNull(exportCV);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500, exportCV.getStatus());
+		File file = (File) exportCV.getEntity();
+		
+		//check if the file was not generated.
+		assertNull(file);
 	}
 
 	private void createTestData() {
 		DEMO_CV_BY_MAP = new HashMap<String, Object>();
 		
-		DEMO_CV_BY_MAP.put("familyName", "");
-		DEMO_CV_BY_MAP.put("givenName", "");
+		DEMO_CV_BY_MAP.put("familyName", "Mustermann");
+		DEMO_CV_BY_MAP.put("givenName", "Max");
 		DEMO_CV_BY_MAP.put("locality", "Musterstadt");
 		DEMO_CV_BY_MAP.put("placeOfBirth", "Musterstadt");
 		DEMO_CV_BY_MAP.put("familyStatus", "ledig / keine Kinder");
