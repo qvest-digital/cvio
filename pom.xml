@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.tarent.cvio</groupId>
   <artifactId>cvserver</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   
   <build>
     <plugins>
@@ -134,36 +134,5 @@
 	   <version>2.4.0</version>
 	</dependency>
   </dependencies>
-  
-  <profiles>
-	   <!-- Profile to build the cvio deb package -->
-	   <profile>
-	       <id>build-debian-package</id>
-	       <build>
-				<plugins>
-				    <plugin>
-					    <groupId>org.codehaus.mojo</groupId>
-		        		<artifactId>exec-maven-plugin</artifactId>
-		        		<version>1.2.1</version>
-		        		<executions>
-		        		    <execution>
-								<id>execute build of debian package</id>
-		        		        <phase>package</phase>
-								<goals>
-								    <goal>
-								        exec
-								    </goal>
-								</goals>
-								<configuration>
-									<executable>dpkg-buildpackage</executable>
-									<sucessCodes>1</sucessCodes>	    
-								</configuration>
-		        		    </execution>
-		        		</executions>
-					</plugin>
-				</plugins>
-	       </build>
-	   </profile>
-  </profiles>
   
 </project>
