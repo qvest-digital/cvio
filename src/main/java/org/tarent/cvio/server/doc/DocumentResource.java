@@ -1,10 +1,13 @@
 package org.tarent.cvio.server.doc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -74,6 +77,9 @@ public class DocumentResource {
     	//Get cv data
 		Map<String, Object> cvData = cvdb.getCVMapById(id);
     	HashMap<Object, Object> dataModel = new HashMap<Object, Object>();
+
+    	//check if invalid characters are in the data model.
+    	cvioDocGen.parseCVData(cvData);
     	
     	//validate the model before adding
     	validateCVData(cvData);
@@ -123,7 +129,5 @@ public class DocumentResource {
 		
 		if(cvData.get("jobs") == null || cvData.get("jobs").toString().equals("[{}]"))
 			cvData.remove("jobs");
-		
-		System.out.println(cvData.toString());
 	}
 }

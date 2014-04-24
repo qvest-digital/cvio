@@ -184,4 +184,35 @@ public class CVIODocumentGenerator {
 		}
 		return skillMap;
 	}
+	
+	/**
+	 * Check if any invalid characters are inside the cv data model before the document is created.
+	 * 
+	 * @param cvData
+	 */
+	public void parseCVData(Map<String, Object> cvData) {
+		for (Iterator<Entry<String, Object>> it = cvData.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Object> next = it.next();
+		
+			if(next.getValue() instanceof String) {
+				if(((String)next.getValue()).contains("<br>")) {
+					next.setValue(next.getValue().toString().replaceAll("<br>", "\n"));
+				}
+			}
+			
+			if(next.getValue() instanceof List) {
+				ArrayList<?> list = (ArrayList<?>) next.getValue();
+				for(Object o : list) {
+					if(o instanceof HashMap) {
+						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
+							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
+							if(next2.getValue().toString().contains("<br>")) {
+								next2.setValue(next2.getValue().toString().replaceAll("<br>", "\n"));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
