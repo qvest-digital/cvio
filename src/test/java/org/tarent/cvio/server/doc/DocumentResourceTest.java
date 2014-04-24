@@ -40,18 +40,74 @@ public class DocumentResourceTest {
 	
 	CVIODocumentGenerator docGen;
 	
+	DocumentResource docResource;
+	
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		docGen = new CVIODocumentGenerator();
 		createTestData();
+		
+		//given
+		docResource = new DocumentResource(cvdb, skilldb, docGen);
+		CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
+		CVResource cvResource = new CVResource(cvdb, aConfiguration);
+		        
+		//create a cv
+		Response cvResponse = cvResource.createCV(DEMO_JSON, true);
+		assertEquals(201, cvResponse.getStatus());
+		
+		//then use the test data to create the document
+		Mockito.when(cvdb.createCV(DEMO_JSON)).thenReturn(CV_ID);
+		Mockito.when(skilldb.getAllSkills()).thenReturn(skills);
+	}
+	
+	/**
+	 * Test to export a normal cv with some data.
+	 * 
+	 * @throws URISyntaxException
+	 */
+	@Test
+	public void testExportCV() throws URISyntaxException {
+		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(DEMO_CV_BY_MAP);
+
+		//create the cv document
+		Response exportCV = docResource.exportCV(CV_ID, true);
+		
+		//and check if the document was created
+		assertNotNull(exportCV);
+		assertEquals(HttpStatus.OK_200, exportCV.getStatus());
+		File file = (File) exportCV.getEntity();
+		assertEquals("cv.odt", file.getName());
+	}
+	
+	/**
+	 * Test to export a cv without any data
+	 * 
+	 * @throws URISyntaxException
+	 */
+	@Test
+	public void testExportNullCV() throws URISyntaxException {
+		//empty hashmap as the data model
+		HashMap<String, Object> EMPTY_CV_TEST_DATA = new HashMap<String, Object>();
+		
+		//return the empty datamodel
+		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(EMPTY_CV_TEST_DATA);
+		
+		//and generate a document with this datamodel
+		Response exportCV = docResource.exportCV(CV_ID, true);
+		
+		assertNotNull(exportCV);
+		assertEquals(HttpStatus.OK_200, exportCV.getStatus());
+		File file = (File) exportCV.getEntity();
+		assertEquals("cv.odt", file.getName());
 	}
 
 	private void createTestData() {
 		DEMO_CV_BY_MAP = new HashMap<String, Object>();
 		
-		DEMO_CV_BY_MAP.put("familyName", "Mustermann");
-		DEMO_CV_BY_MAP.put("givenName", "Max");
+		DEMO_CV_BY_MAP.put("familyName", "");
+		DEMO_CV_BY_MAP.put("givenName", "");
 		DEMO_CV_BY_MAP.put("locality", "Musterstadt");
 		DEMO_CV_BY_MAP.put("placeOfBirth", "Musterstadt");
 		DEMO_CV_BY_MAP.put("familyStatus", "ledig / keine Kinder");
@@ -83,33 +139,5 @@ public class DocumentResourceTest {
 		skills.add(s1);
 		skills.add(s2);
 		skills.add(s3);
-		
-	}
-	
-	@Test
-	public void testExportCV() throws URISyntaxException {
-		
-		//given
-		DocumentResource res = new DocumentResource(cvdb, skilldb, docGen);
-		CVIOConfiguration aConfiguration = ConfigurationHelper.cfg();
-        CVResource cvResource = new CVResource(cvdb, aConfiguration);
-        
-        //create a cv
-        Response cvResponse = cvResource.createCV(DEMO_JSON, true);
-        assertEquals(201, cvResponse.getStatus());
-        
-        //then use the test data to create the document
-		Mockito.when(cvdb.createCV(DEMO_JSON)).thenReturn(CV_ID);
-		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(DEMO_CV_BY_MAP);
-		Mockito.when(skilldb.getAllSkills()).thenReturn(skills);
-
-		//create the cv document
-		Response exportCV = res.exportCV(CV_ID, true);
-		
-		//and check if the document was created
-		assertNotNull(exportCV);
-		assertEquals(HttpStatus.OK_200, exportCV.getStatus());
-		File file = (File) exportCV.getEntity();
-		assertEquals("cv.odt", file.getName());
 	}
 }
