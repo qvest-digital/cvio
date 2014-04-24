@@ -120,7 +120,7 @@ public class DocumentResourceTest {
 		//return the empty datamodel
 		Mockito.when(cvdb.getCVMapById(CV_ID)).thenReturn(EMPTY_CV_TEST_DATA);
 				
-		//and generate a document with this datamodel. The doc shouldn´t be generated
+		//and generate a document with this datamodel. The doc should not be generated
 		//if the full name is null.
 		Response exportCV = docResource.exportCV(CV_ID, true);
 				
