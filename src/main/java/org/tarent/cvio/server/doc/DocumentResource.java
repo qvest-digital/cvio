@@ -1,13 +1,10 @@
 package org.tarent.cvio.server.doc;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import org.tarent.cvio.server.cv.CVDB;
 import org.tarent.cvio.server.skill.Skill;
@@ -83,6 +81,8 @@ public class DocumentResource {
     	
     	//validate the model before adding
     	validateCVData(cvData);
+
+    	String cvName = cvData.get("givenName") + "-" + cvData.get("familyName");
     	
     	dataModel.put("cv", cvData);
     	
@@ -107,11 +107,17 @@ public class DocumentResource {
     	} 
     	
     	//create the document with the generated datamodel
-    	File doc = cvioDocGen.generateDocument(dataModel);
-    	ResponseBuilder response = Response.ok(doc);
-    	response.header("Content-Disposition",
-			"attachment; filename=" + doc.getName());
+    	File doc = cvioDocGen.generateDocument(dataModel, cvName);
     	
+    	
+    	ResponseBuilder response = null;
+    	if(doc != null){
+	    	response = Response.ok(doc);
+	    	response.header("Content-Disposition",
+				"attachment; filename=" + doc.getName());
+    	} else {
+    		response = Response.status(Status.INTERNAL_SERVER_ERROR);
+    	}
 		return response.build();
     }
 

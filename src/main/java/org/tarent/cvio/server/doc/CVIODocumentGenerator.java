@@ -38,17 +38,22 @@ public class CVIODocumentGenerator {
 	 * Generates a odt document with all cv data.
 	 * 
 	 * @param dataModel - a {@link HashMap} data representation. 
+	 * @param name - name of the personal cv
 	 * @param skills 
 	 */
-	public File generateDocument(HashMap<Object, Object> dataModel) {
+	public File generateDocument(HashMap<Object, Object> dataModel, String name) {
 		DocumentTemplateFactory fac = new DocumentTemplateFactory();
 		logger.trace("generating cv document");
+		
+		if(name.contains("null")) {
+			return null;
+		}
 		
 		try {
 			final URL resource = this.getClass().getResource("cv-template.odt");
 			DocumentTemplate template = fac.getTemplate(resource.openStream());
 			
-			File response = new File("/tmp/cv.odt");
+			File response = new File("/tmp/cv-" + name +".odt");
 			template.createDocument(dataModel, new FileOutputStream(response));
 			
 			return response;
