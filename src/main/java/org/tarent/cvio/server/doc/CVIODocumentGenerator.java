@@ -201,7 +201,16 @@ public class CVIODocumentGenerator {
 		
 			if(next.getValue() instanceof String) {
 				if(((String)next.getValue()).contains("<br>")) {
-					next.setValue(next.getValue().toString().replaceAll("<br>", "\n"));
+					String tmp = next.getValue().toString().replaceAll("<br>", "\n");
+					String result = null;
+					if(tmp.endsWith("\n")) {
+						result = replaceLastLineBreak(tmp);
+					}
+					if(result != null) {
+						next.setValue(result);
+					} else {
+						next.setValue(tmp);
+					}
 				}
 			}
 			
@@ -212,12 +221,34 @@ public class CVIODocumentGenerator {
 						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
 							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
 							if(next2.getValue().toString().contains("<br>")) {
-								next2.setValue(next2.getValue().toString().replaceAll("<br>", "\n"));
+								String tmp = next2.getValue().toString().replaceAll("<br>", "\n");
+								
+								String result = null;
+								if(tmp.endsWith("\n")) {
+									result = replaceLastLineBreak(tmp);
+								}
+								if(result != null) {
+									next2.setValue(result);
+								} else {
+									next2.setValue(tmp);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Replace the last occurance of a linebreak.
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private String replaceLastLineBreak(String text) {
+		StringBuilder sb = new StringBuilder(text);
+		sb.replace(text.lastIndexOf("\n"), text.lastIndexOf("\n") + 1, "");
+		return sb.toString();
 	}
 }
