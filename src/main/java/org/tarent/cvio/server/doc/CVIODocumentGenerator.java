@@ -136,7 +136,10 @@ public class CVIODocumentGenerator {
 		
 		//sort the skills by their level
 		HashMap<String,HashMap<String,String>> sortSkillsByLevel = sortSkillsByLevel(skills);
-		dataModel.put("skills", sortSkillsByLevel);
+		
+		if(sortSkillsByLevel.size() > 0) {
+			dataModel.put("skills", sortSkillsByLevel);
+		}
 	}
 
 	/**
@@ -220,7 +223,7 @@ public class CVIODocumentGenerator {
 					if(o instanceof HashMap) {
 						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
 							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
-							if(next2.getValue().toString().contains("<br>")) {
+							if(next2.getValue().toString().contains("<br>") && !next2.getValue().toString().equals("<br>")) {
 								String tmp = next2.getValue().toString().replaceAll("<br>", "\n");
 								
 								String result = null;
@@ -232,6 +235,10 @@ public class CVIODocumentGenerator {
 								} else {
 									next2.setValue(tmp);
 								}
+							} else if(next2.getValue().toString().equals("<br>") || 
+								      next2.getValue().toString().equals("\n") ||
+								      next2.getValue().toString().equals("")) {
+								it2.remove();
 							}
 						}
 					}

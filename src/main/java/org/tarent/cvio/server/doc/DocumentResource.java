@@ -1,10 +1,13 @@
 package org.tarent.cvio.server.doc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -74,6 +77,7 @@ public class DocumentResource {
     public Response exportCV(@PathParam("id") final String id, @Auth Boolean isAuthenticated) {
     	//Get cv data
 		Map<String, Object> cvData = cvdb.getCVMapById(id);
+		cvData.put("noEducation", "true");
     	HashMap<Object, Object> dataModel = new HashMap<Object, Object>();
 
     	//check if invalid characters are in the data model.
@@ -122,18 +126,96 @@ public class DocumentResource {
     }
 
 	/**
+	 * This method is used to evaluate and sort all entries under the "education" property. 
+	 * The educations must be stored into separate lists to display only necessary parts of them if they
+	 * are available.
+	 * 
+	 * @param cvData - The cv data model
+	 */
+	@SuppressWarnings("unchecked")
+	private void evalEducations(Map<String, Object> cvData) {
+		if(cvData.containsKey("educations")) {
+			ArrayList<Object> educations = (ArrayList<Object>) cvData.get("educations");
+			
+			ArrayList<Object> university = new ArrayList<Object>();
+			ArrayList<Object> school = new ArrayList<Object>();
+			ArrayList<Object> training = new ArrayList<Object>();
+			ArrayList<Object> research = new ArrayList<Object>();
+			ArrayList<Object> other = new ArrayList<Object>();
+			
+			for(Object o : educations) {
+				String type = (String) ((HashMap<String, Object>)o).get("type");
+				switch (type) {
+				case "education":
+				case "university":
+					university.add(o);
+					break;
+
+				case "school":
+					school.add(o);
+					break;
+				
+				case "training":
+					training.add(o);
+					break;
+				
+				case "researchProjects":
+					research.add(o);
+					break;
+				
+				case "other":
+					other.add(o);
+					break;
+				
+				default:
+					break;
+				}
+			}
+			
+			if(university.size() > 0) cvData.put("university", university);
+			if(school.size() > 0) cvData.put("school", school);
+			if(training.size() > 0) cvData.put("training", training);
+			if(research.size() > 0) cvData.put("research", research);
+			if(other.size() > 0) cvData.put("other", other);
+			
+			//remove the education property. It is not necessary anymore.
+			cvData.remove("educations");
+			
+			//this checks if the latest part of the template should be displayed if all those 
+			//parts are empty at the same time.
+			if(training.size() == 0 && research.size() == 0 && (cvData.get("interests") == null 
+					|| cvData.get("interests").equals("")) && other.size() == 0) {
+				cvData.remove("noEducation");
+			}
+		} 
+	}
+	
+	/**
 	 * check if certain values are "null" and remove them from the data model
 	 * 
 	 * @param cvData
 	 */
 	private void validateCVData(Map<String, Object> cvData) {
-		if(cvData.get("skills") == null || cvData.get("skills").toString().equals("{}"))
+		if(cvData.get("skills") == null || cvData.get("skills").toString().equals("{}")) {
 			cvData.remove("skills");
+		}
 		
-		if(cvData.get("educations") == null || cvData.get("educations").toString().equals("[{}]"))
+		if(cvData.get("educations") == null || 
+		   cvData.get("educations").toString().equals("[{}]") ||
+		   cvData.get("educations").toString().equals("{}") ||
+		   cvData.get("educations").toString().equals("[]")) {
 			cvData.remove("educations");
+		}
 		
-		if(cvData.get("jobs") == null || cvData.get("jobs").toString().equals("[{}]"))
+		//evaluate educations and put them into different array lists.
+		evalEducations(cvData);
+		
+		if(cvData.get("jobs") == null || cvData.get("jobs").toString().equals("[{}]")) {
 			cvData.remove("jobs");
+		}
+		
+		if(cvData.get("interests") == null || cvData.get("interests").equals("")) {
+			cvData.remove("interests");
+		}
 	}
 }
