@@ -86,6 +86,9 @@ public class DocumentResource {
     	//validate the model before adding
     	validateCVData(cvData);
 
+    	//replace all date properties
+    	cvioDocGen.replaceTimes(cvData);
+    	
     	String cvName = cvData.get("givenName") + "-" + cvData.get("familyName");
     	
     	dataModel.put("cv", cvData);
@@ -112,7 +115,6 @@ public class DocumentResource {
     	
     	//create the document with the generated datamodel
     	File doc = cvioDocGen.generateDocument(dataModel, cvName);
-    	
     	
     	ResponseBuilder response = null;
     	if(doc != null){

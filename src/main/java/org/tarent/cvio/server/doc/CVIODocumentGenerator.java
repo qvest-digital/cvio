@@ -258,4 +258,62 @@ public class CVIODocumentGenerator {
 		sb.replace(text.lastIndexOf("\n"), text.lastIndexOf("\n") + 1, "");
 		return sb.toString();
 	}
+	
+	/**
+	 * This method is used to parse all date properties like start and end and create
+	 * a new date property based on it.
+	 * 
+	 * @param cvData - cv data model
+	 */
+	@SuppressWarnings("unchecked")
+	public void replaceTimes(Map<String, Object> cvData) {
+		for (Iterator<Entry<String, Object>> it = cvData.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Object> next = it.next();
+			if(next.getValue() instanceof List) {
+				ArrayList<?> list = (ArrayList<?>) next.getValue();
+				for(Object o : list) {
+					if(o instanceof HashMap) {
+						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
+							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
+							if(next2.getKey().equals("start") || next2.getKey().equals("end")) {
+								HashMap<String, String> value = (HashMap<String, String>) next2.getValue();
+								String month = value.get("month") != null ? value.get("month") : "";
+								String year = value.get("year") != null ? value.get("year") : "";
+								
+								String newDate = null;
+								if((month.equals("") || month == null) && (!year.equals("") || year != null)) {
+									newDate = year;
+								} else if((year.equals("") || year == null) && (!month.equals("") || month != null)) {
+									newDate = month;
+								} else if((!year.equals("") || year != null) && (!month.equals("") || month != null)) {
+									newDate = month + "/" + year;
+								} else if((year.equals("") || year == null) && (month.equals("") || month == null)) {
+									newDate = "";
+								}
+								next2.setValue(newDate);
+							}
+						}
+						
+						if(((HashMap<?, ?>) o).containsKey("start") && ((HashMap<?, ?>) o).containsKey("end")) {
+							String startDate = (String) (!((HashMap<?, ?>) o).get("start").equals("") ? ((HashMap<?, ?>) o).get("start") : "");
+							String endDate = (String) (!((HashMap<?, ?>) o).get("end").equals("") ? ((HashMap<?, ?>) o).get("end") : "");
+							String result = null;
+							if(startDate.equals("") && !endDate.equals("")) {
+								result = endDate;
+							} else if(!startDate.equals("") && endDate.equals("")) {
+								result = startDate;
+							} else if(!startDate.equals("") && !endDate.equals("")) {
+								result = startDate + " - " + endDate;
+							} else if(!startDate.equals("") && !endDate.equals("")) {
+								result = "";
+							}
+							((HashMap<String, String>) o).put("date", result);
+							((HashMap<?, ?>) o).remove("start");
+							((HashMap<?, ?>) o).remove("end");
+						}
+					}
+				}
+			}
+		}
+	}
 }
