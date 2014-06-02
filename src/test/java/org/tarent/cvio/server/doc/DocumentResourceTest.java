@@ -131,7 +131,20 @@ public class DocumentResourceTest {
 		//check if the file was not generated.
 		assertNull(file);
 	}
-
+	
+	@Test
+	public void testGetCVSkillIds() {
+		HashMap<String, String> skillMap = new HashMap<String, String>();
+		skillMap.put("9j6XxJx9QK-6Ky1RcNezOA", "1");
+		skillMap.put("QToA8FNSSgWSPM7d2irwDA", "2");
+		skillMap.put("rytxjW42RgywXEdjRY26NA", "3");
+		
+		ArrayList<String> cvSkillIds = docGen.getCVSkillIds(skillMap);
+		
+		assertEquals(3, cvSkillIds.size());
+		assertEquals("9j6XxJx9QK-6Ky1RcNezOA", cvSkillIds.get(0));
+	}
+	
 	private void createTestData() {
 		DEMO_CV_BY_MAP = new HashMap<String, Object>();
 		
@@ -146,10 +159,21 @@ public class DocumentResourceTest {
 		skillMap.put("9j6XxJx9QK-6Ky1RcNezOA", "1");
 		skillMap.put("QToA8FNSSgWSPM7d2irwDA", "2");
 		skillMap.put("rytxjW42RgywXEdjRY26NA", "3");
+		skillMap.put("9j6Xxghx9QK-6Ky1RcNezOA", "1");
+		skillMap.put("9j6XxJa4gK-6Ky1RcNezOA", "2");
+		skillMap.put("9j6XxJx9QK-6fj33cNezOA", "3");
+		skillMap.put("9j6XxJx9QK-6asddf3dzOA", "3");
+		skillMap.put("9j6Xfs29QK-6fj33cNezOA", "3");
 		
 		DEMO_CV_BY_MAP.put("skills", skillMap);
-
+		
+		createSkillTestData();
+	}
+	
+	private void createSkillTestData() {
 		skills = new ArrayList<Skill>();
+		
+		//other category
 		Skill s1 = new Skill();
 		s1.setCategory("other");
 		s1.setId("9j6XxJx9QK-6Ky1RcNezOA");
@@ -165,8 +189,38 @@ public class DocumentResourceTest {
 		s3.setId("rytxjW42RgywXEdjRY26NA");
 		s3.setName("Derby");
 		
+		Skill s4 = new Skill();
+		s4.setCategory("db");
+		s4.setId("9j6Xxghx9QK-6Ky1RcNezOA");
+		s4.setName("CouchDB");		
+		
+		Skill s5 = new Skill();
+		s5.setCategory("test");
+		s5.setId("9j6XxJa4gK-6Ky1RcNezOA");
+		s5.setName("JUnit");		
+		
+		Skill s6 = new Skill();
+		s6.setCategory("build");
+		s6.setId("9j6XxJx9QK-6fj33cNezOA");
+		s6.setName("Jenkins");		
+		
+		Skill s7 = new Skill();
+		s7.setCategory("prog");
+		s7.setId("9j6XxJx9QK-6asddf3dzOA");
+		s7.setName("Java");
+		
+		Skill s8 = new Skill();
+		s8.setCategory("concept");
+		s8.setId("9j6Xfs29QK-6fj33cNezOA");
+		s8.setName("Agile");
+		
 		skills.add(s1);
 		skills.add(s2);
 		skills.add(s3);
+		skills.add(s4);
+		skills.add(s5);
+		skills.add(s6);
+		skills.add(s7);
+		skills.add(s8);
 	}
 }

@@ -159,7 +159,6 @@ public class CVIODocumentGenerator {
 			
 			//contains skills for each different level
 			StringBuilder l1 = new StringBuilder();
-			StringBuilder l2 = new StringBuilder();
 			StringBuilder l3 = new StringBuilder();
 			String category = null;
 			
@@ -171,10 +170,8 @@ public class CVIODocumentGenerator {
 				String name = next.getKey().getName();
 				switch (lvl) {
 				case "1":
-					l1.append(name + ", ");
-					break;
 				case "2":
-					l2.append(name + ", ");
+					l1.append(name + ", ");
 					break;
 				case "3":
 					l3.append(name + ", ");
@@ -186,7 +183,6 @@ public class CVIODocumentGenerator {
 			
 			//put all together.
 			if(l1.toString() != null) levelSkills.put("level1", l1.toString().trim().replaceAll(",$", ""));
-			if(l2.toString() != null) levelSkills.put("level2", l2.toString().trim().replaceAll(",$", ""));
 			if(l3.toString() != null) levelSkills.put("level3", l3.toString().trim().replaceAll(",$", ""));
 			skillMap.put(category, levelSkills);
 		}
