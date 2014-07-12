@@ -29,16 +29,16 @@
       <li  class="pull-right">
           <!-- Navigation -->
 	      <div>
-	        <a href="/"
+	        <a id="btnOverview" href="/"
 	           class="btn btn-default btn-md">
 	          <span class="glyphicon glyphicon-chevron-left"></span> &Uuml;bersicht
 	        </a>
-	        <button ng-click="save()" type="button" class="btn btn-default btn-md" ng-style="isBusyWithSaving && {'cursor': 'wait'}">
+	        <button id="btnSave" ng-click="save()" type="button" class="btn btn-default btn-md" ng-style="isBusyWithSaving && {'cursor': 'wait'}">
 	          <span ng-if="modified" class="glyphicon glyphicon-floppy-save text-danger"></span>
 	          <span ng-if="! modified" class="glyphicon glyphicon-floppy-saved text-success"></span>
 	          Speichern
 	        </button>
-            <a href="{{host}}api/export/doc/{{exportId}}" class="btn btn-default btn-md">
+            <a id="btnDownload" href="{{host}}api/export/doc/{{exportId}}" class="btn btn-default btn-md">
                	<span class="glyphicon glyphicon-download" style="margin-right:5px"></span>Download
             </a>
         </div>

@@ -76,7 +76,7 @@ public class DocumentResource {
     	HashMap<Object, Object> dataModel = new HashMap<Object, Object>();
     	dataModel.put("cv", cvData);
     	
-    	//get all id´s of all used skills from a cv
+    	//get all ids of all used skills from a cv
     	@SuppressWarnings("unchecked")
 		HashMap<String, String> cvSkills = (HashMap<String, String>) cvData.get("skills");
     	

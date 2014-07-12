@@ -575,12 +575,12 @@ cv.directive('cvShortField', function() {
       scope: {
     	  'ngModel': '=',
           'label': '@',
-          'input-id': '@',
+          'inputId': '@',
       },
       template: '<div class="form-group">\
                   <label for="{{input-id}}" class="col-sm-2 control-label">{{label}}</label>\
                   <div class="col-sm-5">\
-                   <input type="text" class="form-control input-sm" id=""{{input-id}}" ng-model="ngModel">\
+                   <input type="text" class="form-control input-sm" id="{{inputId}}" ng-model="ngModel">\
                   </div>\
                  </div>'
   }

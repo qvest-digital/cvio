@@ -63,11 +63,11 @@ public class CVIODocumentGenerator {
 	}
 
 	/**
-	 * Collect all id´s of all skills that are used in a cv
+	 * Collect all ids of all skills that are used in a cv
 	 * 
 	 * @param cvSkills - {@link HashMap} of all cv skills.
 	 * 
-	 * @return {@link List} of all cv skill id´s.
+	 * @return {@link List} of all cv skill ids.
 	 */
 	public ArrayList<String> getCVSkillIds(HashMap<String, String> cvSkills) {
 		ArrayList<String> skillIds = new ArrayList<String>();
