@@ -5,3 +5,8 @@
 .settings
 target
 node_modules
+debian/cvio.debhelper.log
+debian/cvio.substvars
+debian/cvio/
+debian/files
+debian/maven-repo/
