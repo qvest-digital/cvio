@@ -38,26 +38,29 @@ public class CVIODocumentGenerator {
 	 * Generates a odt document with all cv data.
 	 * 
 	 * @param dataModel - a {@link HashMap} data representation. 
+	 * @param name - name of the personal cv
 	 * @param skills 
 	 */
-	public File generateDocument(HashMap<Object, Object> dataModel) {
+	public File generateDocument(HashMap<Object, Object> dataModel, String name) {
 		DocumentTemplateFactory fac = new DocumentTemplateFactory();
 		logger.trace("generating cv document");
+		
+		if(name.contains("null")) {
+			return null;
+		}
 		
 		try {
 			final URL resource = this.getClass().getResource("cv-template.odt");
 			DocumentTemplate template = fac.getTemplate(resource.openStream());
 			
-			File response = new File("/tmp/cv.odt");
+			File response = new File("/tmp/cv-" + name +".odt");
 			template.createDocument(dataModel, new FileOutputStream(response));
 			
 			return response;
 		} catch (IOException e) {
-			logger.error("error occured while creating the cv template");
-			e.printStackTrace();
+			logger.error("error occured while creating the cv template", e);
 		} catch (DocumentTemplateException e) {
-			logger.error("error occured while parsing the cv template");
-			e.printStackTrace();
+			logger.error("error occured while parsing the cv template", e);
 		}
 		return null;
 	}
@@ -133,7 +136,10 @@ public class CVIODocumentGenerator {
 		
 		//sort the skills by their level
 		HashMap<String,HashMap<String,String>> sortSkillsByLevel = sortSkillsByLevel(skills);
-		dataModel.put("skills", sortSkillsByLevel);
+		
+		if(sortSkillsByLevel.size() > 0) {
+			dataModel.put("skills", sortSkillsByLevel);
+		}
 	}
 
 	/**
@@ -153,7 +159,6 @@ public class CVIODocumentGenerator {
 			
 			//contains skills for each different level
 			StringBuilder l1 = new StringBuilder();
-			StringBuilder l2 = new StringBuilder();
 			StringBuilder l3 = new StringBuilder();
 			String category = null;
 			
@@ -165,10 +170,8 @@ public class CVIODocumentGenerator {
 				String name = next.getKey().getName();
 				switch (lvl) {
 				case "1":
-					l1.append(name + ", ");
-					break;
 				case "2":
-					l2.append(name + ", ");
+					l1.append(name + ", ");
 					break;
 				case "3":
 					l3.append(name + ", ");
@@ -180,10 +183,133 @@ public class CVIODocumentGenerator {
 			
 			//put all together.
 			if(l1.toString() != null) levelSkills.put("level1", l1.toString().trim().replaceAll(",$", ""));
-			if(l2.toString() != null) levelSkills.put("level2", l2.toString().trim().replaceAll(",$", ""));
 			if(l3.toString() != null) levelSkills.put("level3", l3.toString().trim().replaceAll(",$", ""));
 			skillMap.put(category, levelSkills);
 		}
 		return skillMap;
+	}
+	
+	/**
+	 * Check if any invalid characters are inside the cv data model before the document is created.
+	 * 
+	 * @param cvData
+	 */
+	public void parseCVData(Map<String, Object> cvData) {
+		for (Iterator<Entry<String, Object>> it = cvData.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Object> next = it.next();
+		
+			if(next.getValue() instanceof String) {
+				if(((String)next.getValue()).contains("<br>")) {
+					String tmp = next.getValue().toString().replaceAll("<br>", "\n");
+					String result = null;
+					if(tmp.endsWith("\n")) {
+						result = replaceLastLineBreak(tmp);
+					}
+					if(result != null) {
+						next.setValue(result);
+					} else {
+						next.setValue(tmp);
+					}
+				}
+			}
+			
+			if(next.getValue() instanceof List) {
+				ArrayList<?> list = (ArrayList<?>) next.getValue();
+				for(Object o : list) {
+					if(o instanceof HashMap) {
+						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
+							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
+							if(next2.getValue().toString().contains("<br>") && !next2.getValue().toString().equals("<br>")) {
+								String tmp = next2.getValue().toString().replaceAll("<br>", "\n");
+								
+								String result = null;
+								if(tmp.endsWith("\n")) {
+									result = replaceLastLineBreak(tmp);
+								}
+								if(result != null) {
+									next2.setValue(result);
+								} else {
+									next2.setValue(tmp);
+								}
+							} else if(next2.getValue().toString().equals("<br>") || 
+								      next2.getValue().toString().equals("\n") ||
+								      next2.getValue().toString().equals("")) {
+								it2.remove();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Replace the last occurance of a linebreak.
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private String replaceLastLineBreak(String text) {
+		StringBuilder sb = new StringBuilder(text);
+		sb.replace(text.lastIndexOf("\n"), text.lastIndexOf("\n") + 1, "");
+		return sb.toString();
+	}
+	
+	/**
+	 * This method is used to parse all date properties like start and end and create
+	 * a new date property based on it.
+	 * 
+	 * @param cvData - cv data model
+	 */
+	@SuppressWarnings("unchecked")
+	public void replaceTimes(Map<String, Object> cvData) {
+		for (Iterator<Entry<String, Object>> it = cvData.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Object> next = it.next();
+			if(next.getValue() instanceof List) {
+				ArrayList<?> list = (ArrayList<?>) next.getValue();
+				for(Object o : list) {
+					if(o instanceof HashMap) {
+						for (Iterator<?> it2 = ((HashMap<?, ?>) o).entrySet().iterator(); it2.hasNext();) {
+							Entry<String, Object> next2 = (Entry<String, Object>) it2.next();
+							if(next2.getKey().equals("start") || next2.getKey().equals("end")) {
+								HashMap<String, String> value = (HashMap<String, String>) next2.getValue();
+								String month = value.get("month") != null ? value.get("month") : "";
+								String year = value.get("year") != null ? value.get("year") : "";
+								
+								String newDate = null;
+								if((month.equals("") || month == null) && (!year.equals("") || year != null)) {
+									newDate = year;
+								} else if((year.equals("") || year == null) && (!month.equals("") || month != null)) {
+									newDate = month;
+								} else if((!year.equals("") || year != null) && (!month.equals("") || month != null)) {
+									newDate = month + "/" + year;
+								} else if((year.equals("") || year == null) && (month.equals("") || month == null)) {
+									newDate = "";
+								}
+								next2.setValue(newDate);
+							}
+						}
+						
+						if(((HashMap<?, ?>) o).containsKey("start") && ((HashMap<?, ?>) o).containsKey("end")) {
+							String startDate = (String) (!((HashMap<?, ?>) o).get("start").equals("") ? ((HashMap<?, ?>) o).get("start") : "");
+							String endDate = (String) (!((HashMap<?, ?>) o).get("end").equals("") ? ((HashMap<?, ?>) o).get("end") : "");
+							String result = null;
+							if(startDate.equals("") && !endDate.equals("")) {
+								result = endDate;
+							} else if(!startDate.equals("") && endDate.equals("")) {
+								result = startDate;
+							} else if(!startDate.equals("") && !endDate.equals("")) {
+								result = startDate + " - " + endDate;
+							} else if(!startDate.equals("") && !endDate.equals("")) {
+								result = "";
+							}
+							((HashMap<String, String>) o).put("date", result);
+							((HashMap<?, ?>) o).remove("start");
+							((HashMap<?, ?>) o).remove("end");
+						}
+					}
+				}
+			}
+		}
 	}
 }
