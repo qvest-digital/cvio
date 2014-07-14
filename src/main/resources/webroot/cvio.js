@@ -611,10 +611,12 @@ cv.directive('cvCeFormRow', function() {
  */
 function generateOptionYearList() {
     var out = '';
-    out += '                          <option value="">---</option>\n';
+    out += '                              <option value="">---</option>\n';
+    out += '				  <option value="heute">heute</option>\n';
     for (var i=new Date().getFullYear(); i>=1980; i--) {
         out += '                          <option>' + i + '</option>\n';
     }
+
     return out;
 }
 
