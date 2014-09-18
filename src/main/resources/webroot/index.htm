@@ -29,20 +29,33 @@
         </a>
       </div>
       <br/>
-	    <div class="container">
-	        <div class="row">
-		      <div style="width: 400px;" class="pull-right">
-		        <div ng-repeat="item in searchSkillItems"
-		           class="skillItem pull-right">{{item.name}}
-		           <small ng-click="removeSearchSkill(item)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
-		        </div>
-		      </div>            
-	       </div>
-	       <div class="row">	
-		      <cv-skill-entry label="Suche" skill-list="skillItems" submit-function="addSearchTerm(searchTerm)" ng-model="searchTerm"></cv-skill-entry>
-		   </div>
+		<div class="container">
+			<div class="row">
+				<div style="width: 400px;" class="pull-right">
+					<div ng-repeat="item in searchSkillItems"
+						class="skillItem pull-right">
+						{{item.name}} <small ng-click="removeSearchSkill(item)"
+							class="skillRemoveIcon glyphicon glyphicon-remove"></small>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-9" style="padding-left: 0px;">
+						<span class="btn-group" style="width: 180px;">
+						    <input
+							type="text" class="input-sm form-control" ng-model="seachTerm"> 
+                            <span class="searchclear glyphicon glyphicon-remove-circle"></span>
+                            <span class="searchtool glyphicon glyphicon-search"></span>
+						</span>
+                </div>
+				<div class="col-md-3" style="padding-right: 0px;">
+					<cv-skill-entry  class="pull-right"  label="Skill Filter" skill-list="skillItems"
+						submit-function="addSearchTerm(skillSearchTerm)"
+						ng-model="skillSearchTerm"></cv-skill-entry>
+				</div>
+			</div>
 		</div>
-    <div class="container">
+		<div class="container">
      <div class="row">
       <table class="table table-striped">
         <thead>
