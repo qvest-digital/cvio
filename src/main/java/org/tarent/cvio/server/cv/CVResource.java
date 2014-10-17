@@ -46,7 +46,7 @@ public class CVResource {
      * The global configuration.
      */
     private CVIOConfiguration configuration;
-    
+
     /**
      * Creates a new CV Resource.
      * 
@@ -69,13 +69,28 @@ public class CVResource {
     @GET
     @Path("/cvs")
     public List<Map<String, Object>> getCVs(
-            @QueryParam("fields") final List<String> fields, @Auth Boolean isAuthenticated) {
-        List<Map<String, Object>> cvs = cvdb.getAllCVs(fields.toArray(new String[0]));
+            @QueryParam("fields") final List<String> fields,
+            @QueryParam("seachTerm") final String seachTerm,
+            @Auth Boolean isAuthenticated) {
+        List<Map<String, Object>> cvs = cvdb.getCVs(fields.toArray(new String[0]), seachTerm);
         for (Map<String, Object> entry : cvs) {
             entry.put("ref",
                     configuration.getUriPrefix() + "/cv/cvs/" + entry.get("id"));
         }
         return cvs;
+    }
+
+    /**
+     * Returns a list of suggestion terms
+     * 
+     * @param searchTerm the term to make the suggestion
+     * @return a list of suggestions
+     */
+    @Timed
+    @GET
+    @Path("/suggestions/{searchTerm}")
+    public List<String> getSuggestions(@PathParam("searchTerm") final String searchTerm) {
+        return cvdb.getSuggestions(searchTerm);
     }
 
     /**
@@ -125,17 +140,18 @@ public class CVResource {
                 .created(new URI(configuration.getUriPrefix() + "/cv/cvs/" + cvid))
                 .build();
     }
-    
+
     /**
      * Delte CV
+     * 
      * @param id the id of the cv
      * @return Response Objet with the status of the action
      * 
      * */
     @DELETE
     @Path("/cvs/{id}")
-    public Response deleteCV(@PathParam("id") final String id,@Auth Boolean isAuthenticated){
-    	cvdb.deleteCV(id);
-    	return Response.noContent().build();
+    public Response deleteCV(@PathParam("id") final String id, @Auth Boolean isAuthenticated) {
+        cvdb.deleteCV(id);
+        return Response.noContent().build();
     }
 }

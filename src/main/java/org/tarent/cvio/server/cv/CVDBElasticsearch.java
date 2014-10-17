@@ -2,13 +2,20 @@ package org.tarent.cvio.server.cv;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.suggest.SuggestResponse;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.suggest.Suggest.Suggestion;
+import org.elasticsearch.search.suggest.Suggest.Suggestion.Entry;
+import org.elasticsearch.search.suggest.Suggest.Suggestion.Entry.Option;
+import org.elasticsearch.search.suggest.term.TermSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tarent.cvio.server.common.CVIOConfiguration;
@@ -62,23 +69,47 @@ public class CVDBElasticsearch implements CVDB {
     }
 
     @Override
-    public List<Map<String, Object>> getAllCVs(final String[] fields) {
+    public List<Map<String, Object>> getCVs(final String[] fields, String seachTerm) {
         if (!es.doesIndexExist(INDEX_CVS)) {
             logger.warn("index " + INDEX_CVS + " does not exist.");
             return new ArrayList<Map<String, Object>>();
         }
-        logger.trace("searching for all cvs in es");
-        SearchRequestBuilder search = es.client().prepareSearch()
-                .setIndices(INDEX_CVS).setTypes(TYPE_CV)
-                .setFetchSource(fields, null)
-                .setSize(config.getDefaultEsFetchSize());
 
+        logger.trace("searching for all cvs in es");
+
+        SearchRequestBuilder search = createSearchRequest(fields, seachTerm);
+        SearchResponse response = doSearch(search);
+        return toCVMapList(response);
+    }
+
+    private SearchResponse doSearch(SearchRequestBuilder search) {
         SearchResponse response = search.execute().actionGet();
         if (response.getHits().getHits().length < response.getHits().getTotalHits()) {
             search.setSize((int) response.getHits().getTotalHits());
             response = search.execute().actionGet();
         }
+        return response;
+    }
 
+    private SearchRequestBuilder createSearchRequest(final String[] fields, String seachTerm) {
+        SearchRequestBuilder search = es.client().prepareSearch()
+                .setIndices(INDEX_CVS).setTypes(TYPE_CV)
+                .setFetchSource(fields, null)
+                .setSize(config.getDefaultEsFetchSize());
+
+        if (seachTerm != null && seachTerm.trim().length() > 0) {
+            search.setQuery(QueryBuilders.queryString(seachTerm));
+        }
+        return search;
+    }
+
+    /**
+     * Creates a cv map list out of a search response.
+     * 
+     * @param response the es search response
+     * @return a lis of cvs as map of strings and maps
+     */
+    private List<Map<String, Object>> toCVMapList(SearchResponse response) {
         ArrayList<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
         for (SearchHit hit : response.getHits().getHits()) {
             Map<String, Object> hitEntry = new HashMap<String, Object>();
@@ -94,6 +125,26 @@ public class CVDBElasticsearch implements CVDB {
             result.add(hitEntry);
         }
         return result;
+    }
+
+    @Override
+    public List<String> getSuggestions(String searchTerm) {
+        SuggestResponse resp = es.client().prepareSuggest(INDEX_CVS)
+                .addSuggestion(new TermSuggestionBuilder("")
+                        .field("_all")
+                        .text(searchTerm)
+                        .size(10))
+                .execute().actionGet();
+        ArrayList<String> suggestions = new ArrayList<String>();
+        Iterator<Suggestion<? extends Entry<? extends Option>>> iter1 = resp.getSuggest().iterator();
+        while (iter1.hasNext()) {
+            Iterator<? extends Option> iter2 = iter1.next().getEntries().get(0).iterator();
+
+            while (iter2.hasNext()) {
+                suggestions.add(iter2.next().getText().toString());
+            }
+        }
+        return suggestions;
     }
 
     @Override
@@ -114,10 +165,10 @@ public class CVDBElasticsearch implements CVDB {
         return es.client().prepareGet(INDEX_CVS, TYPE_CV, id).execute()
                 .actionGet().getSourceAsString();
     }
-    
+
     @Override
     public Map<String, Object> getCVMapById(final String id) {
-    	if (!es.doesIndexExist(INDEX_CVS)) {
+        if (!es.doesIndexExist(INDEX_CVS)) {
             logger.warn("index " + INDEX_CVS + " does not exist.");
             return null;
         }
@@ -132,13 +183,13 @@ public class CVDBElasticsearch implements CVDB {
         es.client().prepareIndex(INDEX_CVS, TYPE_CV, id).setSource(content)
                 .execute().actionGet();
     }
-    
+
     @Override
     public void deleteCV(final String id) {
-    	if (!es.doesIndexExist(INDEX_CVS)){
-    		logger.warn("cv with id: " + id + "does not exist.");
-    	}    	
-    	logger.trace("delete cv with id: " + id);
-    	es.client().prepareDelete(INDEX_CVS,TYPE_CV,id).execute().actionGet();
+        if (!es.doesIndexExist(INDEX_CVS)) {
+            logger.warn("cv with id: " + id + "does not exist.");
+        }
+        logger.trace("delete cv with id: " + id);
+        es.client().prepareDelete(INDEX_CVS, TYPE_CV, id).execute().actionGet();
     }
 }

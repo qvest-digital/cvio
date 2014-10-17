@@ -15,10 +15,11 @@ public interface CVDB {
      * Returns the CVs.
      * 
      * @param fields list of fields to return in the answer
+     * @param seachTerm a search string, or null if no filter should be applied
      * @return List of Maps with the requested fields and a special field '_id'
      *         for the document id.
      */
-    List<Map<String, Object>> getAllCVs(String[] fields);
+    List<Map<String, Object>> getCVs(String[] fields, String seachTerm);
 
     /**
      * Creates a CV with the supplied JSON-Document.
@@ -38,13 +39,13 @@ public interface CVDB {
 
     /**
      * Returns one cv by its id.
-     *  
+     * 
      * @param id the cv id
-     * @return the CV as a {@link Map} 
+     * @return the CV as a {@link Map}
      */
     Map<String, Object> getCVMapById(String id);
-    
-     /**
+
+    /**
      * Stores the new content of the cv.
      * 
      * @param content the cv as json string
@@ -52,11 +53,19 @@ public interface CVDB {
      * @param id the cv id
      */
     void updateCV(String id, String content);
-    
-    
+
     /**
      * Deltes a cv by id
+     * 
      * @param id the cv id
      */
     void deleteCV(String id);
+
+    /**
+     * Returns a list of suggestion terms
+     * 
+     * @param searchTerm the term to make the suggestion
+     * @return a list of suggestions
+     */
+    List<String> getSuggestions(String searchTerm);
 }

@@ -73,8 +73,28 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     /**
      * The Skill-Items, which are currently selected as search filter
      */
-    $scope.searchSkillItems = [];
+    $scope.filterSkillItems = [];
 
+    /**
+     * The term for fulltext search
+     */
+    $scope.seachTerm;
+
+    /**
+     * True is an * should be appendet to the search
+     */
+    $scope.appendAsterixToSearch = true;
+    
+    /**
+     * True, if an error occurs while searching 
+     */
+    $scope.seachTermError = false;
+    
+    /**
+     * A list of cv ids to filter on
+     */
+    $scope.filterIDs = [];
+    
 	/**
 	 * The list of CVSs
 	 */
@@ -98,18 +118,18 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
      * Remove one Skill-Item from the search filter
      */
     $scope.removeSearchSkill = function(skillItem) {
-    	deleteFromCollection($scope.searchSkillItems, skillItem);
+    	deleteFromCollection($scope.filterSkillItems, skillItem);
     }
 
     /**
      * Add a Skill-Item matching the supplied name
      * to the search filter. 
      */
-    $scope.addSearchTerm = function(term) {
+    $scope.addSkillSearchTerm = function(term) {
         for (var i=0; i<$scope.skillItems.length; i++) {
         	var item = $scope.skillItems[i];
-           	if (item.name == term && $scope.searchSkillItems.indexOf(item) == -1) {            	
-            	$scope.searchSkillItems.push(item);
+           	if (item.name == term && $scope.filterSkillItems.indexOf(item) == -1) {            	
+            	$scope.filterSkillItems.push(item);
             	$scope.searchTerm = '';
                 break;
             }
@@ -117,23 +137,50 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     }
     
     /**
-     * calculates the match of an cv for a search in $scope.searchSkillItems
+     * calculates the match of an cv for a search in $scope.filterSkillItems
      * @return returns an interger value between 0 an 100
      */    
     $scope.calculateSearchScorePercent = function(cvEntry) {
-    	if (! $scope.searchSkillItems.length > 0) {
+    	if (! $scope.filterSkillItems.length > 0) {
     		return 100;
     	}
     	var cvSkills = cvEntry.skills;
     	var score = 0;
-    	for (var i=0; i<$scope.searchSkillItems.length; i++) {
-           	var skillItem = $scope.searchSkillItems[i];
+    	for (var i=0; i<$scope.filterSkillItems.length; i++) {
+           	var skillItem = $scope.filterSkillItems[i];
            	if (cvSkills[skillItem.id] > 0 ) {
            		score += cvSkills[skillItem.id];
            	}
     	}
-    	return Math.round(100 * score / ($scope.searchSkillItems.length * 3));
+    	return Math.round(100 * score / ($scope.filterSkillItems.length * 3));
     }
+    
+    /**
+     * on changes of the $scope.seachTerm, 
+     * we do a search within the backend of this term.
+     * The result is an id list of matching cvs which we store for filtering.
+     */
+    $scope.$watch('seachTerm', function(newValue, oldValue) {
+    	
+    	$scope.seachTermError = false;
+    	if (!newValue) {
+    		$scope.filterIDs = [];
+    		return;
+    	}
+    	if ($scope.appendAsterixToSearch) {
+    		newValue += '*';    		
+    	}
+    	$http.get('/api/cv/cvs?seachTerm='+newValue)
+        .success(function(data, status, headers, config) {
+        	$scope.filterIDs = [];
+        	for (var i=0; i<data.length; i++) {
+        		$scope.filterIDs.push(data[i].id);
+        	}
+        })
+        .error(function(data, status, headers, config) {
+        	$scope.seachTermError = true;           
+        });
+    });
     
     /**
      * Filter for a list of cvs.
@@ -142,10 +189,10 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
      */
     $scope.bySearchCriteria = function() {
     	return function(cvEntry) {
-    		return $scope.calculateSearchScorePercent(cvEntry) > 0;
+    		return $scope.calculateSearchScorePercent(cvEntry) > 0
+    			&& ($scope.filterIDs.length == 0 || $scope.filterIDs.indexOf(cvEntry.id) > -1);
 	    }
     }
-    
     
     /**
      + Delete cv

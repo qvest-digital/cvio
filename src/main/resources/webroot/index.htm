@@ -40,17 +40,23 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-9" style="padding-left: 0px;">
-						<span class="btn-group" style="width: 180px;">
+				<div class="col-md-9" style="padding-left: 0px;" 
+				    ng-class="{'has-error':seachTermError, 'has-success': filterIDs.length > 0}">
+				        <span class="control-label">Suche:</span>
+						<span class="btn-group" style="width: 280px;">                            
+                            <span class="searchtool glyphicon glyphicon-search control-label"></span>
 						    <input
-							type="text" class="input-sm form-control" ng-model="seachTerm"> 
-                            <span class="searchclear glyphicon glyphicon-remove-circle"></span>
-                            <span class="searchtool glyphicon glyphicon-search"></span>
-						</span>
+							type="text" class="input-sm form-control"							
+							ng-model="seachTerm"> 
+                            <!-- <span class="searchclear glyphicon glyphicon-remove-circle control-label"></span> -->
+
+						</span>						
+                         <input type="checkbox" class="input-sm" ng-model="appendAsterixToSearch"> * anhängen
+                         <a target="_blank" href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax">(Experten Syntax)</a>
                 </div>
 				<div class="col-md-3" style="padding-right: 0px;">
 					<cv-skill-entry  class="pull-right"  label="Skill Filter" skill-list="skillItems"
-						submit-function="addSearchTerm(skillSearchTerm)"
+						submit-function="addSkillSearchTerm(skillSearchTerm)"
 						ng-model="skillSearchTerm"></cv-skill-entry>
 				</div>
 			</div>

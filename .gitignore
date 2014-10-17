@@ -10,3 +10,4 @@ debian/cvio.substvars
 debian/cvio/
 debian/files
 debian/maven-repo/
+/bin
