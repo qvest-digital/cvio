@@ -79,11 +79,11 @@ public class CVResourceTest {
         String[] someFields = { "demo" };
 
         List<Map<String, Object>> demoResultData = demoResultData();
-        Mockito.when(dbMock.getAllCVs(someFields)).thenReturn(demoResultData);
+        Mockito.when(dbMock.getCVs(someFields, null)).thenReturn(demoResultData);
 
         // when I request a CV
         List<Map<String, Object>> result = aRessource.getCVs(Arrays
-                .asList(someFields), true);
+                .asList(someFields), null, true);
 
         // then
         // data matches:

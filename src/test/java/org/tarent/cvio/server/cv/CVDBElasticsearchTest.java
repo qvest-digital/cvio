@@ -35,7 +35,7 @@ public class CVDBElasticsearchTest extends EsTest {
         refreshIndexes();
 
         // then I can retrieve it by its name later
-        List<Map<String, Object>> retrievedCVs = cvDB.getAllCVs(null);
+        List<Map<String, Object>> retrievedCVs = cvDB.getCVs(null, null);
         assertEquals(21, retrievedCVs.size());
     }
 
@@ -44,7 +44,7 @@ public class CVDBElasticsearchTest extends EsTest {
         // given a fresh database
         CVDBElasticsearch cvDB = new CVDBElasticsearch(esNode(), ConfigurationHelper.cfg());
 
-        assertEquals(0, cvDB.getAllCVs(null).size());
+        assertEquals(0, cvDB.getCVs(null, null).size());
         assertNull(cvDB.getCVById("foo"));
     }
 }
