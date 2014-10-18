@@ -155,13 +155,15 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     	return Math.round(100 * score / ($scope.filterSkillItems.length * 3));
     }
     
+    $scope.searchFilterQueryCounter = 0;
+    
     /**
      * on changes of the $scope.seachTerm, 
      * we do a search within the backend of this term.
      * The result is an id list of matching cvs which we store for filtering.
      */
     $scope.$watch('seachTerm', function(newValue, oldValue) {
-    	
+    	var mycounter = ++$scope.searchFilterQueryCounter;
     	$scope.seachTermError = false;
     	if (!newValue) {
     		$scope.filterIDs = [];
@@ -172,6 +174,9 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     	}
     	$http.get('/api/cv/cvs?seachTerm='+newValue)
         .success(function(data, status, headers, config) {
+        	if (mycounter < $scope.searchFilterQueryCounter) {
+        		return; // the is a newer query running
+        	}
         	$scope.filterIDs = [];
         	for (var i=0; i<data.length; i++) {
         		$scope.filterIDs.push(data[i].id);
@@ -702,4 +707,13 @@ cv.directive('cvDateField', function() {
                       </div>\
                     </div>'
   }
+});
+
+cv.directive('autoFocus', function() {
+    return {
+        restrict: 'AC',
+        link: function(_scope, _element) {
+            _element[0].focus();
+        }
+    };
 });
