@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="cvio">
+  <head>
+    <title>cvio - Skills verwalten</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="lib/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="cv.css" rel="stylesheet" media="screen"/>
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/ui/jquery-ui.js"></script>
+    <script src="lib/bootstrap.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/ui-bootstrap-tpls.min.js"></script>
+    
+   <script src="cvio.js"></script>
+  </head>
+  <body>
+  
+    <div class="container" ng-controller="SkillManagementCtrl">
+        
+      <h1>Skills verwalten</h1>
+      <br/>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4" style="padding-left: 0px;">
+                </div>
+                <div class="col-md-2">                
+                </div>
+				<div class="col-md-3" style="padding-right: 0px;">
+				</div>
+			</div>
+		</div>
+	<div class="container">
+     <div class="row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Kategorie</th>
+            <th>Relevanz</th>
+            <th>Freigegeben</th>
+          </tr>
+          <tr>
+            <td colspan="2"><span class="input-group">           
+                            <span class="input-group-addon glyphicon glyphicon-search"></span>                 
+                            <input
+                             placeholder="Filter"
+                             type="text" class="input-sm form-control"                          
+                             ng-model="filter.term"
+                             auto-focus> 
+                        </span>
+            </td>
+            <td><select class="form-control" ng-model="filter.category" ng-options="cat.id as cat.name for cat in categories">
+                  <option value=""></option>
+                </select>
+             </td>
+            <td><select class="form-control" ng-model="filter.relevance">
+                  <option value=""></option>
+                  <option value="1">hoch</option>
+                  <option value="0">mittel</option>
+                  <option value="-1">gering</option>
+                </select>
+            </td>
+            <td><select class="form-control" ng-model="filter.approved">
+                  <option value=""></option>
+                  <option value="1">ja</option>
+                  <option value="0">nein</option>
+                </select>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="skill in skillItems | filter:bySkillFilter() | orderBy:skill.name:true ">
+            <td>{{skill.id}}</td>
+            <td>{{skill.name}}</td>
+            <td><select class="form-control" ng-model="skill.category" ng-options="cat.id as cat.name for cat in categories">
+                </select>
+             </td>
+            <td><select class="form-control" ng-model="skill.relevance">
+				  <option value="1">hoch</option>
+                  <option value="0">mittel</option>
+                  <option value="-1">gering</option>
+				</select>
+			</td>
+            <td><input ng-model="skill.approved" type="checkbox">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+      
+    </div>
+    
+  </body>
+</html>

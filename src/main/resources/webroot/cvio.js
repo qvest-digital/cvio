@@ -389,41 +389,42 @@ cv.factory('Skills', function($resource){
     });
 });
 
+cv.value('categories', [
+                        {
+                       	 'id': 'prog',
+                       	 'name': 'Programmiersprachen und Frameworks',
+                        },
+                        {
+                       	 'id': 'build',
+                       	 'name': 'Build, Deploymnet und Plattformen',
+                        },
+                        {
+                       	 'id': 'db',
+                       	 'name': 'Datenbanken',
+                        },
+                        {
+                       	 'id': 'test',
+                       	 'name': 'Software Testing',
+                        },
+                        {
+                       	 'id': 'concept',
+                       	 'name': 'Konzepte und Vorgehen',
+                        },
+                        {
+                       	 'id': 'other',
+                       	 'name': 'Sonstiges',
+                        }                                                  
+                        ]);
 /**
  * Controller for the skill tab
  * This is not ready for now
  */
-cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills, $http) {
+cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', 'categories', function($scope, Skills, $http, categories) {
 
     $scope.skillItems = Skills.query(),
 
     $scope.categorySelection = 'prog';
-    $scope.categories = [
-                         {
-                        	 'id': 'prog',
-                        	 'name': 'Programmiersprachen und Frameworks',
-                         },
-                         {
-                        	 'id': 'build',
-                        	 'name': 'Build, Deploymnet und Plattformen',
-                         },
-                         {
-                        	 'id': 'db',
-                        	 'name': 'Datenbanken',
-                         },
-                         {
-                        	 'id': 'test',
-                        	 'name': 'Software Testing',
-                         },
-                         {
-                        	 'id': 'concept',
-                        	 'name': 'Konzepte und Vorgehen',
-                         },
-                         {
-                        	 'id': 'other',
-                        	 'name': 'Sonstiges',
-                         }                                                  
-                         ];
+    $scope.categories = categories;
     
 
     $scope.skillLevelHeader = {'beginner': 'Grundkenntnisse',  'advanced': 'Erfahrung', 'expert': 'Expertise'};
@@ -554,6 +555,30 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', function($scope, Skills
 	    });
     }
     
+}]);
+
+cv.controller('SkillManagementCtrl', ['$scope', 'Skills', '$http', 'categories', function($scope, Skills, $http, categories) {
+
+	$scope.skillItems = Skills.query();
+
+	$scope.categories = categories;
+	
+	/**
+	 * Filter term for filtering the skills.
+	 */
+	$scope.filter = {approved: ''};
+	
+    /**
+     * Filter for a the skills.
+     */
+    $scope.bySkillFilter = function() {
+    	return function(skillItem) {
+    		return (!$scope.filter.term || skillItem.name.indexOf($scope.filter.term) != -1)
+				&& (!$scope.filter.category || skillItem.category == $scope.filter.category)
+				&& (!$scope.filter.relevance || skillItem.relevance == $scope.filter.relevance)
+				&& ($scope.filter.approved == ''|| (skillItem.approved && $scope.filter.approved == '1') || (!skillItem.approved && $scope.filter.approved == '0'));
+	    }
+    }    
 }]);
 
 /**

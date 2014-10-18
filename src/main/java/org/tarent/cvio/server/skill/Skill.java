@@ -9,6 +9,9 @@ import org.joda.time.DateTime;
  */
 public class Skill {
 
+    // sameAs: id
+    // specialisationOf: id
+
     /**
      * The id of the Skill.
      */
@@ -33,6 +36,16 @@ public class Skill {
      * creation time of the item.
      */
     private DateTime creationTime;
+
+    /**
+     * flag, if the skill was already reviewed
+     */
+    boolean approved;
+
+    /**
+     * integer -1, 0, 1 of the relevance for tarent
+     */
+    int relevance;
 
     /**
      * returns the name.
