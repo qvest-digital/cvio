@@ -188,9 +188,9 @@ public class CVIODocumentGenerator {
             }
 
             // put all together.
-            if (l1.toString() != null)
+            if (l1 != null && !"".equals(l1.toString().trim()))
                 levelSkills.put("level1", l1.toString().trim().replaceAll(",$", ""));
-            if (l3.toString() != null)
+            if (l3 != null && !"".equals(l3.toString().trim()))
                 levelSkills.put("level3", l3.toString().trim().replaceAll(",$", ""));
             skillMap.put(category, levelSkills);
         }
@@ -235,6 +235,7 @@ public class CVIODocumentGenerator {
     private String clearHtml(String value) {
         value = value.replaceAll("<br>", "\n");
         value = value.replaceAll("&amp;", "&");
+        value = value.replaceAll("&nbsp;", " ");
         value = value.trim();
         return value;
     }
