@@ -114,6 +114,16 @@ public class SkillDBElasticsearch implements SkillDB {
         return resp.getId();
     }
 
+    @Override
+    public void updateSkill(Skill updateSkill) {
+        logger.trace("update skill with id " + updateSkill.getId() + ", name " + updateSkill.getName() + " in es: "
+                + mapper.writeValueAsString(updateSkill));
+
+        es.client().prepareIndex(INDEX_SKILL, TYPE_SKILL, updateSkill.getId())
+                .setSource(mapper.writeValueAsString(updateSkill))
+                .execute().actionGet();
+    }
+
     /**
      * Returns an List<Skill> for a search response.
      * 

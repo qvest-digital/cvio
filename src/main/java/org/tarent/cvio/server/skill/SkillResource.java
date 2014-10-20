@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -90,6 +91,24 @@ public class SkillResource {
         return Response
                 .created(new URI(configuration.getUriPrefix() + "/skills/" + id))
                 .build();
+    }
+
+    /**
+     * update a skill.
+     * 
+     * @param updateSkill the skill to update
+     * @param id the skill id
+     * @return http response object
+     * @throws URISyntaxException in case of a miss configuration
+     */
+    @PUT()
+    @Path("/{id}")
+    @Timed
+    public Response updateSkill(@PathParam("id") final String id, final Skill updateSkill,
+            @Auth Boolean isAuthenticated) throws URISyntaxException {
+        updateSkill.setId(id);
+        skillDB.updateSkill(updateSkill);
+        return Response.ok().build();
     }
 
 }

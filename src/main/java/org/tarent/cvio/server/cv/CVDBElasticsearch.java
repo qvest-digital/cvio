@@ -149,7 +149,7 @@ public class CVDBElasticsearch implements CVDB {
 
     @Override
     public String createCV(final String content) {
-        logger.trace("create cv in es: " + content);
+        logger.trace("create cv in es");
         IndexResponse resp = es.client().prepareIndex(INDEX_CVS, TYPE_CV)
                 .setSource(content).execute().actionGet();
         return resp.getId();
@@ -179,7 +179,7 @@ public class CVDBElasticsearch implements CVDB {
 
     @Override
     public void updateCV(final String id, final String content) {
-        logger.trace("update cv with id " + id + " in es: " + content);
+        logger.trace("update cv with id " + id + " in es");
         es.client().prepareIndex(INDEX_CVS, TYPE_CV, id).setSource(content)
                 .execute().actionGet();
     }

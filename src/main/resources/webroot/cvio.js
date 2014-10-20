@@ -386,6 +386,7 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
 cv.factory('Skills', function($resource){
     return $resource('/api/skills' + '/:item', {item: '@id'}, {
         query: {method:'GET', params:{}, isArray:true},
+        update: {method:'PUT', params:{}, isArray:false}
     });
 });
 
@@ -560,14 +561,68 @@ cv.controller('SkillCtrl', ['$scope', 'Skills', '$http', 'categories', function(
 cv.controller('SkillManagementCtrl', ['$scope', 'Skills', '$http', 'categories', function($scope, Skills, $http, categories) {
 
 	$scope.skillItems = Skills.query();
-
+	
 	$scope.categories = categories;
+	
+	/**
+	 * map from skill.id -> boolean,
+	 * if a skill was modified in the gui.
+	 */
+	$scope.modified = {};
 	
 	/**
 	 * Filter term for filtering the skills.
 	 */
 	$scope.filter = {approved: ''};
 	
+	$scope.$watch('skillItems', function(newValue, oldValue) {
+        if (newValue == undefined
+            || oldValue == undefined
+            || newValue.length != oldValue.length) {
+            return;
+        }
+        for (var i = 0; i < newValue.length; i++) {
+            var oldElement = $scope.getArrayElementById(oldValue, newValue[i].id);
+            if (!angular.equals(newValue[i], oldElement)) {
+            	$scope.modified[newValue[i].id] = true;
+            }
+        }
+    }, true);
+            
+	
+	$scope.isAnyModified = function() {
+		for (var prop in $scope.modified) {
+			if ($scope.modified [prop]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	$scope.saveAllSkills = function() {
+		for (var i=0; i<$scope.skillItems.length; i++) {
+			var skill = $scope.skillItems[i];
+			if ($scope.modified [skill.id]) {
+				$scope.saveSkill(skill);
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Saves the skill data.
+	 */
+	$scope.saveSkill = function(skill) {
+		skill.$update(
+				function() {
+                	$scope.modified[skill.id] = false;
+				},
+				function() {
+					alert("error while saving "+skill.name);
+				});
+	};
+            	
     /**
      * Filter for a the skills.
      */
@@ -579,6 +634,14 @@ cv.controller('SkillManagementCtrl', ['$scope', 'Skills', '$http', 'categories',
 				&& ($scope.filter.approved == ''|| (skillItem.approved && $scope.filter.approved == '1') || (!skillItem.approved && $scope.filter.approved == '0'));
 	    }
     }    
+    
+    $scope.getArrayElementById = function(elementArray, id) {
+        var resultList = jQuery.grep(elementArray, function (value) {
+            return value.id == id;
+        });
+        return resultList[0];
+    }
+
 }]);
 
 /**

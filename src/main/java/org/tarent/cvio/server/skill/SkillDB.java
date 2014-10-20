@@ -33,4 +33,10 @@ public interface SkillDB {
      */
     String createSkill(Skill newSkill);
 
+    /**
+     * updates a skill.
+     * 
+     * @param updateSkill the new skill to update
+     */
+    void updateSkill(Skill updateSkill);
 }

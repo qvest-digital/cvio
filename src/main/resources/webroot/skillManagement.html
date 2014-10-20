@@ -27,9 +27,21 @@
 			<div class="row">
 				<div class="col-md-4" style="padding-left: 0px;">
                 </div>
-                <div class="col-md-2">                
+                <div class="col-md-4">                
                 </div>
-				<div class="col-md-3" style="padding-right: 0px;">
+				<div class="col-md-4" style="padding-right: 0px;">
+					<div class="pull-right">
+			            <a id="btnOverview" href="/"
+			               class="btn btn-default btn-md">
+			              <span class="glyphicon glyphicon-chevron-left"></span> &Uuml;bersicht
+			            </a>
+			            <button id="btnSave" ng-click="saveAllSkills()" type="button" class="btn btn-default btn-md" 
+			                     ng-class="{'disabled': !isAnyModified()}">
+			              <span ng-if="isAnyModified()" class="glyphicon glyphicon-floppy-save text-danger"></span>
+			              <span ng-if="!isAnyModified()" class="glyphicon glyphicon-floppy-saved text-success"></span>
+			              Alle Speichern
+			            </button>
+			        </div> 
 				</div>
 			</div>
 		</div>
@@ -43,6 +55,7 @@
             <th>Kategorie</th>
             <th>Relevanz</th>
             <th>Freigegeben</th>
+            <th></th>
           </tr>
           <tr>
             <td colspan="2"><span class="input-group">           
@@ -71,6 +84,12 @@
                   <option value="0">nein</option>
                 </select>
             </td>
+            <td>
+                <button id="btnSaveNoopJustForSizing" type="button" style="visibility: hidden"  class="btn btn-default btn-md pull-right" >
+                     Speichern
+                     <span class="glyphicon glyphicon-floppy-save"></span>                               
+                </button>                        	           
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -86,7 +105,14 @@
                   <option value="-1">gering</option>
 				</select>
 			</td>
-            <td><input ng-model="skill.approved" type="checkbox">
+            <td>
+                <input ng-model="skill.approved" type="checkbox">
+            </td>
+            <td>
+                <button ng-click="saveSkill(skill)" ng-class="{'disabled' : !modified[skill.id]}" type="button" class="btn btn-default btn-md pull-right" ng-style="isBusyWithSaving && {'cursor': 'wait'}">
+	                 Speichern
+                     <span class="glyphicon glyphicon-floppy-save" ng-class="{'text-danger' : modified[skill.id], 'text-success' : !modified[skill.id]}"></span>                               
+                </button>                        
             </td>
           </tr>
         </tbody>

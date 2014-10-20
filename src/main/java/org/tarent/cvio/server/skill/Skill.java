@@ -136,4 +136,20 @@ public class Skill {
     public String getId() {
         return this.id;
     }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public int getRelevance() {
+        return relevance;
+    }
+
+    public void setRelevance(int relevance) {
+        this.relevance = relevance;
+    }
 }
