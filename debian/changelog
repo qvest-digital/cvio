@@ -1,3 +1,11 @@
+cvio (0.2.0) unstable; urgency=medium
+
+  * Fixes in cv generation
+  * Fulltext search 
+  * Skill management
+
+ -- Sebastian Mancke <smancke@smanck-x1>  Mon, 20 Oct 2014 23:43:07 +0200
+
 cvio (0.1.1) unstable; urgency=low
 
   * First Debian package
