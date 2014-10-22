@@ -11,6 +11,10 @@
 	
 }
 
+.skill-blocked {
+	color: grey;
+}
+
 .skillRemoveIcon {	
 	color: #cccccc;
 	padding: 3px;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app="cvio">
+<html ng-app="cvio" ng-controller="CvCtrl">
   <head>
-    <title>Profil verwalten</title>
+    <title>{{cv.familyName}}, {{cv.givenName}} - Profil verwalten</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -18,7 +18,7 @@
   </head>
   <body>
 
-    <div class="container" ng-controller="CvCtrl">
+    <div class="container">
      <h3>Profil {{cv.givenName}} {{cv.familyName}}</h3>
       <br/>
     
@@ -230,8 +230,8 @@
         </ul>
         <div class="panel panel-default">
           <div id="all-items-box" class="connectedSortable panel-body" style="min-height: 150px;">
-            <div ng-repeat="item in skillItems | filter:byCategory(categorySelection) | orderBy:'name'"
-                 id="skill_item_{{item.id}}" class="skillItem">{{item.name}}</div>
+            <div ng-repeat="item in skillItems | filter:byCategory(categorySelection) | orderBy:['-approved', '-relevance','name']"
+                 id="skill_item_{{item.id}}" class="skillItem" ng-class="{'skill-blocked': !item.approved || item.relevance<0}">{{item.name}}</div>
           </div>
         </div>
       </div>
@@ -245,7 +245,7 @@
             </div>
             <div style="min-height: 250px;" class="panel-body" id="beginner">
                 <div ng-repeat="item in skillItems | filter:bySkillSelection('beginner') | orderBy:'name'"
-                  id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                  id="skill_item_{{item.id}}" class="skillItem" ng-class="{'skill-blocked': !item.approved || item.relevance<0}">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
@@ -262,7 +262,7 @@
             <div style="min-height: 250px;" class="panel-body" id="advanced">
 
                 <div ng-repeat="item in skillItems | filter:bySkillSelection('advanced') | orderBy:'name'"
-                    id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                    id="skill_item_{{item.id}}" class="skillItem" ng-class="{'skill-blocked': !item.approved || item.relevance<0}">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
@@ -279,7 +279,7 @@
             <div style="min-height: 250px;" class="panel-body" id="expert">
 
                 <div ng-repeat="item in skillItems | filter:bySkillSelection('expert') | orderBy:'name'"
-                    id="skill_item_{{item.id}}" class="skillItem">{{item.name}}
+                    id="skill_item_{{item.id}}" class="skillItem" ng-class="{'skill-blocked': !item.approved || item.relevance<0}">{{item.name}}
                  <small ng-click="removeSkill(item.id)" class="skillRemoveIcon glyphicon glyphicon-remove"></small>
                 </div>
 
