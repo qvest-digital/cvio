@@ -78,7 +78,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     /**
      * The term for fulltext search
      */
-    $scope.seachTerm;
+    $scope.seachTerm = '';
 
     /**
      * True is an * should be appendet to the search
@@ -89,7 +89,12 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
      * True, if an error occurs while searching 
      */
     $scope.seachTermError = false;
-    
+
+    /**
+     * True, if an the seatch has returned no results 
+     */
+    $scope.seachNoResults = false;
+
     /**
      * A list of cv ids to filter on
      */
@@ -155,7 +160,15 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     	return Math.round(100 * score / ($scope.filterSkillItems.length * 3));
     }
     
+    /**
+     * count how much queries are out there to decide about an animation image
+     */
     $scope.searchFilterQueryCounter = 0;
+
+    /**
+     * query sequence, to ensure, that no newer query overtaktes an older one
+     */
+    $scope.searchFilterQuerySequence = 0;
     
     /**
      * on changes of the $scope.seachTerm, 
@@ -163,7 +176,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
      * The result is an id list of matching cvs which we store for filtering.
      */
     $scope.$watch('seachTerm', function(newValue, oldValue) {
-    	var mycounter = ++$scope.searchFilterQueryCounter;
+    	var mycounter = ++$scope.searchFilterQuerySequence;
     	$scope.seachTermError = false;
     	if (!newValue) {
     		$scope.filterIDs = [];
@@ -172,17 +185,23 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     	if ($scope.appendAsterixToSearch) {
     		newValue += '*';    		
     	}
+    	$scope.searchFilterQueryCounter++;
+    	$scope.filterIDs = [];
     	$http.get('/api/cv/cvs?seachTerm='+newValue)
         .success(function(data, status, headers, config) {
-        	if (mycounter < $scope.searchFilterQueryCounter) {
+        	$scope.searchFilterQueryCounter--;
+        	if (mycounter < $scope.searchFilterQuerySequence) {
         		return; // the is a newer query running
         	}
+        	$scope.seachNoResults = data.length == 0;
         	$scope.filterIDs = [];
         	for (var i=0; i<data.length; i++) {
         		$scope.filterIDs.push(data[i].id);
         	}
         })
         .error(function(data, status, headers, config) {
+        	$scope.seachNoResults = true;
+        	$scope.searchFilterQueryCounter--;
         	$scope.seachTermError = true;           
         });
     });
@@ -195,7 +214,7 @@ cv.controller('ListCtrl', ['$scope', 'Skills', '$http', function($scope, Skills,
     $scope.bySearchCriteria = function() {
     	return function(cvEntry) {
     		return $scope.calculateSearchScorePercent(cvEntry) > 0
-    			&& ($scope.filterIDs.length == 0 || $scope.filterIDs.indexOf(cvEntry.id) > -1);
+    			&& ($scope.seachTerm.trim() == '' || $scope.filterIDs.indexOf(cvEntry.id) > -1);
 	    }
     }
     

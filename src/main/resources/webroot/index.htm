@@ -44,8 +44,10 @@
 				</div>
 			</div>
 			<div class="row">
+			{{seachNoResults}} 
 				<div class="col-md-4" style="padding-left: 0px;" 
-				    ng-class="{'has-error':seachTermError, 'has-success': filterIDs.length > 0}">
+				    ng-class="{'has-error':seachTermError, 'has-success': filterIDs.length > 0, 
+				              'has-warning': seachTerm != '' && filterIDs.length == 0 && searchFilterQueryCounter == 0}">
 						<span class="input-group">           
 						    <span class="input-group-addon glyphicon glyphicon-search"></span>                 
                             <!-- <span class="searchtool glyphicon glyphicon-search control-label"></span> -->
