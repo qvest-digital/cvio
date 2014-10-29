@@ -117,6 +117,8 @@ public class DocumentResource {
             cvioDocGen.matchCVSkills(sortedSkillMap, dataModel);
         }
 
+        cvioDocGen.prepareImage(dataModel);
+
         // create the document with the generated datamodel
         File doc = cvioDocGen.generateDocument(dataModel, cvName);
 

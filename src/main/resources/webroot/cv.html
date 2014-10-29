@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="cvio" ng-controller="CvCtrl">
+<html ng-app="cvio" ng-controller="CvCtrl" flow-init>
   <head>
     <title>{{cv.familyName}}, {{cv.givenName}} - Profil verwalten</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -14,6 +14,8 @@
     <script src="lib/angular.min.js"></script>
     <script src="lib/angular-resource.min.js"></script>
     <script src="lib/ui-bootstrap-tpls.min.js"></script>    
+    
+    <script src="lib/ng-flow-standalone.min.js"></script>    
     <script src="cvio.js"></script>
   </head>
   <body>
@@ -55,18 +57,41 @@
         </div>
         <div class="panel-body">
 
-          <form class="form-horizontal" role="form">
-            
-            <cv-short-field ng-model="cv.userName" input-id="userName" label="Benutzername"></cv-short-field>
-            <cv-short-field ng-model="cv.givenName" input-id="givenName" label="Vorname"></cv-short-field>
-            <cv-short-field ng-model="cv.familyName" input-id="familyName" label="Nachname"></cv-short-field>
-            <hr/>
-            <cv-short-field ng-model="cv.yearOfBirth" input-id="yearOfBirth" label="Geburtsjahr"></cv-short-field>
-            <cv-short-field ng-model="cv.placeOfBirth" input-id="placeOfBirth" label="Geburtsort-/Land"></cv-short-field>
-            <cv-short-field ng-model="cv.languages" input-id="languages" label="Sprachen"></cv-short-field>
-            <cv-short-field ng-model="cv.familyStatus" input-id="familyStatus" label="Familienstand/Kinder"></cv-short-field>
-            <cv-short-field ng-model="cv.interests" input-id="interests" label="Interessen/Hobbys"></cv-short-field>
-          </form>
+	        <div class="container">
+	            <div class="row">                        
+
+		          <form class="form-horizontal col-md-7" role="form">            
+		            <cv-short-field ng-model="cv.userName" input-id="userName" label="Benutzername"></cv-short-field>
+		            <cv-short-field ng-model="cv.givenName" input-id="givenName" label="Vorname"></cv-short-field>
+		            <cv-short-field ng-model="cv.familyName" input-id="familyName" label="Nachname"></cv-short-field>
+		            <hr/>
+		            <cv-short-field ng-model="cv.yearOfBirth" input-id="yearOfBirth" label="Geburtsjahr"></cv-short-field>
+		            <cv-short-field ng-model="cv.placeOfBirth" input-id="placeOfBirth" label="Geburtsort-/Land"></cv-short-field>
+		            <cv-short-field ng-model="cv.languages" input-id="languages" label="Sprachen"></cv-short-field>
+		            <cv-short-field ng-model="cv.familyStatus" input-id="familyStatus" label="Familienstand/Kinder"></cv-short-field>
+		            <cv-short-field ng-model="cv.interests" input-id="interests" label="Interessen/Hobbys"></cv-short-field>
+		          </form>
+		          
+		          <div class="col-md-5">
+				    <div class="thumbnail" ng-hide="cv.image">
+				      <img src="http://www.placehold.it/150x200/EFEFEF/AAAAAA&text=Kein+Foto" />
+				    </div>
+				    <div class="thumbnail" ng-show="cv.image">
+				      <img src="{{cv.image}}" />
+				    </div>
+				    <div>
+				      <span ng-show="imageError"><h3>{{imageError}}</h3></span>
+				      <a href="#" class="btn" ng-hide="cv.image" flow-btn flow-attrs="{accept:'image/*'}">Select image</a>
+				      <a href="#" class="btn" ng-show="cv.image" flow-btn flow-attrs="{accept:'image/*'}">Change</a>
+				      <a href="#" class="btn btn-danger" ng-show="cv.image"
+				         ng-click="removeImage()">
+				        Remove
+				      </a>				      
+				    </div>
+				  </div>
+
+                </div>
+            </div>		          
         </div>   
       </div>
 
@@ -77,25 +102,29 @@
         </div>
         <div class="panel-body">
 
-          <form class="form-horizontal" role="form">
-            <cv-short-field ng-model="cv.email" input-id="email" label="E-Mail"></cv-short-field>
-            <cv-short-field ng-model="cv.phoneMobile" input-id="phoneMobile" label="Telefon (Mobil)"></cv-short-field>
-            <cv-short-field ng-model="cv.phoneFixed" input-id="phoneFixed" label="Telefon (Arbeit)"></cv-short-field>
-            <cv-short-field ng-model="cv.phoneFixedPrivate" input-id="phoneFixed" label="Telefon (Privat)"></cv-short-field>
-            <cv-short-field ng-model="cv.xingProfile" input-id="xingProfile" label="Xing Profil"></cv-short-field>
-
-            <hr/>
-            <cv-short-field ng-model="cv.streetAddress" input-id="streetAddress" label="Stra&szlig;e, Hausnummer"></cv-short-field>
-            <div class="form-group">
-              <label for="postalcode" class="col-sm-2 control-label">PLZ/Ort</label>
-              <div class="col-sm-2">
-                <input type="text" class="form-control input-sm" id="postalcode" ng-model="cv.postalcode">
-              </div>
-              <div class="col-sm-3">
-                <input type="text" class="form-control input-sm" id="locality" ng-model="cv.locality">
-              </div>
-            </div>
-          </form>
+            <div class="container">
+                <div class="row">       
+		          <form class="form-horizontal col-md-7" role="form">
+		            <cv-short-field ng-model="cv.email" input-id="email" label="E-Mail"></cv-short-field>
+		            <cv-short-field ng-model="cv.phoneMobile" input-id="phoneMobile" label="Telefon (Mobil)"></cv-short-field>
+		            <cv-short-field ng-model="cv.phoneFixed" input-id="phoneFixed" label="Telefon (Arbeit)"></cv-short-field>
+		            <cv-short-field ng-model="cv.phoneFixedPrivate" input-id="phoneFixed" label="Telefon (Privat)"></cv-short-field>
+		            <cv-short-field ng-model="cv.xingProfile" input-id="xingProfile" label="Xing Profil"></cv-short-field>
+		
+		            <hr/>
+		            <cv-short-field ng-model="cv.streetAddress" input-id="streetAddress" label="Stra&szlig;e, Hausnummer"></cv-short-field>
+		            <div class="form-group">
+		              <label for="postalcode" class="col-sm-2 control-label">PLZ/Ort</label>
+		              <div class="col-sm-2">
+		                <input type="text" class="form-control input-sm" id="postalcode" ng-model="cv.postalcode">
+		              </div>
+		              <div class="col-sm-3">
+		                <input type="text" class="form-control input-sm" id="locality" ng-model="cv.locality">
+		              </div>
+		            </div>
+		          </form>
+	          </div>
+          </div>
         </div>   
       </div>
     </div>

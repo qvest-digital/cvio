@@ -58,7 +58,17 @@ function revoveHTMLAndStyleButNotBr(text) {
 /**
  * the angular main module for the cv application
  */
-var cv = angular.module('cvio', ['ngResource', 'ui.bootstrap']);
+var cv = angular.module('cvio', ['ngResource', 'ui.bootstrap', 'flow', 'flow.img', 'flow.init']);
+
+cv.config(['flowFactoryProvider', function (flowFactoryProvider) {
+	  flowFactoryProvider.defaults = {
+	    permanentErrors: [404, 500, 501],
+	    maxChunkRetries: 1,
+	    chunkRetryInterval: 5000,
+	    simultaneousUploads: 4,
+	    singleFile: true
+	  };
+	}]);
 
 /**
  * The controller for List view of the application
@@ -296,6 +306,26 @@ cv.controller('CvCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.deleteJob = function(job) {
         deleteFromCollection($scope.cv.jobs, job);
     }
+    
+    $scope.removeImage = function() {
+       	$scope.cv.image = '';
+    }
+    
+    $scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+    	if (flowFile.size > 100*1024) {
+    		$scope.imageError = "Maximal 100kb erlaubt!";
+        	event.preventDefault();//prevent file from uploading
+    	} else {
+    		$scope.imageError = undefined;
+			var fileReader = new FileReader();
+			fileReader.onload = function (event) {
+				$scope.$apply(function () {
+					$scope.cv.image = event.target.result;
+				});
+			};
+			fileReader.readAsDataURL(flowFile.file);
+    	}
+    });
 
     /**
      * The $watch method is an angular method, which is called,
@@ -737,8 +767,8 @@ cv.directive('cvShortField', function() {
           'inputId': '@',
       },
       template: '<div class="form-group">\
-                  <label for="{{input-id}}" class="col-sm-2 control-label">{{label}}</label>\
-                  <div class="col-sm-5">\
+                  <label for="{{input-id}}" class="col-sm-4 control-label">{{label}}</label>\
+                  <div class="col-sm-8">\
                    <input type="text" class="form-control input-sm" id="{{inputId}}" ng-model="ngModel">\
                   </div>\
                  </div>'
@@ -824,3 +854,25 @@ cv.directive('autoFocus', function() {
         }
     };
 });
+
+cv.directive('base64ImageData', [function() {
+	return {
+		'scope': false,
+		'link': function(scope, element, attrs) {
+			var dataPath = attrs.base64ImageData;
+			scope.$watch(dataPath, function (data) {
+				if (!data) {
+					attrs.$set('src', '');
+					return ;
+				}
+				var fileReader = new FileReader();
+				fileReader.readAsDataURL(data);
+				fileReader.onload = function (event) {
+					scope.$apply(function () {
+						attrs.$set('src', event.target.result);
+					});
+				};
+			});
+		}
+	};
+}]);

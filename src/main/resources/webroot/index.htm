@@ -14,6 +14,7 @@
     <script src="lib/angular.min.js"></script>
     <script src="lib/angular-resource.min.js"></script>
     <script src="lib/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/ng-flow-standalone.min.js"></script>    
     
    <script src="cvio.js"></script>
   </head>
@@ -36,7 +37,7 @@
 		<div class="container">
 			<div class="row">
 				<div style="width: 400px;" class="pull-right">
-					<div ng-repeat="item in searchSkillItems"
+					<div ng-repeat="item in filterSkillItems"
 						class="skillItem pull-right">
 						{{item.name}} <small ng-click="removeSearchSkill(item)"
 							class="skillRemoveIcon glyphicon glyphicon-remove"></small>
@@ -44,7 +45,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4" style="padding-left: 0px;" 
+				<div class="col-md-4 col-xs-9" style="padding-left: 0px;" 
 				    ng-class="{'has-error':seachTermError, 'has-success': filterIDs.length > 0, 
 				              'has-warning': seachTerm != '' && filterIDs.length == 0 && searchFilterQueryCounter == 0}">
 						<span class="input-group">           
@@ -61,13 +62,11 @@
                              </span>
 						</span>						                        
                 </div>
-                <div class="col-md-3" style="line-height: 37px; padding-left:0px;">
+                <div class="col-xs-3 col-md-3" style="line-height: 37px; padding-left:0px;">
                    <a target="_blank" href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax">(Experten Syntax)</a>
                 </div>
                 
-                <div class="col-md-2">                
-                </div>
-				<div class="col-md-3" style="padding-right: 0px;">
+				<div class="col-md-5 col-xs-12" style="padding-right: 0px;">
 					<cv-skill-entry  class="pull-right"  label="Skill Filter" skill-list="skillItems"
 						submit-function="addSkillSearchTerm(skillSearchTerm)"
 						ng-model="skillSearchTerm"></cv-skill-entry>
@@ -82,8 +81,8 @@
             <th></th>
             <th>Name</th>
             <th>Vorname</th>
-            <th ng-repeat="item in searchSkillItems" style="text-align: right;">{{item.name}}</th>
-            <th ng-if="searchSkillItems.length > 0" style="text-align: right;">%</th>
+            <th ng-repeat="item in filterSkillItems" style="text-align: right;">{{item.name}}</th>
+            <th ng-if="filterSkillItems.length > 0" style="text-align: right;">%</th>
           </tr>
         </thead>
         <tbody>
@@ -94,8 +93,8 @@
             </td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.familyName}}</a></td>
             <td><a href="cv.html?ref={{cv.ref}}">{{cv.givenName}}</a></td>            
-            <td ng-repeat="item in searchSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>
-            <td ng-if="searchSkillItems.length > 0" style="text-align: right;">{{calculateSearchScorePercent(cv)}}</td>
+            <td ng-repeat="item in filterSkillItems" style="text-align: right;">{{cv.skills[item.id]}}</td>
+            <td ng-if="filterSkillItems.length > 0" style="text-align: right;">{{calculateSearchScorePercent(cv)}}</td>
           </tr>
         </tbody>
       </table>

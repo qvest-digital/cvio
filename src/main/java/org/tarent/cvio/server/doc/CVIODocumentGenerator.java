@@ -1,5 +1,7 @@
 package org.tarent.cvio.server.doc;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,13 +13,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
+
 import net.sf.jooreports.templates.DocumentTemplate;
 import net.sf.jooreports.templates.DocumentTemplateException;
 import net.sf.jooreports.templates.DocumentTemplateFactory;
+import net.sf.jooreports.templates.image.RenderedImageSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tarent.cvio.server.skill.Skill;
+
+import com.sun.jersey.core.util.Base64;
 
 /**
  * This class contains severel helper methods to generate a document based on
@@ -299,5 +306,24 @@ public class CVIODocumentGenerator {
                 }
             }
         }
+    }
+
+    public void prepareImage(HashMap<Object, Object> dataModel) {
+        try {
+            String imageData = (String) ((HashMap) dataModel.get("cv")).get("image");
+            if (imageData != null && !imageData.trim().equals("")) {
+                imageData = imageData.substring(imageData.indexOf("base64,") + 7);
+                Base64 decoder = new Base64();
+                byte[] imgBytes = decoder.decode(imageData);
+                BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imgBytes));
+
+                dataModel.put("image", new RenderedImageSource(bufImg));
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // TODO Auto-generated method stub
+
     }
 }

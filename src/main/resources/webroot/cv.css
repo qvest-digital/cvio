@@ -20,6 +20,10 @@
 	padding: 3px;
 }
 
+.thumbnail {
+    max-width: 150px; max-height: 200px; line-height: 20px; margin-bottom: 5px;
+}
+ 
 
 
 /** twitter-typeahead classes */
