@@ -14,6 +14,14 @@ java -jar target/cvserver-*.jar server config.yaml
 firefox http://127.0.0.1:8080
 ```
 
+CVIO needs a bugfix from the latest JODReports source, which are not releases by now.
+So you have to build this from soure, before building cvio:
+´´´
+svn checkout svn://svn.code.sf.net/p/jodreports/code/trunk jodreports-code
+cd jodreports-code/jodreports
+mvn install
+```
+
 
 .deb packaging
 -----------------
