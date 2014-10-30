@@ -1,3 +1,5 @@
-target/cvserver-0.2.0.jar	usr/share/cvio
+target/cvserver-0.3.0.jar	usr/share/cvio
 
-debian/etc/*                    etc/cvio
+debian/etc/config.yaml                  etc/cvio
+debian/etc/deamon_options		etc/cvio
+debian/etc/cvio/run			etc/cvio/cvio

@@ -1,3 +1,10 @@
+cvio (0.3.0) unstable; urgency=medium
+
+  * Image saving and generation
+  * Usability of search
+
+ -- Sebastian Mancke <smancke@smanck-x1>  Thu, 30 Oct 2014 22:35:46 +0100
+
 cvio (0.2.0) unstable; urgency=medium
 
   * Fixes in cv generation
