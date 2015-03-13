@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.tarent.cvio</groupId>
   <artifactId>cvserver</artifactId>
-  <version>0.3.0</version>
+  <version>0.2.0</version>
   
   <build>
     <plugins>
@@ -129,9 +129,9 @@
 		<version>1.1.1</version>
 	</dependency>
 	<dependency>
-	   <groupId>net.sf.jodreports</groupId>
-	   <artifactId>jodreports</artifactId>
-	   <version>2.4.1-SNAPSHOT</version>
+	   <groupId>org.jodreports</groupId>
+	   <artifactId>jodreports-library</artifactId>
+	   <version>3.0.0</version>
 	</dependency>
   </dependencies>
   

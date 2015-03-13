@@ -15,11 +15,10 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
-import net.sf.jooreports.templates.DocumentTemplate;
-import net.sf.jooreports.templates.DocumentTemplateException;
-import net.sf.jooreports.templates.DocumentTemplateFactory;
-import net.sf.jooreports.templates.image.RenderedImageSource;
-
+import org.jodreports.templates.DocumentTemplate;
+import org.jodreports.templates.DocumentTemplateException;
+import org.jodreports.templates.DocumentTemplateFactory;
+import org.jodreports.templates.image.RenderedImageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tarent.cvio.server.skill.Skill;
